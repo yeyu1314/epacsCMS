@@ -98,7 +98,12 @@ export default {
   },
   methods: {
     ...mapActions(['getDetectionVerifyList']),
-    showRecord (that, row) { // 点击操作记录
+    // 打印检测报告
+    printReport (that, row) {
+      console.log(that, row)
+    },
+    // 点击操作记录
+    showRecord (that, row) {
       // console.log(that, row)
       this.isShowRecord = true
       getOperatingRecord({ id: row.jobId })
@@ -113,7 +118,12 @@ export default {
     closeTip () { // 关闭弹窗
       this.isShowRecord = false
     },
-    frozen (that, row) { // 冻结
+    // 开始审核
+    startVerift () {
+
+    },
+    // 冻结
+    frozen (that, row) {
       this.$confirm('此操作将冻结此工单, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

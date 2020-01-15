@@ -117,12 +117,6 @@ export default {
             this.getDetectionOrderList()
           })
       })
-    },
-    showReport (that, row) {
-      console.log(that, row)
-    },
-    editReport (that, row) {
-      console.log(that, row)
     }
   }
 }

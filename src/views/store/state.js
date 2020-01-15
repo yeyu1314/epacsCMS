@@ -73,5 +73,37 @@ export default {
     pageNum: 1,
     total: 0
   },
-  ensureOrderBtnArrList: []
+  ensureOrderBtnArrList: [],
+  // 待复查工单
+  treatTableData: [],
+  treatPagination: {
+    pageSize: 10,
+    pageNum: 1,
+    total: 0
+  },
+  treatLongData: [],
+  // 复查照片上传
+  recheckPicTableData: [],
+  recheckPicPagination: {
+    pageSize: 10,
+    pageNum: 1,
+    total: 0
+  },
+  recheckLongData: [],
+  // 复查报告编辑
+  editTecheckTableData: [],
+  editTecheckPagination: {
+    pageSize: 10,
+    pageNum: 1,
+    total: 0
+  },
+  editTecheckLongData: [],
+  // 复查报告待审
+  waitVerifyReportTableData: [],
+  waitVerifyReportPagination: {
+    pageSize: 10,
+    pageNum: 1,
+    total: 0
+  },
+  waitVerifyReportLongData: [],
 }

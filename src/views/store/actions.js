@@ -1,13 +1,22 @@
-import {getlistData, getCheckout, getDetectionOrderEdutListData, editDetectionOrder, getDetectionImgUploadData, getDetectionOrderListData} from '../../api'
-import {RECEIVE_IMG_UPLOAD_TABLEDATA, RECEIVE_TABLEDATA, RECEIVE_EDIT_ORDER_TABLEDATA, RECEIVE_DETECTION_ORDER_TABLEDATA, RECEIVE_DETECTION_VERIFY_TABLEDATA,
-  RECEIVE_ENSURE_ORDER_TABLEDATA} from './mutation_types'
+import {getCheckout, editDetectionOrder, getDetectionOrderListData} from '../../api'
+import {
+  RECEIVE_IMG_UPLOAD_TABLEDATA,
+  RECEIVE_TABLEDATA,
+  RECEIVE_EDIT_ORDER_TABLEDATA,
+  RECEIVE_DETECTION_ORDER_TABLEDATA,
+  RECEIVE_DETECTION_VERIFY_TABLEDATA,
+  RECEIVE_ENSURE_ORDER_TABLEDATA,
+  RECEIVE_TREAT_ORDER_TABLEDATA,
+  RECEIVE_RECHECKPIC_ORDER_TABLEDATA,
+  RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA, RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA
+} from "./mutation_types";
 import router from '../../router'
 import moment from 'moment'
 import {Message, MessageBox} from 'element-ui'
 
 export default {
   // 完成工单
-  getDataList ({commit, state}) {
+  async getDataList ({commit, state}) {
     const record = (jobId, step) => {
       console.log('点击啦!!!!', jobId, step)
       const param = {
@@ -37,7 +46,7 @@ export default {
         }
       })
     }
-    getlistData(
+    await getDetectionOrderListData(
       {pageNo: state.pageNo, pageSize: state.pageSize},
       {
         type: 9,
@@ -79,7 +88,7 @@ export default {
             checkButtonArr.push({id: tableData[i].jobId, type: 'primary', label: '查看检测报告', isShow: false})
           }
         }
-        checkButtonArr.forEach((c, index) => {
+        checkButtonArr.forEach((c) => {
           if (checkArr.length === 1) { // 如果小数组已经满了，创建一个新的  （两个为一组）
             checkArr = []
           }
@@ -120,7 +129,7 @@ export default {
     const starEdit = (that, row) => { // 编辑检测报告
       console.log(that, row)
     }
-    await getDetectionOrderEdutListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 3}).then(res => {
+    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 3}).then(res => {
       console.log('待编辑报告数据',res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -194,7 +203,7 @@ export default {
     const finshUpload = (that, row) => {
       console.log(that, row)
     }
-    await getDetectionImgUploadData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 2}).then(res => {
+    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 2}).then(res => {
       console.log('待上传照片', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -245,7 +254,7 @@ export default {
         commit(RECEIVE_IMG_UPLOAD_TABLEDATA, {tableData, pagination, longDatas, detectionImgUploadBtnArrList})// 提交一个mutation
       }
     }).catch(res => {
-      console.log('待上传照片', res)      
+      console.log('待上传照片', res)
     })
   },
   // 待检测工单
@@ -275,7 +284,7 @@ export default {
         }
       }
     }).catch(res => {
-      console.log('待检测工单', res)      
+      console.log('待检测工单', res)
     })
   },
   // 待审核报告
@@ -305,7 +314,7 @@ export default {
         }
       }
     }).catch(res => {
-      console.log('待检测工单', res)      
+      console.log('待检测工单', res)
     })
   },
   // 治疗单确认
@@ -362,6 +371,127 @@ export default {
       }
     }).catch(res => {
       console.log('待检测工单', res)
+    })
+  },
+ // 待复查工单
+  async getTreatOrderEditList({commit, state}) {
+    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 6}).then(res => {
+      console.log('待复查工单', res)
+      if (res.retcode === 1) {
+        const tableData = res.data.rows
+        const pagination = { // 分页数据
+          pageSize: res.data.pageSize,
+          pageNum: res.data.pageNo,
+          total: res.data.total
+        }
+        let longDatas = []
+        for (let i = 0; i < tableData.length; i++) {
+          tableData[i].checkTypeLaber = tableData[i].checkType === 1 ? '检测' : (tableData[i].checkType === 3 ? '治疗+检测' : '治疗') // 业务类型
+          tableData[i].inputTime = moment(tableData[i].inputTime).format('YYYY-MM-DD HH:MM')
+          longDatas.push({ // 车辆信息
+            jobId: tableData[i].jobId,
+            note: [
+              tableData[i].factoryName,
+              tableData[i].seriesName,
+              tableData[i].modelName
+            ]
+          })
+        }
+        commit(RECEIVE_TREAT_ORDER_TABLEDATA, {tableData, pagination, longDatas})
+      }
+    }).catch(res => {
+      console.log('待复查工单error', res)
+    })
+  },
+  // 复查照片上传
+  async getRecheckPicList ({commit, state}) {
+    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 7}).then(res => {
+      console.log('复查照片上传', res)
+      if (res.retcode === 1) {
+        const tableData = res.data.rows
+        const pagination = { // 分页数据
+          pageSize: res.data.pageSize,
+          pageNum: res.data.pageNo,
+          total: res.data.total
+        }
+        let longDatas = []
+        for (let i = 0; i < tableData.length; i++) {
+          tableData[i].checkTypeLaber = tableData[i].checkType === 1 ? '检测' : (tableData[i].checkType === 3 ? '治疗+检测' : '治疗') // 业务类型
+          tableData[i].inputTime = moment(tableData[i].inputTime).format('YYYY-MM-DD HH:MM')
+          tableData[i].explain = tableData[i].jobCode === 632 ? '照片不合格' : '正常'
+          longDatas.push({ // 车辆信息
+            jobId: tableData[i].jobId,
+            note: [
+              tableData[i].factoryName,
+              tableData[i].seriesName,
+              tableData[i].modelName
+            ]
+          })
+        }
+        commit(RECEIVE_RECHECKPIC_ORDER_TABLEDATA, {tableData, pagination, longDatas})
+      }
+    }).catch(error => {
+      console.log('复查照片上传error', error)
+    })
+  },
+  // 复查报告编辑
+  async getEditRecheckList ({commit, state}) {
+    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 8}).then(res => {
+      console.log('复查报告编辑', res)
+      if (res.retcode === 1) {
+        const tableData = res.data.rows
+        const pagination = { // 分页数据
+          pageSize: res.data.pageSize,
+          pageNum: res.data.pageNo,
+          total: res.data.total
+        }
+        let longDatas = []
+        for (let i = 0; i < tableData.length; i++) {
+          tableData[i].checkTypeLaber = tableData[i].checkType === 1 ? '检测' : (tableData[i].checkType === 3 ? '治疗+检测' : '治疗') // 业务类型
+          tableData[i].inputTime = moment(tableData[i].inputTime).format('YYYY-MM-DD HH:MM')
+          longDatas.push({ // 车辆信息
+            jobId: tableData[i].jobId,
+            note: [
+              tableData[i].factoryName,
+              tableData[i].seriesName,
+              tableData[i].modelName
+            ]
+          })
+        }
+        commit(RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA, {tableData, pagination, longDatas})
+      }
+    }).catch(error => {
+      console.log('复查照片上传error', error)
+    })
+  },
+  //复查报告待审
+  async getWaitVerifyReportList ({commit, state}) {
+    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 10}).then(res => {
+      console.log('复查报告待审', res)
+      if (res.retcode === 1) {
+        const tableData = res.data.rows
+        const pagination = { // 分页数据
+          pageSize: res.data.pageSize,
+          pageNum: res.data.pageNo,
+          total: res.data.total
+        }
+        let longDatas = []
+        for (let i = 0; i < tableData.length; i++) {
+          tableData[i].checkTypeLaber = tableData[i].checkType === 1 ? '检测' : (tableData[i].checkType === 3 ? '治疗+检测' : '治疗') // 业务类型
+          tableData[i].inputTime = moment(tableData[i].inputTime).format('YYYY-MM-DD HH:MM')
+          longDatas.push({ // 车辆信息
+            jobId: tableData[i].jobId,
+            note: [
+              tableData[i].factoryName,
+              tableData[i].seriesName,
+              tableData[i].modelName
+            ]
+          })
+        }
+        commit(RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA, {tableData, pagination, longDatas})
+      }
+    }).catch(error => {
+      console.log('复查照片上传error', error)
     })
   }
 }

@@ -27,6 +27,7 @@
 <script>
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
+import {frozenOrder} from '../../api'
 import {mapActions, mapState} from 'vuex'
 export default {
   components: {
@@ -54,7 +55,7 @@ export default {
           label: '操作',
           type: 'Button',
           btnList: [
-            {type: 'primary', label: '是否接受治疗', handle: (that, row) => this.startVerift(that, row)},
+            {type: 'primary', label: '是否接受治疗', handle: (that, row) => this.treatOrder(that, row)},
             {type: 'primary', label: '打印检测报告', handle: (that, row) => this.printReport(that, row)}
           ]
         },
@@ -77,28 +78,31 @@ export default {
   methods: {
     ...mapActions(['getEnsureOrderList']),
     //冻结
-    frozen(row) {
-      this.$confirm("此操作将冻结此工单, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+    frozen(that, row) {
+      console.log(that, row)
+      this.$confirm('此操作将冻结此工单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
-        net
-          .request("admin/abnormalOrder/frozenByUser", "post", {
-            jobId: row.jobId,
-            version: row.version
-          })
-          .then(res => {
-            if (res.retcode == 1) {
-              net.message(this, "操作成功", "success");
-              this.getlistData(
-                { pageNo: this.pageNo, pageSize: this.pageSize },
-                { carNumber: this.carPai, type: 5 }
-              );
-            }
-          });
-      });
+        console.log(that, row)
+        frozenOrder({jobId: row.jobId, version: row.version})
+                .then(res => {
+                  console.log(res)
+                }).catch(res => {
+          console.log(res)
+          this.getDetectionOrderList()
+        })
+      })
     },
+    // 打印检测报告
+    printReport (that, row) {
+      console.log(that, row)
+    },
+    // 是否接受治疗
+    treatOrder (that, row) {
+      console.log(that, row)
+    }
   }
 }
 </script>

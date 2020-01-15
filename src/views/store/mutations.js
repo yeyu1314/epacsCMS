@@ -7,7 +7,11 @@ import {
   RECEIVE_EDIT_ORDER_TABLEDATA,
   RECEIVE_DETECTION_ORDER_TABLEDATA,
   RECEIVE_DETECTION_VERIFY_TABLEDATA,
-  RECEIVE_ENSURE_ORDER_TABLEDATA
+  RECEIVE_ENSURE_ORDER_TABLEDATA,
+  RECEIVE_TREAT_ORDER_TABLEDATA,
+  RECEIVE_RECHECKPIC_ORDER_TABLEDATA,
+  RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA,
+  RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA
 } from './mutation_types'
 export default {
   [RECEIVE_TABLEDATA] (state, {tableData, pagination, longDatas, checkButtonList, detectionOrderBtnArrList}) { // 完成工单
@@ -50,5 +54,29 @@ export default {
     state.ensureOrderPagination = pagination
     state.ensureOrderLongDatas = longDatas
     state.ensureOrderBtnArrList = ensureBtnArrList
+  },
+
+  [RECEIVE_TREAT_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 待复查工单
+    state.treatTableData = tableData
+    state.treatPagination = pagination
+    state.treatLongData = longDatas
+  },
+
+  [RECEIVE_RECHECKPIC_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 复查照片上传
+    state.recheckPicTableData = tableData
+    state.recheckPicPagination = pagination
+    state.recheckPicLongData = longDatas
+  },
+
+  [RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 复查报告编辑
+    state.editTecheckTableData = tableData
+    state.editTecheckPagination = pagination
+    state.editTecheckLongData = longDatas
+  },
+
+  [RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 复查报告待审
+    state.waitVerifyReportTableData = tableData
+    state.waitVerifyReportPagination = pagination
+    state.waitVerifyReportLongData = longDatas
   }
 }
