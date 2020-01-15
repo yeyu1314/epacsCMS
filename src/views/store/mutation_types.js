@@ -12,3 +12,5 @@ export const RECEIVE_TREAT_ORDER_TABLEDATA = 'receive_treat_order_tabledata' // 
 export const RECEIVE_RECHECKPIC_ORDER_TABLEDATA = 'receive_recheckpic_order_tabledata' // 复查照片上传
 export const RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA = 'receive_edit_recheck_order_tabledata' // 复查报告编辑
 export const RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA = 'receive_wait_verify_report_order_tabledata' // 复查报告待审
+export const RECEIVE_FROZEN_ORDER_TABLEDATA = 'receive_frozen_order_tabledata' // 冻结工单
+export const RECEIVE_DISCARD_ORDER_TABLEDATA = 'receive_discard_order_tabledata' // 冻结工单

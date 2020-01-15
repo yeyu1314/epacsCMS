@@ -11,7 +11,9 @@ import {
   RECEIVE_TREAT_ORDER_TABLEDATA,
   RECEIVE_RECHECKPIC_ORDER_TABLEDATA,
   RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA,
-  RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA
+  RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA,
+  RECEIVE_FROZEN_ORDER_TABLEDATA,
+  RECEIVE_DISCARD_ORDER_TABLEDATA
 } from './mutation_types'
 export default {
   [RECEIVE_TABLEDATA] (state, {tableData, pagination, longDatas, checkButtonList, detectionOrderBtnArrList}) { // 完成工单
@@ -78,5 +80,18 @@ export default {
     state.waitVerifyReportTableData = tableData
     state.waitVerifyReportPagination = pagination
     state.waitVerifyReportLongData = longDatas
+  },
+
+  [RECEIVE_FROZEN_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 冻结工单列表
+    state.frozenTableData = tableData
+    state.frozenPagination = pagination
+    state.frozenLongData = longDatas
+  },
+
+  [RECEIVE_DISCARD_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 废弃工单列表
+    console.log(tableData, pagination, longDatas)
+    state.discardTableData = tableData
+    state.discardPagination = pagination
+    state.discardLongData = longDatas
   }
 }

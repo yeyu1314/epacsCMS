@@ -24,22 +24,20 @@ export default {
   },
   checkButtonList: [],
   detectionOrderBtnArrList: [],
-  // 待编辑报告
-  editDetectionTableData: [],
-  editDetectionLongData: [],
-  editDetectionPagination: {
-    pageSize: 10,
-    pageNum: 1,
-    total: 0
-  },
   redordCols: [ // 操作记录表头
     {label: '操作人', prop: 'userName'},
     {label: '操作内容', prop: 'remarks'},
     {label: '操作时间', prop: 'inputTime'}
   ],
   redordData: [], // 操作记录数据
-  // 完成工单列表
-  detectionOrderEditBtnArrList: [],
+  // 待检测工单
+  detectionOrderTableData: [],
+  detectionOrderLongDatas: [],
+  detectionOrderPagination: {
+    pageSize: 10,
+    pageNum: 1,
+    total: 0
+  },
   // 待上传照片
   imgUploadTableData: [],
   imgUploadLongDatas: [],
@@ -49,14 +47,15 @@ export default {
     total: 0
   },
   detectionImgUploadBtnArrList: [],
-  // 待检测工单
-  detectionOrderTableData: [],
-  detectionOrderLongDatas: [],
-  detectionOrderPagination: {
+  // 待编辑报告
+  editDetectionTableData: [],
+  editDetectionLongData: [],
+  editDetectionPagination: {
     pageSize: 10,
     pageNum: 1,
     total: 0
   },
+  detectionOrderEditBtnArrList: [],
   // 待审核报告
   verifyDetectionOrderTableData: [],
   verifyDetectionOrderLongDatas: [],
@@ -106,4 +105,22 @@ export default {
     total: 0
   },
   waitVerifyReportLongData: [],
+  // 完成工单列表
+
+  // 冻结工单列表
+  frozenTableData: [],
+  frozenPagination: {
+    pageSize: 10,
+    pageNum: 1,
+    total: 0
+  },
+  frozenLongData: [],
+  // 废弃工单列表
+  discardTableData: [],
+  discardPagination: {
+    pageSize: 10,
+    pageNum: 1,
+    total: 0
+  },
+  discardLongData: [],
 }

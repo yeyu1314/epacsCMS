@@ -1,4 +1,4 @@
-import {getCheckout, editDetectionOrder, getDetectionOrderListData} from '../../api'
+import {getCheckout, editDetectionOrder, getDetectionOrderListData, getFrozenOrder, getDiscardOrder} from '../../api'
 import {
   RECEIVE_IMG_UPLOAD_TABLEDATA,
   RECEIVE_TABLEDATA,
@@ -8,7 +8,10 @@ import {
   RECEIVE_ENSURE_ORDER_TABLEDATA,
   RECEIVE_TREAT_ORDER_TABLEDATA,
   RECEIVE_RECHECKPIC_ORDER_TABLEDATA,
-  RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA, RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA
+  RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA,
+  RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA,
+  RECEIVE_FROZEN_ORDER_TABLEDATA,
+  RECEIVE_DISCARD_ORDER_TABLEDATA
 } from "./mutation_types";
 import router from '../../router'
 import moment from 'moment'
@@ -461,7 +464,7 @@ export default {
         commit(RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA, {tableData, pagination, longDatas})
       }
     }).catch(error => {
-      console.log('复查照片上传error', error)
+      console.log('复查报告编辑error', error)
     })
   },
   //复查报告待审
@@ -491,7 +494,69 @@ export default {
         commit(RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA, {tableData, pagination, longDatas})
       }
     }).catch(error => {
-      console.log('复查照片上传error', error)
+      console.log('复查报告待审error', error)
+    })
+  },
+  // 冻结工单列表
+  async getFrozenList ({commit, state}) {
+    await getFrozenOrder({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 11}).then(res => {
+      console.log('冻结工单列表', res)
+      if (res.retcode === 1) {
+        const tableData = res.data.rows
+        const pagination = { // 分页数据
+          pageSize: res.data.pageSize,
+          pageNum: res.data.pageNo,
+          total: res.data.total
+        }
+        let longDatas = []
+        for (let i = 0; i < tableData.length; i++) {
+          tableData[i].checkTypeLaber = tableData[i].checkType === 1 ? '检测' : (tableData[i].checkType === 3 ? '治疗+检测' : '治疗') // 业务类型
+          tableData[i].inputTime = moment(tableData[i].inputTime).format('YYYY-MM-DD HH:MM')
+          tableData[i].frozenStatusLaber = tableData[i].frozenStatus==1?"系统冻结":tableData[i].frozenStatus==2?"人工冻结":"其他"
+          longDatas.push({ // 车辆信息
+            jobId: tableData[i].jobId,
+            note: [
+              tableData[i].factoryName,
+              tableData[i].seriesName,
+              tableData[i].modelName
+            ]
+          })
+        }
+        commit(RECEIVE_FROZEN_ORDER_TABLEDATA, {tableData, pagination, longDatas})
+      }
+    }).catch(error => {
+      console.log('冻结工单列表error', error)
+    })
+  },
+  // 废弃工单列表
+  async getDiscaedList ({commit, state}) {
+    await getDiscardOrder({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 12}).then(res => {
+      console.log('废弃工单列表', res)
+      if (res.retcode === 1) {
+        const tableData = res.data.rows
+        const pagination = { // 分页数据
+          pageSize: res.data.pageSize,
+          pageNum: res.data.pageNo,
+          total: res.data.total
+        }
+        let longDatas = []
+        for (let i = 0; i < tableData.length; i++) {
+          tableData[i].checkTypeLaber = tableData[i].checkType === 1 ? '检测' : (tableData[i].checkType === 3 ? '治疗+检测' : '治疗') // 业务类型
+          tableData[i].inputTime = moment(tableData[i].inputTime).format('YYYY-MM-DD HH:MM')
+          tableData[i].frozenStatusLaber = tableData[i].frozenStatus==1?"系统冻结":tableData[i].frozenStatus==2?"人工冻结":"其他"
+          longDatas.push({ // 车辆信息
+            jobId: tableData[i].jobId,
+            note: [
+              tableData[i].factoryName ? tableData[i].factoryName : '',
+              tableData[i].seriesName ? tableData[i].seriesName : '',
+              tableData[i].modelName ? tableData[i].modelName : ''
+            ]
+          })
+        }
+        commit(RECEIVE_DISCARD_ORDER_TABLEDATA, {tableData, pagination, longDatas})
+      }
+    }).catch(error => {
+      console.log('废弃工单列表error', error)
     })
   }
 }

@@ -25,4 +25,8 @@ export const editDetectionOrder = (params) => net.request('admin/order/startPrac
 // 获取 待检测工单 /待上传照片/ 待编辑报告 / 待审核报告 / 治疗单确认 / 待复查工单 / 完成工单列表
 export const getDetectionOrderListData = (param, data) => net.request('admin/order/queryListPage', 'post', param, data)
 
+export const getFrozenOrder = (params, data) => net.request('admin/abnormalOrder/frozenPage', 'post', params, data) // 冻结工单列表
+
+export const getDiscardOrder = (params, data) => net.request('admin/abnormalOrder/discardPage', 'post', params, data) // 废弃工单列表
+
 
