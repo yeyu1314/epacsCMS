@@ -30,6 +30,7 @@ export default {
     state.imgUploadPagination = pagination
     state.imgUploadLongDatas = longDatas
     state.detectionImgUploadBtnArrList = detectionImgUploadBtnArrList
+    state.searchData.carNumber = ''
   },
 
   [RECEIVE_EDIT_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas, detectionOrderEditBtnArrList}) { // 待编辑报告
@@ -37,18 +38,21 @@ export default {
     state.editDetectionPagination = pagination
     state.editDetectionLongData = longDatas
     state.detectionOrderEditBtnArrList = detectionOrderEditBtnArrList
+    state.searchData.carNumber = ''
   },
 
   [RECEIVE_DETECTION_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 待检测工单
     state.detectionOrderTableData = tableData
     state.detectionOrderPagination = pagination
     state.detectionOrderLongDatas = longDatas
+    state.searchData.carNumber = ''
   },
 
   [RECEIVE_DETECTION_VERIFY_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 待审核报告
     state.verifyDetectionOrderTableData = tableData
     state.verifyDetectionOrderPagination = pagination
     state.verifyDetectionOrderLongDatas = longDatas
+    state.searchData.carNumber = ''
   },
 
   [RECEIVE_ENSURE_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas, ensureBtnArrList}) { // 治疗单确认
@@ -56,30 +60,35 @@ export default {
     state.ensureOrderPagination = pagination
     state.ensureOrderLongDatas = longDatas
     state.ensureOrderBtnArrList = ensureBtnArrList
+    state.searchData.carNumber = ''
   },
 
   [RECEIVE_TREAT_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 待复查工单
     state.treatTableData = tableData
     state.treatPagination = pagination
     state.treatLongData = longDatas
+    state.searchData.carNumber = ''
   },
 
   [RECEIVE_RECHECKPIC_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 复查照片上传
     state.recheckPicTableData = tableData
     state.recheckPicPagination = pagination
     state.recheckPicLongData = longDatas
+    state.searchData.carNumber = ''
   },
 
   [RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 复查报告编辑
     state.editTecheckTableData = tableData
     state.editTecheckPagination = pagination
     state.editTecheckLongData = longDatas
+    state.searchData.carNumber = ''
   },
 
   [RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 复查报告待审
     state.waitVerifyReportTableData = tableData
     state.waitVerifyReportPagination = pagination
     state.waitVerifyReportLongData = longDatas
+    state.searchData.carNumber = ''
   },
 
   [RECEIVE_FROZEN_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 冻结工单列表

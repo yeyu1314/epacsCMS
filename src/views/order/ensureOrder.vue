@@ -41,7 +41,7 @@ export default {
         {type: 'Input', prop: 'carNumber', width: '180px', placeholder: '请输入车牌'}
       ],
       searchHandle: [ // 搜索按钮
-        {label: '查询', icon: 'el-icon-search', type: 'primary', handle: () => this.searchNews()}
+        {label: '查询', icon: 'el-icon-search', type: 'primary', handle: () => this.searchOrder()}
       ],
       tableCols: [// 表头
         {label: '车牌', prop: 'carNumber'},
@@ -102,6 +102,9 @@ export default {
     // 是否接受治疗
     treatOrder (that, row) {
       console.log(that, row)
+    },
+    searchOrder () { // 查询
+      this.getEnsureOrderList()
     }
   }
 }

@@ -20,6 +20,10 @@ export const getOperatingRecord = ({id}) => net.request('admin/order/queryOrderB
 
 export const frozenOrder = (params) => net.request('admin/abnormalOrder/frozenByUser', 'post', params) // 冻结工单
 
+export const recoverOrder = (params) => net.request('admin/abnormalOrder/renewByUser', 'post', params) // 恢复工单
+
+export const cancellationOrder = (params) => net.request('admin/abnormalOrder/discardByUser', 'post', params) // 作废工单
+
 export const editDetectionOrder = (params) => net.request('admin/order/startPractice', 'post', params) // 编辑报告
 
 // 获取 待检测工单 /待上传照片/ 待编辑报告 / 待审核报告 / 治疗单确认 / 待复查工单 / 完成工单列表

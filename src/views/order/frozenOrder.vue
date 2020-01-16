@@ -34,7 +34,7 @@
   import tableCom from '../../components/tableCompnment/tableForm'
   import searchCom from '../../components/tableCompnment/searchForm'
   import recordForm from '../../components/tableCompnment/recordForm'
-  import {getOperatingRecord} from '../../api'
+  import {getOperatingRecord, recoverOrder, cancellationOrder} from '../../api'
   import {mapActions, mapState} from 'vuex'
 export default {
   components: {
@@ -76,8 +76,9 @@ export default {
           label: '操作',
           type: 'Button',
           btnList: [
-            {type: 'primary', label: '恢复工单', handle: (that, row) => this.frozen(that, row)},
-            {type: 'danger', label: '作废工单', handle: (that, row) => this.frozen(that, row)}
+
+            {type: 'primary', label: '恢复工单', handle: (that, row) => this.recover(that, row)},
+            {type: 'danger', label: '作废工单', handle: (that, row) => this.cancellation(that, row)}
           ]
         }
       ],
@@ -94,7 +95,6 @@ export default {
     ...mapActions(['getFrozenList']),
     // 点击操作记录
     showRecord(that, row) {
-      // console.log(that, row)
       this.isShowRecord = true
       getOperatingRecord({ id: row.jobId })
         .then(res => {
@@ -108,6 +108,58 @@ export default {
     closeTip() { // 关闭弹窗
       this.isShowRecord = false
     },
+    // 恢复工单
+    recover(that, row){
+      this.$confirm('此操作将恢复此工单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        recoverOrder({jobId: row.jobId,version: row.version}).then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          });
+          this.getFrozenList()
+        }).catch(err => {
+          this.$message({
+            type: 'info',
+            message: err
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消恢复'
+        })
+      })
+    },
+    // 作废工单
+    cancellation (that, row) {
+      this.$confirm('此操作将作废此工单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        cancellationOrder({jobId: row.jobId,version: row.version}).then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          });
+          this.getFrozenList()
+        }).catch(err => {
+          this.$message({
+            type: 'info',
+            message: err
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消作废'
+        })
+      })
+    }
   }
 }
 </script>
