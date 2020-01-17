@@ -67,7 +67,7 @@
             </template>
             <!--一个单元格一个按钮         显示      -->
             <template v-if="item.type === 'Button'">
-              <p v-for="btnItem in item.btnList" :key="btnItem.label">
+              <div v-for="btnItem in item.btnList" :key="btnItem.label">
                 <el-button
                   :disabled="btnItem.disabled && btnItem.disabled(scope.row)"
                   :type="btnItem.type"
@@ -75,7 +75,7 @@
                   :icon="btnItem.icon"
                   @click="btnItem.handle(that,scope.row)">{{btnItem.label}}
                 </el-button>
-              </p>
+              </div>
             </template>
 
             <!--@click="btn.handle(scope.row,btn.jobID)"-->

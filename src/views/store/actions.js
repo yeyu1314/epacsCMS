@@ -11,7 +11,8 @@ import {
   RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA,
   RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA,
   RECEIVE_FROZEN_ORDER_TABLEDATA,
-  RECEIVE_DISCARD_ORDER_TABLEDATA
+  RECEIVE_DISCARD_ORDER_TABLEDATA,
+  RECEIVE_IMG_UPLOAD_D_TABLEDATA
 } from "./mutation_types";
 import router from '../../router'
 import moment from 'moment'
@@ -140,7 +141,9 @@ export default {
   // 待上传照片
   async getDetectionImgUploadList ({commit, state}) {
     const showEditTest = (that, row) => {
-      MessageBox('此操作将提交照片, 是否继续?', '提示', {
+      console.log(that, row)
+      commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {})// 提交一个mutation
+      /*MessageBox('此操作将提交照片, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -152,7 +155,7 @@ export default {
             data[i].btnList[1].isShow = true
           }
         }
-      })
+      })*/
     }
     const finshUpload = (that, row) => {
       console.log(that, row)

@@ -6,8 +6,6 @@ import net from "../assets/js/public";
 // export const getRemarkData = ({id}) => net.request("admin/order/queryProductInfoList","post",{id})
 
 
-export const getlistData = (param, data) => net.request('admin/order/queryListPage', 'post', param, data) // 获取完成工单列表
-
 export const getRemarkData = ({id}) => net.request('admin/order/queryProductInfoList', 'post', {id}) // 获取备注
 
 export const getCode = ({userPhone}) => net.request('admin/log/getSmsCode', 'post', {userPhone}) // 获取短信验证码
@@ -32,5 +30,7 @@ export const getDetectionOrderListData = (param, data) => net.request('admin/ord
 export const getFrozenOrder = (params, data) => net.request('admin/abnormalOrder/frozenPage', 'post', params, data) // 冻结工单列表
 
 export const getDiscardOrder = (params, data) => net.request('admin/abnormalOrder/discardPage', 'post', params, data) // 废弃工单列表
+
+export const getStartTesting = (params) => net.request('admin/order/startTesting', 'post', params) // 开始检测
 
 

@@ -47,6 +47,7 @@ export default {
     total: 0
   },
   detectionImgUploadBtnArrList: [],
+  onloadPicDialog: false,
   // 待编辑报告
   editDetectionTableData: [],
   editDetectionLongData: [],
