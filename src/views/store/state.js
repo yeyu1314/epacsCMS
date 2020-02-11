@@ -48,6 +48,8 @@ export default {
   },
   detectionImgUploadBtnArrList: [],
   onloadPicDialog: false,
+  onloadPicRow: '',
+  rowCarInfo: '',
   // 待编辑报告
   editDetectionTableData: [],
   editDetectionLongData: [],

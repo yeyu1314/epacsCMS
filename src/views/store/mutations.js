@@ -105,7 +105,9 @@ export default {
     state.discardLongData = longDatas
   },
 
-  [RECEIVE_IMG_UPLOAD_D_TABLEDATA] (state) {
+  [RECEIVE_IMG_UPLOAD_D_TABLEDATA] (state, {row, result}) {
     state.onloadPicDialog = true
+    state.onloadPicRow = row
+    state.rowCarInfo = result
   }
 }

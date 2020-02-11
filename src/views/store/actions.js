@@ -1,4 +1,5 @@
-import {getCheckout, editDetectionOrder, getDetectionOrderListData, getFrozenOrder, getDiscardOrder} from '../../api'
+import {getCheckout, editDetectionOrder, getDetectionOrderListData, getFrozenOrder, getDiscardOrder, getUploadImgBtnData,
+  getSelectData} from '../../api'
 import {
   RECEIVE_IMG_UPLOAD_TABLEDATA,
   RECEIVE_TABLEDATA,
@@ -138,24 +139,39 @@ export default {
       console.log('待检测工单', res)
     })
   },
-  // 待上传照片
+  // 待上传照片 
   async getDetectionImgUploadList ({commit, state}) {
-    const showEditTest = (that, row) => {
+    const showEditTest = (that, row) => { // 上传照片
       console.log(that, row)
-      commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {})// 提交一个mutation
-      /*MessageBox('此操作将提交照片, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        Message.success('操作成功', 'success')
-        const data = state.detectionImgUploadBtnArrList
-        for (let i = 0; i < data.length; i++) {
-          if (row.jobId === data[i].jobId) {
-            data[i].btnList[1].isShow = true
-          }
+      getUploadImgBtnData({carId: row.carId}).then(res => {
+        console.log(res)
+        if(res.retcode === 1){
+          const result = res.data
+          commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {row, result})// 提交一个mutation
         }
-      })*/
+      })
+      getSelectList(1, row.orgId)
+      getSelectList(2, row.orgId)
+      getSelectList(3, row.orgId)
+    }
+    const getSelectList = (index,orgId) => {
+      console.log(index,orgId)
+      let url;
+      if (index === 1) {
+        url = "admin/engineer/CZListByOrgId";
+      }
+      if (index === 2) {
+        url = "admin/engineer/JCListByOrgId";
+      }
+      if (index === 3) {
+        url = "admin/engineer/GDListByOrgId";
+      }
+      getSelectData(url,{orgId: orgId}).then(res => {
+        console.log(res)
+        // commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {res})// 提交一个mutation
+      }).catch(error => {
+        console.log(error)
+      })
     }
     const finshUpload = (that, row) => {
       console.log(that, row)
@@ -561,5 +577,8 @@ export default {
     }).catch(error => {
       console.log('废弃工单列表error', error)
     })
-  }
+  },
+
+  
+  
 }

@@ -33,4 +33,6 @@ export const getDiscardOrder = (params, data) => net.request('admin/abnormalOrde
 
 export const getStartTesting = (params) => net.request('admin/order/startTesting', 'post', params) // 开始检测
 
+export const getUploadImgBtnData = ({carId}) => net.request('admin/car/queryById', 'post', {carId}) // 获取 待上传照片 界面中 “上传检测照片” 按钮的该行的数据
 
+export const getSelectData = (url,{orgId}) => net.request(url, 'post', {orgId}) // 获取 拆装工程师  检测工程师   跟单员
