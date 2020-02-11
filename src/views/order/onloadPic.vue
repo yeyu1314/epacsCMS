@@ -229,9 +229,7 @@ export default {
       if (row.jobCode == 30 || row.jobCode == 31 || row.jobCode == 32) {
         param["jobCode"] = 31;
       }
-      if (
-        row.chaizhuang.length == 0 || row.jiance.length == 0 || row.gendan.length == 0
-      ) {
+      if (row.chaizhuang.length == 0 || row.jiance.length == 0 || row.gendan.length == 0) {
         let title = "";
         // if (row.chaizhuang.length == 0) {
         //   title += "拆装工程师 ";

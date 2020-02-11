@@ -91,7 +91,11 @@ export default {
     pageNum: 1,
     total: 0
   },
-  recheckLongData: [],
+  recheckPicLongData: [],
+  recheckImgUploadBtnArrList: [],
+  recheckonloadPicDialog: false,
+  recheckonloadPicRow: '',
+  recheckrowCarInfo: '',
   // 复查报告编辑
   editTecheckTableData: [],
   editTecheckPagination: {

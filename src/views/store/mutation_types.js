@@ -15,4 +15,5 @@ export const RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA = 'receive_wait_verify_r
 export const RECEIVE_FROZEN_ORDER_TABLEDATA = 'receive_frozen_order_tabledata' // 冻结工单
 export const RECEIVE_DISCARD_ORDER_TABLEDATA = 'receive_discard_order_tabledata' // 冻结工单
 
-export const RECEIVE_IMG_UPLOAD_D_TABLEDATA = 'receive_img_upload_d_tabledata'
+export const RECEIVE_IMG_UPLOAD_D_TABLEDATA = 'receive_img_upload_d_tabledata' // 待上传照片
+export const RECHECK_IMG_UPLOAD_D_TABLEDATA = 'recheck_img_upload_d_tabledata' // 复查照片上传

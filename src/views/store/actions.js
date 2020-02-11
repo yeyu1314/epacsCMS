@@ -13,7 +13,8 @@ import {
   RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA,
   RECEIVE_FROZEN_ORDER_TABLEDATA,
   RECEIVE_DISCARD_ORDER_TABLEDATA,
-  RECEIVE_IMG_UPLOAD_D_TABLEDATA
+  RECEIVE_IMG_UPLOAD_D_TABLEDATA,
+  RECHECK_IMG_UPLOAD_D_TABLEDATA
 } from "./mutation_types";
 import router from '../../router'
 import moment from 'moment'
@@ -427,6 +428,41 @@ export default {
   },
   // 复查照片上传
   async getRecheckPicList ({commit, state}) {
+    const showEditTest = (that, row) => { // 上传照片
+      console.log(that, row)
+      getUploadImgBtnData({carId: row.carId}).then(res => {
+        console.log(res)
+        if(res.retcode === 1){
+          const result = res.data
+          commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result})// 提交一个mutation
+        }
+      })
+      getSelectList(1, row.orgId)
+      getSelectList(2, row.orgId)
+      getSelectList(3, row.orgId)
+    }
+    const getSelectList = (index,orgId) => {
+      console.log(index,orgId)
+      let url;
+      if (index === 1) {
+        url = "admin/engineer/CZListByOrgId";
+      }
+      if (index === 2) {
+        url = "admin/engineer/JCListByOrgId";
+      }
+      if (index === 3) {
+        url = "admin/engineer/GDListByOrgId";
+      }
+      getSelectData(url,{orgId: orgId}).then(res => {
+        console.log(res)
+        // commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {res})// 提交一个mutation
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+    const finshUpload = (that, row) => {
+      console.log(that, row)
+    }
     await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 7,carNumber:state.searchData.carNumber}).then(res => {
       console.log('复查照片上传', res)
       if (res.retcode === 1) {
@@ -437,6 +473,9 @@ export default {
           total: res.data.total
         }
         let longDatas = []
+        let imgBtnArr = []
+        let minArr = []
+        let recheckImgUploadBtnArrList = []
         for (let i = 0; i < tableData.length; i++) {
           tableData[i].checkTypeLaber = tableData[i].checkType === 1 ? '检测' : (tableData[i].checkType === 3 ? '治疗+检测' : '治疗') // 业务类型
           tableData[i].inputTime = moment(tableData[i].inputTime).format('YYYY-MM-DD HH:MM')
@@ -449,8 +488,32 @@ export default {
               tableData[i].modelName
             ]
           })
+          if (tableData[i].jobCode === 600) {
+            imgBtnArr.push(
+              {type: 'primary', label: '上传照片', isShow: true, handle: (that, row) => { showEditTest(that, row) }},
+              {type: 'success', label: '完成', isShow: false}
+            )
+          } if (tableData[i].jobCode === 630 || tableData[i].jobCode === 631 || tableData[i].jobCode === 632) {
+            imgBtnArr.push(
+              {type: 'primary', label: '上传照片', isShow: true, handle: (that, row) => { showEditTest(that, row) }},
+              {type: 'success', label: '完成上传', isShow: true, handle: (that, row) => { finshUpload(that, row) }}
+            )
+          }
         }
-        commit(RECEIVE_RECHECKPIC_ORDER_TABLEDATA, {tableData, pagination, longDatas})
+        imgBtnArr.forEach((c, index) => {
+          if (minArr.length === 2) {
+            minArr = []
+          }
+          if (minArr.length === 0) {
+            recheckImgUploadBtnArrList.push({
+              jobId: tableData[index / 2].jobId,
+              btnList: minArr
+            })
+          }
+          minArr.push(c) // 将当前分类保存到小数组中
+        })
+        console.log(longDatas)
+        commit(RECEIVE_RECHECKPIC_ORDER_TABLEDATA, {tableData, pagination, longDatas, recheckImgUploadBtnArrList})
       }
     }).catch(error => {
       console.log('复查照片上传error', error)

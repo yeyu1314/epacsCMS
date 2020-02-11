@@ -36,3 +36,7 @@ export const getStartTesting = (params) => net.request('admin/order/startTesting
 export const getUploadImgBtnData = ({carId}) => net.request('admin/car/queryById', 'post', {carId}) // 获取 待上传照片 界面中 “上传检测照片” 按钮的该行的数据
 
 export const getSelectData = (url,{orgId}) => net.request(url, 'post', {orgId}) // 获取 拆装工程师  检测工程师   跟单员
+
+export const getProductData = () => net.request('admin/order/queryProductInfoList', 'post', ) // 获取产品信息
+
+export const getSearchProductData = ({jobId}) => net.request('admin/order/queryProductInfoList', 'post', jobId) // 查询产品用量

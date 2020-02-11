@@ -14,7 +14,8 @@ import {
   RECEIVE_WAIT_VERIFY_REPORT_ORDER_TABLEDATA,
   RECEIVE_FROZEN_ORDER_TABLEDATA,
   RECEIVE_DISCARD_ORDER_TABLEDATA,
-  RECEIVE_IMG_UPLOAD_D_TABLEDATA
+  RECEIVE_IMG_UPLOAD_D_TABLEDATA,
+  RECHECK_IMG_UPLOAD_D_TABLEDATA
 } from './mutation_types'
 export default {
   [RECEIVE_TABLEDATA] (state, {tableData, pagination, longDatas, checkButtonList, detectionOrderBtnArrList}) { // 完成工单
@@ -71,11 +72,12 @@ export default {
     state.searchData.carNumber = ''
   },
 
-  [RECEIVE_RECHECKPIC_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 复查照片上传
+  [RECEIVE_RECHECKPIC_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas, recheckImgUploadBtnArrList}) { // 复查照片上传
     state.recheckPicTableData = tableData
     state.recheckPicPagination = pagination
     state.recheckPicLongData = longDatas
     state.searchData.carNumber = ''
+    state.recheckImgUploadBtnArrList = recheckImgUploadBtnArrList
   },
 
   [RECEIVE_EDIT_RECHECK_ORDER_TABLEDATA] (state, {tableData, pagination, longDatas}) { // 复查报告编辑
@@ -109,5 +111,12 @@ export default {
     state.onloadPicDialog = true
     state.onloadPicRow = row
     state.rowCarInfo = result
-  }
+  },
+
+  [RECHECK_IMG_UPLOAD_D_TABLEDATA] (state, {row, result}) {
+    console.log(row,result)
+    state.recheckonloadPicDialog = true
+    state.recheckonloadPicRow = row
+    state.recheckrowCarInfo = result
+  },
 }
