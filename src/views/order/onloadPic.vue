@@ -80,7 +80,7 @@
                 :action="uploadUrl"
                 list-type="picture-card"
                 :data="{carNumber:onloadPicRow.carNumber,step:1,option:-1}"
-                :on-success="uploadSuccess"
+                :on-success="uploadSuccess.bind(this,-1,carPhotoId)"
                 :on-preview="handlePictureCardPreview"
                 :on-change="change.bind(this,-1)"
                 :on-remove="remove.bind(this,-1,carPhotoId,onloadPicRow.jobId,onloadPicRow.version)"
@@ -97,10 +97,10 @@
                 :action="uploadUrl"
                 list-type="picture-card"
                 :data="{carNumber:onloadPicRow.carNumber,step:1,option:-11}"
-                :on-success="uploadSuccess"
+                :on-success="uploadSuccess.bind(this,-11,framePhotoId)"
                 :on-preview="handlePictureCardPreview"
-                :on-change="change.bind(this,-1)"
-                :on-remove="remove.bind(this,-1)"
+                :on-change="change.bind(this,-11)"
+                :on-remove="remove.bind(this,-11,framePhotoId,onloadPicRow.jobId,onloadPicRow.version)"
                 :file-list="fileList"
               >
                 <i class="el-icon-plus"></i>
@@ -128,10 +128,14 @@
         </div>
       </div>
     </el-dialog>
+    <el-dialog :visible="dialogVisible1" @close='close1'>
+      <img width="100%" :src="dialogImageUrl" alt />
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import net from "../../assets/js/public"
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
 import {frozenOrder} from '../../api'
@@ -168,9 +172,13 @@ export default {
       jiance: '',
       gendan: '',
       imageUrl: '',
-      uploadUrl: '',
+      uploadUrl: net.imageHP + "import/upload",
       fileList: [],
       carPhotoId: undefined,
+      framePhotoId: undefined,
+      dialogVisible1: false,
+      dialogImageUrl: '',
+      photoList: [],
     }
   },
   created () {
@@ -210,7 +218,7 @@ export default {
         })
       })
     },
-
+    // 确认上传
     uploadImgs () {
       console.log('确定上传')
       console.log(this.$store.state.detectionImgUploadBtnArrList)
@@ -223,6 +231,7 @@ export default {
         jianCe: row.jiance || 0,
         genDan: row.gendan || 0
       };
+      console.log(row,param)
       if (row.jobCode == 20 && row.photoId == undefined) {
         param["jobCode"] = 30;
       }
@@ -275,24 +284,55 @@ export default {
     close () { // 关闭弹窗
       this.$store.state.onloadPicDialog = false
     },
+    close1 () { //关闭放大图片
+      this.dialogVisible1 = false
+    },
     closeDialog () {
       // this.$store.state.onloadPicDialog = false
       console.log('关闭')
     },
-    uploadSuccess(){
-      console.log('aaa')
+    // 上传图片成功
+    uploadSuccess(optionId, photoId, response, file, fileList){
+      if (response.retcode != 1) {
+        net.message(this, response.retmsg, "error");
+        return false;
+      }
+      this.photoList.push({ optionId: optionId, photoId: response.data });
+      // this.optionId = optionId;
+      if (optionId == -1) {
+        this.carPhotoId = response.data;
+      } else if (optionId == -11) {
+        this.framePhotoId = response.data;
+      } else {
+        const data = this.rowCarInfo
+        for (let i = 0; i < data.list.length; i++) {
+          const element = data.list[i];
+          if (optionId == element.optionId) {
+            data.list[i].photoId = response.data;
+            this.$store.state.rowCarInfo.list.splice(i, 1, element);
+          }
+        }
+        console.log(this.rowCarInfo);
+        console.log(this.$store.state.rowCarInfo);
+      }
     },
-    handlePictureCardPreview(){
-
+    //监听改变
+    change(idx, file, fileList) {
+      if (fileList.length > 1) {
+        fileList.splice(0, 1);
+      }
     },
-    change(){
-
-    },
-    remove() {
-
+    // 移除图片的回调
+    remove(optionID, photoID, jobID, version1) {
+      console.log(optionID, photoID, jobID, version1)
     },
     handleExceed() {
-
+      net.message(this, "同时上传限制一个图，请先删除前面上传的图片", "error")
+    },
+    //点击显示放大
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible1 = true;
     }
   }
 }

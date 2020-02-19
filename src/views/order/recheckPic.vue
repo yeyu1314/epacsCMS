@@ -88,27 +88,10 @@
                   :action="uploadUrl"
                   list-type="picture-card"
                   :data="{carNumber:recheckonloadPicRow.carNumber,step:1,option:-1}"
-                  :on-success="uploadSuccess"
+                  :on-success="uploadSuccess.bind(this,-2,recheckrowCarInfo.carPhotoId)"
                   :on-preview="handlePictureCardPreview"
                   :on-change="change.bind(this,-1)"
                   :on-remove="remove.bind(this,-1,carPhotoId,recheckonloadPicRow.jobId,recheckonloadPicRow.version)"
-                  :file-list="fileList"
-                >
-                  <i class="el-icon-plus"></i>
-                </el-upload>
-              </div>
-            </div>
-            <div class="perform">
-              <div class="left">车架号</div>
-              <div class="right">
-                <el-upload
-                  :action="uploadUrl"
-                  list-type="picture-card"
-                  :data="{carNumber:recheckrowCarInfo.carNumber,step:1,option:-11}"
-                  :on-success="uploadSuccess"
-                  :on-preview="handlePictureCardPreview"
-                  :on-change="change.bind(this,-1)"
-                  :on-remove="remove.bind(this,-1)"
                   :file-list="fileList"
                 >
                   <i class="el-icon-plus"></i>
@@ -149,10 +132,11 @@
                   >
                     <el-checkbox
                       style="margin-left: 20px;text-align: left;height: 42px;line-height: 42px;    margin-bottom: 1px;"
-                      v-for="(item,index) in productArr"
+                      v-for="(item,index) in productItem"
                       :key="index"
                       :label="item.id"
-                    >{{item.productName}}</el-checkbox>
+                    >{{item.productName}}
+                    </el-checkbox>
                   </el-checkbox-group>
                 </div>
                 <div>
@@ -161,7 +145,7 @@
                       class="inputNumber"
                       :data-id="item.id"
                       style="margin-top: 6px;margin-bottom:5px;"
-                      v-for="(item,index) in productArr"
+                      v-for="(item,index) in productItem"
                       :key="index"
                       :min="0"
                       v-model="dataModel[index].value1"
@@ -173,25 +157,22 @@
                   </el-checkbox-group>
                 </div>
               </div>
-              <!-- <div style="text-align: left;margin: 20px 0 0 23px;">
-              <el-button type="success" size="small" @click="subUse">提交用量</el-button>
-              </div>-->
             </div>
           </div>
       </div>
     </el-dialog>
-
-    <!-- <el-dialog :visible="recheckonloadPicDialog">
-      {{recheckonloadPicRow}}---------------
-      {{recheckrowCarInfo}}
-    </el-dialog> -->
+    <el-dialog :visible="dialogVisible1">
+      <img width="100%" :src="dialogImageUrl" alt />
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import $ from "jquery"
+import net from "../../assets/js/public"
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
-import {frozenOrder} from '../../api'
+import {frozenOrder, saveProductData} from '../../api'
 import {mapActions, mapState} from 'vuex'
 export default {
   components: {
@@ -246,6 +227,9 @@ export default {
       carPhotoId: undefined,
       productArr: [],
       checkProList: [],
+      uploadUrl: net.imageHP + "import/upload",
+      dialogVisible1: false, //图片放大显示控制
+      dialogImageUrl: "",
     }
   },
   created() {
@@ -253,7 +237,7 @@ export default {
   },
   computed: {
     ...mapState(['recheckPicTableData', 'recheckPicLongData', 'recheckPicPagination', 'pageNo', 'pageSize', 'searchData', 
-    'recheckImgUploadBtnArrList', 'recheckonloadPicRow', 'recheckonloadPicDialog', 'recheckrowCarInfo'])// 读数据
+    'recheckImgUploadBtnArrList', 'recheckonloadPicRow', 'recheckonloadPicDialog', 'recheckrowCarInfo', 'productItem', 'dataModel'])// 读数据
   },
   methods: {
     ...mapActions(['getRecheckPicList']),
@@ -322,12 +306,6 @@ export default {
       // this.$store.state.onloadPicDialog = false
       console.log('关闭')
     },
-    uploadSuccess(){
-      console.log('aaa')
-    },
-    handlePictureCardPreview(){
-
-    },
     change(){
 
     },
@@ -337,9 +315,106 @@ export default {
     handleExceed() {
 
     },
-    addProductNumber () {
+    // 保存产品用量
+    addProductNumber() {
+      var params = {
+        version: this.recheckonloadPicRow.version,
+        jobId: this.recheckonloadPicRow.jobId
+      };
+      console.log(params)
+      var data = this.getProArgs();
+      console.log(data)
+      saveProductData(params, data).then(res => {
+        if (res.retcode == 1) {
+          // net.message(this, res.retmsg, "success");
+          this.$message({
+          message: res.retmsg,
+          type: 'success'
+        });
+          this.$store.state.recheckonloadPicRow.version = res.data;
+        } else {
+          net.message(this, res.retmsg, "error");
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    //获取产品用量参数对象
+    getProArgs() {
+      console.log('sss')
+      var list = [];
+      var _this = this;
+      $(".inputNumber").each(function() {
+        var productId = $(this).data("id");
+        var number = $(this)
+          .children(".el-input--small")
+          .children("input")
+          .val();
+        var obj;
+        var flag = _this.checkProList.indexOf(productId);
+        if (flag == -1) {
+          obj = {
+            productId: productId,
+            number: 0
+          };
+        } else {
+          obj = {
+            productId: productId,
+            number: number
+          };
+        }
+        list.push(obj);
+      });
+      return list;
+    },
+    // 监听输入的产品用量
+    handleChange(id, val) {
+      // this.checkProList.push(id)
+      if (val > 0) {
+        var s = this.checkProList.indexOf(id);
+        if (s == -1) {
+          this.checkProList.push(id);
+        }
+      }
+      if (val == 0) {
+        var s1 = this.checkProList.indexOf(id);
+        if (s1 != -1) {
+          this.checkProList.splice(s1, 1);
+        }
+      }
+    },
+    //图片上次成功回调
+    uploadSuccess(optionId, photoId, response, file, fileList) {
+      console.log(optionId, photoId, response, file, fileList);
+      // if (response.retcode != 1) {
+      //   net.message(this, response.retmsg, "error");
+      //   return false;
+      // }
+      // console.log(this.photoList);
+      // this.photoList.push({ optionId: optionId, photoId: response.data });
+      // this.optionId = optionId;
+      // if (optionId == -1) {
+      //   this.carPhotoId = response.data;
+      // } else if (optionId == -11) {
+      //   this.framePhotoId = response.data;
+      // } else {
+      //   for (let i = 0; i < this.placeData.length; i++) {
+      //     const element = this.placeData[i];
+      //     if (optionId == element.optionId) {
+      //       element.photoId = response.data;
+      //       this.placeData.splice(i, 1, element);
+      //     }
+      //   }
+      //   console.log(this.placeData);
+      // }
 
-    }
+      // this.ctroOnloadBtn();
+    },
+    //点击显示放大
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible1 = true;
+    },
   }
 }
 </script>

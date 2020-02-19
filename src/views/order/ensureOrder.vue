@@ -21,13 +21,64 @@
       :newBtnList='ensureOrderBtnArrList'
     >
     </table-com>
+    <el-dialog title="温馨提示" :visible="dialogVisible" width="40%" @close='close'>
+      <span>当前订单检测已完成，车主是否接受治疗？</span>
+      <br />
+      <br />
+      <div class="selectType" style="text-align:left;margin-left:10%">
+        <p>治疗项目</p>
+        <br />
+        <el-checkbox-group v-model="step2Type2OptionList" @change="handleStep2Type2OptionList">
+          <el-checkbox :label="0">动力康复</el-checkbox>
+          <el-checkbox :label="1">缸内修复</el-checkbox>
+          <el-checkbox :label="2">烧机油治理</el-checkbox>
+        </el-checkbox-group>
+      </div>
+      <br />
+      <div style="text-align:left;margin-left:10%">
+        <span style="color:#f40">注意:</span>
+        <br />
+        <span
+          style="color:#f40"
+        >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;治疗项目已经调整,请注意根据实际情况进行选择</span>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel" style="color:red">*不治疗*</el-button>
+        <el-button type="primary" @click="ensure">接受治疗</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="预览文件"
+      :visible="viewPdf20"
+      :before-close="handleClose"
+      :fullscreen="true"
+    >
+      <iframe :src=url20 frameborder="0" style="width: 100vw; height: 80vh"></iframe>
+    </el-dialog>
+    <el-dialog
+      title="预览文件"
+      :visible="viewPdf30"
+      :before-close="handleClose"
+      :fullscreen="true"
+    >
+      <iframe :src=url30 frameborder="0" style="width: 100%; height: 80vh"></iframe>
+    </el-dialog>
+    <el-dialog
+      title="预览文件"
+      :visible="viewPdf31"
+      :before-close="handleClose"
+      :fullscreen="true"
+    >
+      <iframe :src=url31 frameborder="0" style="width: 100%; height: 80vh"></iframe>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import net from "../../assets/js/public"
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
-import {frozenOrder} from '../../api'
+import {frozenOrder, startEnsureOrder, stopEnsureOrder} from '../../api'
 import {mapActions, mapState} from 'vuex'
 export default {
   components: {
@@ -67,13 +118,22 @@ export default {
           ]
         }
       ],
+      treatOrderRow: '',
+      dialogVisible: false,
+      step2Type2OptionList: [0],
+      url30 : 'http://autoepacs.com/30.pdf',
+      url31 : 'http://autoepacs.com/31.pdf',
+      url20 : 'http://autoepacs.com/20.pdf',
+      isViewPdf30: false,
+      isViewPdf31: false
     };
   },
   created () {
     this.getEnsureOrderList()
   },
   computed: {
-    ...mapState(['ensureOrderTableData', 'ensureOrderLongDatas', 'ensureOrderPagination', 'pageNo', 'pageSize', 'searchData', 'ensureOrderBtnArrList'])// 读数据
+    ...mapState(['ensureOrderTableData', 'ensureOrderLongDatas', 'ensureOrderPagination', 'pageNo', 'pageSize', 'searchData', 'ensureOrderBtnArrList',
+    'viewPdf20', 'viewPdf30', 'viewPdf31'])// 读数据
   },
   methods: {
     ...mapActions(['getEnsureOrderList']),
@@ -86,25 +146,91 @@ export default {
         type: 'warning'
       }).then(() => {
         console.log(that, row)
-        frozenOrder({jobId: row.jobId, version: row.version})
-                .then(res => {
-                  console.log(res)
-                }).catch(res => {
+        frozenOrder({jobId: row.jobId, version: row.version}).then(res => {
+          if (res.retcode == 1) {
+            console.log(res)
+            net.message(this, "操作成功", "success");
+            this.getEnsureOrderList()
+          }
+        }).catch(res => {
           console.log(res)
-          this.getDetectionOrderList()
         })
       })
     },
-    // 打印检测报告
-    printReport (that, row) {
-      console.log(that, row)
+    treatOrder (that, row) {// 是否接受治疗
+      this.dialogVisible = true
+      this.treatOrderRow = row
     },
-    // 是否接受治疗
-    treatOrder (that, row) {
-      console.log(that, row)
+    handleStep2Type2OptionList(value) { // 选择治疗项目
+      if (value.indexOf(0) == -1) {
+        net.message(this, "治疗项目必须包含动力康复", "warning");
+        value.push(0);
+      }
+    },
+    ensure(){ // 接受治疗
+      const params = {
+        jobId: this.treatOrderRow.jobId,
+        orgId: this.treatOrderRow.orgId,
+        version: this.treatOrderRow.version,
+        step2Type2OptionList: this.step2Type2OptionList.join(",")
+      }
+      startEnsureOrder(params).then(res => {
+        if (res.retcode == 1) {
+            net.message(this, res.retmsg, "success");
+            var skip = net.isJump("/treatOrder");
+            if (skip) {
+              this.$router.push({ path: "/treatOrder" });
+            } else {
+              this.getlistData(
+                { pageNo: this.pageNo, pageSize: this.pageSize },
+                { carNumber: this.carPai, type: 5 }
+              );
+            }
+          } else {
+            net.message(this, res.retmsg, "warning");
+          }
+      })
+    },
+    cancel(){ // 不治疗
+      const params = {
+        jobId: this.treatOrderRow.jobId,
+        version: this.treatOrderRow.version,
+      }
+      stopEnsureOrder(params).then(res => {
+        if (res.retcode == 1) {
+          net.message(this, res.retmsg, "success");
+          this.$router.push({ path: "/completeOrder" });
+        } else {
+          net.message(this, res.retmsg, "warning");
+        }
+      })
     },
     searchOrder () { // 查询
       this.getEnsureOrderList()
+    },
+    close(){ // 关闭选择治疗弹窗
+      this.dialogVisible = false
+      this.step2Type2OptionList = [0]
+    },
+    printReport(that, row) { // 打印检测报告
+      console.log(this.ensureOrderPagination,row)
+      this.$router.push({
+        name: "InitSurvey",
+        params: {
+          operId: 2,
+          row: row,
+          pageNo: this.ensureOrderPagination.pageNum,
+          pageSize: this.ensureOrderPagination.pageSize,
+          carNumber: row.carNumber,
+          enter: false,
+          print: true
+        }
+      });
+    },
+    handleClose() { //关闭 报告解读 弹窗
+      this.$store.state.viewPdf20 = false
+      this.$store.state.viewPdf30 = false
+      this.$store.state.viewPdf31 = false
     }
   }
 }

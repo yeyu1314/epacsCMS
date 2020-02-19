@@ -1,5 +1,5 @@
 import {getCheckout, editDetectionOrder, getDetectionOrderListData, getFrozenOrder, getDiscardOrder, getUploadImgBtnData,
-  getSelectData} from '../../api'
+  getSelectData, getProductData, getSearchProductData} from '../../api'
 import {
   RECEIVE_IMG_UPLOAD_TABLEDATA,
   RECEIVE_TABLEDATA,
@@ -14,7 +14,9 @@ import {
   RECEIVE_FROZEN_ORDER_TABLEDATA,
   RECEIVE_DISCARD_ORDER_TABLEDATA,
   RECEIVE_IMG_UPLOAD_D_TABLEDATA,
-  RECHECK_IMG_UPLOAD_D_TABLEDATA
+  RECHECK_IMG_UPLOAD_D_TABLEDATA,
+  RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA,
+  RECEIVE_ENSURE_ORDER_DIA_TABLEDATA
 } from "./mutation_types";
 import router from '../../router'
 import moment from 'moment'
@@ -342,6 +344,18 @@ export default {
   },
   // 治疗单确认
   async getEnsureOrderList ({commit, state}) {
+    const isViewPdf20 = () => {
+      const viewPdf20 = true
+      commit(RECEIVE_ENSURE_ORDER_DIA_TABLEDATA, {viewPdf20})
+    }
+    const isViewPdf30 = () => {
+      const viewPdf30 = true
+      commit(RECEIVE_ENSURE_ORDER_DIA_TABLEDATA, {viewPdf30})
+    }
+    const isViewPdf31 = () => {
+      const viewPdf31 = true
+      commit(RECEIVE_ENSURE_ORDER_DIA_TABLEDATA, {viewPdf31})
+    }
     await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 5,carNumber:state.searchData.carNumber}).then(res => {
       console.log('治疗单确认', res)
       if (res.retcode === 1) {
@@ -368,13 +382,13 @@ export default {
           })
           if (tableData[i].avgValue === 3) {
             btnArr.push(
-              {type: 'success', label: '报告解读', isShow: true, handle: (that, row) => { showEditTest(that, row) }},
-              {type: 'warning', label: '车主答疑', isShow: true, handle: (that, row) => { starEdit(that, row) }}
+              {type: 'success', label: '报告解读', isShow: true, handle: (that, row) => { isViewPdf30(that, row) }},
+              {type: 'warning', label: '车主答疑', isShow: true, handle: (that, row) => { isViewPdf31(that, row) }}
             )
           } if (tableData[i].avgValue === 2) {
             btnArr.push(
-              {type: 'success', label: '报告解读', isShow: true, handle: (that, row) => { showEditTest(that, row) }},
-              {type: 'warning', label: '车主答疑', isShow: false, handle: (that, row) => { starEdit(that, row) }}
+              {type: 'success', label: '报告解读', isShow: true, handle: (that, row) => { isViewPdf20(that, row) }},
+              {type: 'warning', label: '车主答疑', isShow: false}
             )
           }
         }
@@ -429,9 +443,9 @@ export default {
   // 复查照片上传
   async getRecheckPicList ({commit, state}) {
     const showEditTest = (that, row) => { // 上传照片
-      console.log(that, row)
+      console.log('that',that, '该行row', row)
       getUploadImgBtnData({carId: row.carId}).then(res => {
-        console.log(res)
+        console.log('该行的图片信息',res)
         if(res.retcode === 1){
           const result = res.data
           commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result})// 提交一个mutation
@@ -440,9 +454,11 @@ export default {
       getSelectList(1, row.orgId)
       getSelectList(2, row.orgId)
       getSelectList(3, row.orgId)
+      getSelectList(4, row.orgId)
+      // getProductInfo()
+      searchProUse(row.jobId)
     }
-    const getSelectList = (index,orgId) => {
-      console.log(index,orgId)
+    const getSelectList = (index,orgId) => { // 获取诊断工程师 等 的下拉框的值
       let url;
       if (index === 1) {
         url = "admin/engineer/CZListByOrgId";
@@ -453,13 +469,78 @@ export default {
       if (index === 3) {
         url = "admin/engineer/GDListByOrgId";
       }
+      if (index === 4) {
+        url = "admin/engineer/ZLListByOrgId";
+      }
       getSelectData(url,{orgId: orgId}).then(res => {
-        console.log(res)
         // commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {res})// 提交一个mutation
       }).catch(error => {
         console.log(error)
       })
     }
+    // 获取产品信息
+    // const getProductInfo = () => {
+    //   getProductData().then(res => {
+    //     let dataModel = []
+    //     console.log('产品用量',res)
+    //     if(res.retcode == 1) {
+    //       const productItem = res.data
+    //       for(let i = 0; i < productItem.length; i++){
+    //         dataModel.push({
+    //           value1: "",
+    //           id: productItem[i].id
+    //         })
+    //       }
+    //       console.log(dataModel)
+    //       commit(RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA, {productItem, dataModel})
+    //     }
+    //   }).catch(error => {
+    //     console.log(error)
+    //   })
+    // }
+    const searchProUse = (jobId) => {
+
+      let dataModel = []
+      getProductData().then(res => {
+        console.log('产品用量',res)
+        if(res.retcode == 1) {
+          const productItem = res.data
+          for(let i = 0; i < productItem.length; i++){
+            dataModel.push({
+              value1: "",
+              id: productItem[i].id
+            })
+          }
+          console.log(dataModel)
+          commit(RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA, {productItem, dataModel})
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+      getSearchProductData({jobId: jobId}).then(res => {
+        console.log('查询',res)
+        if (res.retcode === 1) {
+          const productItem = res.data.rows;
+          console.log(productItem)
+          for (let i = 0; i < productItem.length; i++) {
+            if (productItem[i].number != 0) {
+              // this.checkProList.push(data[i].productId);
+              console.log(dataModel)
+              for (let j = 0; j < dataModel.length; j++) {
+                if (dataModel[j].id == productItem[i].productId) {
+                  dataModel[j]["value1"] = productItem[i].number;
+                }
+              }
+              console.log(dataModel)
+            }
+          }
+          // commit(RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA, {productItem, dataModel})
+        } else {
+          net.message(this, res.retmsg, "error");
+        }
+      })
+    }
+    
     const finshUpload = (that, row) => {
       console.log(that, row)
     }
@@ -512,7 +593,6 @@ export default {
           }
           minArr.push(c) // 将当前分类保存到小数组中
         })
-        console.log(longDatas)
         commit(RECEIVE_RECHECKPIC_ORDER_TABLEDATA, {tableData, pagination, longDatas, recheckImgUploadBtnArrList})
       }
     }).catch(error => {

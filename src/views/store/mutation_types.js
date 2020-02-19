@@ -17,3 +17,7 @@ export const RECEIVE_DISCARD_ORDER_TABLEDATA = 'receive_discard_order_tabledata'
 
 export const RECEIVE_IMG_UPLOAD_D_TABLEDATA = 'receive_img_upload_d_tabledata' // 待上传照片
 export const RECHECK_IMG_UPLOAD_D_TABLEDATA = 'recheck_img_upload_d_tabledata' // 复查照片上传
+export const RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA = 'receive_recheckpic_order_p_tabledata' // 复查照片上传中 产品用量
+
+export const RECEIVE_ENSURE_ORDER_DIA_TABLEDATA = 'receive_ensure_order_dis_tabledata' // 治疗单确认的报告解读弹窗
+

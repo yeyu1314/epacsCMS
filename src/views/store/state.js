@@ -76,6 +76,9 @@ export default {
     total: 0
   },
   ensureOrderBtnArrList: [],
+  viewPdf20: false,
+  viewPdf30: false,
+  viewPdf31: false,
   // 待复查工单
   treatTableData: [],
   treatPagination: {
@@ -96,6 +99,8 @@ export default {
   recheckonloadPicDialog: false,
   recheckonloadPicRow: '',
   recheckrowCarInfo: '',
+  productItem: [],
+  dataModel: [], //暂存计步器双休绑定
   // 复查报告编辑
   editTecheckTableData: [],
   editTecheckPagination: {

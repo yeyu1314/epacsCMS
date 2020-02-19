@@ -15,7 +15,9 @@ import {
   RECEIVE_FROZEN_ORDER_TABLEDATA,
   RECEIVE_DISCARD_ORDER_TABLEDATA,
   RECEIVE_IMG_UPLOAD_D_TABLEDATA,
-  RECHECK_IMG_UPLOAD_D_TABLEDATA
+  RECHECK_IMG_UPLOAD_D_TABLEDATA,
+  RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA,
+  RECEIVE_ENSURE_ORDER_DIA_TABLEDATA
 } from './mutation_types'
 export default {
   [RECEIVE_TABLEDATA] (state, {tableData, pagination, longDatas, checkButtonList, detectionOrderBtnArrList}) { // 完成工单
@@ -114,9 +116,20 @@ export default {
   },
 
   [RECHECK_IMG_UPLOAD_D_TABLEDATA] (state, {row, result}) {
-    console.log(row,result)
     state.recheckonloadPicDialog = true
     state.recheckonloadPicRow = row
     state.recheckrowCarInfo = result
   },
+
+  [RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA] (state, {productItem, dataModel}) {
+    state.productItem = productItem
+    state.dataModel = dataModel
+  },
+
+  [RECEIVE_ENSURE_ORDER_DIA_TABLEDATA] (state,{viewPdf20, viewPdf30, viewPdf31}) { //治疗单确认的报告解读弹窗
+    console.log(viewPdf20)
+    state.viewPdf20 = viewPdf20
+    state.viewPdf30 = viewPdf30
+    state.viewPdf31 = viewPdf31
+  }
 }

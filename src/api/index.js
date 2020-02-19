@@ -37,6 +37,12 @@ export const getUploadImgBtnData = ({carId}) => net.request('admin/car/queryById
 
 export const getSelectData = (url,{orgId}) => net.request(url, 'post', {orgId}) // 获取 拆装工程师  检测工程师   跟单员
 
-export const getProductData = () => net.request('admin/order/queryProductInfoList', 'post', ) // 获取产品信息
+export const getProductData = () => net.request('admin/product/selectProductList', 'post', {}) // 获取产品信息
 
-export const getSearchProductData = ({jobId}) => net.request('admin/order/queryProductInfoList', 'post', jobId) // 查询产品用量
+export const getSearchProductData = (jobId) => net.request('admin/order/queryProductInfoList', 'post', jobId) // 查询产品用量
+
+export const saveProductData = (params,data) => net.request('admin/order/writeProductInfo', 'post', params, data) // 保存产品用量
+
+export const startEnsureOrder = (params) => net.request('admin/order/confirmedTreatment', 'post', params) // 确认治疗
+
+export const stopEnsureOrder = (params) => net.request('admin/order/noTreatment', 'post', params) // 不治疗
