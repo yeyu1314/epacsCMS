@@ -46,3 +46,5 @@ export const saveProductData = (params,data) => net.request('admin/order/writePr
 export const startEnsureOrder = (params) => net.request('admin/order/confirmedTreatment', 'post', params) // 确认治疗
 
 export const stopEnsureOrder = (params) => net.request('admin/order/noTreatment', 'post', params) // 不治疗
+
+export const getFirstReportEdir = (params) => net.request('admin/car/queryById', 'post', params) // 待编辑报告 编辑报告 按钮

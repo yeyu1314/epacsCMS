@@ -17,7 +17,8 @@ import {
   RECEIVE_IMG_UPLOAD_D_TABLEDATA,
   RECHECK_IMG_UPLOAD_D_TABLEDATA,
   RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA,
-  RECEIVE_ENSURE_ORDER_DIA_TABLEDATA
+  RECEIVE_ENSURE_ORDER_DIA_TABLEDATA,
+  RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA
 } from './mutation_types'
 export default {
   [RECEIVE_TABLEDATA] (state, {tableData, pagination, longDatas, checkButtonList, detectionOrderBtnArrList}) { // 完成工单
@@ -131,5 +132,11 @@ export default {
     state.viewPdf20 = viewPdf20
     state.viewPdf30 = viewPdf30
     state.viewPdf31 = viewPdf31
+  },
+
+  [RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA] (state, {showEditPage, firstReportRow}) { // 待编辑报告界面
+    console.log(showEditPage)
+    state.showEditPage = showEditPage
+    state.firstReportRow = firstReportRow
   }
 }

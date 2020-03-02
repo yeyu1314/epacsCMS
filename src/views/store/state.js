@@ -59,6 +59,8 @@ export default {
     total: 0
   },
   detectionOrderEditBtnArrList: [],
+  showEditPage: false,
+  firstReportRow: '', //点击的行数据
   // 待审核报告
   verifyDetectionOrderTableData: [],
   verifyDetectionOrderLongDatas: [],

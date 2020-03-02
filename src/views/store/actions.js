@@ -16,7 +16,8 @@ import {
   RECEIVE_IMG_UPLOAD_D_TABLEDATA,
   RECHECK_IMG_UPLOAD_D_TABLEDATA,
   RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA,
-  RECEIVE_ENSURE_ORDER_DIA_TABLEDATA
+  RECEIVE_ENSURE_ORDER_DIA_TABLEDATA,
+  RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA
 } from "./mutation_types";
 import router from '../../router'
 import moment from 'moment'
@@ -240,8 +241,6 @@ export default {
       editDetectionOrder({jobId: row.jobId, version: row.version})
         .then(res => {
           console.log(res)
-        }).catch(res => {
-          console.log(res)
           if (res.data.retcode === 1) {
             const data = state.detectionOrderBtnArrList
             Message.success('请再次点击进入报告编辑')
@@ -253,10 +252,16 @@ export default {
             }
             // getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 3})
           }
+        }).catch(error => {
+          console.log(error)
+          
         })
     }
     const starEdit = (that, row) => { // 编辑检测报告
       console.log(that, row)
+      const showEditPage = true
+      const firstReportRow = row
+      commit(RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA, {showEditPage, firstReportRow})
     }
     await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 3,carNumber:state.searchData.carNumber}).then(res => {
       console.log('待编辑报告数据',res)
