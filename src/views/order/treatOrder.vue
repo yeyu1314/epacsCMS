@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import net from "../../assets/js/public";
+import $ from "jquery";
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
 import {frozenOrder} from '../../api'
@@ -83,9 +85,42 @@ export default {
     ...mapActions(['getTreatOrderEditList']),
     startTeaet (that, row) { // 开始复查
       console.log(that, row)
+      net
+        .request("admin/order/reExamination", "post", {
+          jobId: row.jobId,
+          version: row.version
+        })
+        .then(res => {
+          if (res.retcode == 1) {
+            net.message(this, res.retmsg, "success");
+            var skip = net.isJump("/recheckPic");
+            if (skip) {
+              this.$router.push({ path: "/recheckPic" });
+            } else {
+              this.getlistData(
+                { pageNo: this.pageNo, pageSize: this.pageSize },
+                { carNumber: this.carPai, type: 6 }
+              );
+            }
+          } else {
+            net.message(this, res.retmsg, "error");
+          }
+        });
     },
     printReport (that, row) { // 打印检测报告
       console.log(that, row)
+      this.$router.push({
+        name: "InitSurvey",
+        params: {
+          operId: 3,
+          row: row,
+          pageNo: this.pageNo,
+          pageSize: this.pageSize,
+          carNumber: row.carNumber,
+          enter: false,
+          print: true
+        }
+      });
     },
     frozen (that, row) { // 冻结
       console.log(that, row)
