@@ -34,6 +34,7 @@ export const getDiscardOrder = (params, data) => net.request('admin/abnormalOrde
 export const getStartTesting = (params) => net.request('admin/order/startTesting', 'post', params) // 开始检测
 
 export const getUploadImgBtnData = ({carId}) => net.request('admin/car/queryById', 'post', {carId}) // 获取 待上传照片 界面中 “上传检测照片” 按钮的该行的数据
+export const getUploadImgBtnPhotoData = ({params}) => net.request('admin/car/queryCarTestingPhoto', 'post', params) // 获取 待上传照片 界面中 “编辑检测照片” 按钮的该行的照片数据
 
 export const getSelectData = (url,{orgId}) => net.request(url, 'post', {orgId}) // 获取 拆装工程师  检测工程师   跟单员
 
@@ -48,3 +49,5 @@ export const startEnsureOrder = (params) => net.request('admin/order/confirmedTr
 export const stopEnsureOrder = (params) => net.request('admin/order/noTreatment', 'post', params) // 不治疗
 
 export const getFirstReportEdir = (params) => net.request('admin/car/queryById', 'post', params) // 待编辑报告 编辑报告 按钮
+
+export const startTeaet = (params) => net.request('admin/order/reExamination', 'post', params) // 开始复查

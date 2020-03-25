@@ -28,7 +28,7 @@ import net from "../../assets/js/public";
 import $ from "jquery";
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
-import {frozenOrder} from '../../api'
+import {frozenOrder, startTeaet} from '../../api'
 import {mapActions, mapState} from 'vuex'
 export default {
   components: {
@@ -85,27 +85,23 @@ export default {
     ...mapActions(['getTreatOrderEditList']),
     startTeaet (that, row) { // 开始复查
       console.log(that, row)
-      net
-        .request("admin/order/reExamination", "post", {
-          jobId: row.jobId,
-          version: row.version
-        })
-        .then(res => {
-          if (res.retcode == 1) {
-            net.message(this, res.retmsg, "success");
-            var skip = net.isJump("/recheckPic");
-            if (skip) {
-              this.$router.push({ path: "/recheckPic" });
-            } else {
-              this.getlistData(
-                { pageNo: this.pageNo, pageSize: this.pageSize },
-                { carNumber: this.carPai, type: 6 }
-              );
-            }
+      const params = {
+        jobId: row.jobId,
+        version: row.version
+      }
+      startTeaet(params).then(res => {
+        if (res.retcode == 1) {
+          net.message(this, res.retmsg, "success");
+          var skip = net.isJump("/recheckPic");
+          if (skip) {
+            this.$router.push({ path: "/recheckPic" });
           } else {
-            net.message(this, res.retmsg, "error");
+            this.getTreatOrderEditList()
           }
-        });
+        } else {
+          net.message(this, res.retmsg, "error");
+        }
+      })
     },
     printReport (that, row) { // 打印检测报告
       console.log(that, row)

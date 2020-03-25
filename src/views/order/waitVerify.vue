@@ -842,6 +842,7 @@
 <script>
 import net from "../../assets/js/public";
 import $ from "jquery";
+import moment from 'moment'
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
 import recordForm from '../../components/tableCompnment/recordForm'
@@ -1022,44 +1023,50 @@ export default {
     // 打印检测报告
     printReport (that, row) {
       console.log(that, row)
+      this.$router.push({
+        name: "InitSurvey",
+        params: {
+          operId: 7,
+          row: row,
+          pageNo: this.verifyDetectionOrderPagination.pageNum,
+          pageSize: this.verifyDetectionOrderPagination.pageSize,
+          carNumber: row.carNumber,
+          enter: false,
+          print: true
+        }
+      })
     },
     // 点击操作记录
     showRecord (that, row) {
-      // console.log(that, row)
       this.isShowRecord = true
-      getOperatingRecord({ id: row.jobId })
-        .then(res => {
-          console.log(res)
-          const data = res.data.list
-          this.$store.state.redordData = data
-        }).catch(res => {
-          console.log('操作记录', res)
+      getOperatingRecord({ id: row.jobId }).then(res => {
+        let data = res.data.list
+        for (let i = 0; i < res.data.list.length; i++){
+          data[i].inputTime = moment(data[i].inputTime).format('YYYY-MM-DD HH:MM')
+        }
+        this.$store.state.redordData = data
+        }).catch(error => {
+          console.log('操作记录', error)
         })
     },
-    closeTip () { // 关闭弹窗
+    closeTip () { // 关闭操作记录的弹窗
       this.isShowRecord = false
     },
     // 开始审核
     startVerift (that, row) {
       this.isShowOpear = true
-      for (let i in this.listData) {
-        this.listData[i]["review"] = 0;
-      }
-      row.review = 1;
-      this.exChange();
-      this.carId = row.carId;
-      this.mileNumber = row.mile + "km";
-      this.checkType = row.checkType;
-      this.p_mileStart = row.mile;
-      this.jobId = row.jobId;
-      this.jobCode = row.jobCode;
-      this.getBgImg(row.orgId);
-      this.version = row.version;
+      row.review = 1
+      this.exChange()
+      this.mileNumber = row.mile + "km"
+      this.checkType = row.checkType
+      this.p_mileStart = row.mile
+      this.jobId = row.jobId
+      this.jobCode = row.jobCode
+      this.getBgImg(row.orgId)
+      this.version = row.version
       this.getEngineData(() => {
         net
-          .request("admin/car/queryById", "post", { carId: row.carId })
-          .then(res => {
-            // this.gasolineType = res.data.fuelTypeId;
+          .request("admin/car/queryById", "post", { carId: row.carId }).then(res => {
             this.carNumber = res.data.carNumber;
             this.brandname = res.data.brandName;
             this.cartype = res.data.modelName;
@@ -1071,8 +1078,8 @@ export default {
             this.cityId = res.data.cityId;
             this.provinceId = res.data.provinceId;
             this.engineType2 = res.data.engineId;
-            //品牌四级联动
-            this.getbrandData(() => {
+           
+            this.getbrandData(() => { //品牌四级联动
               this.value1 = res.data.brandId;
               this.gethostData(res.data.brandId, () => {
                 this.value2 = res.data.factoryId;
@@ -1080,11 +1087,7 @@ export default {
                   this.value3 = res.data.seriesId;
                   this.getcarTypeData(res.data.seriesId, () => {
                     this.value4 = res.data.modelId;
-
-                    this.getMileData(); //初始化里程区间
-                    this.seeFristReport(); //查看检测报告
-                    //区省市三级联动
-                    this.getareaData(() => {
+                    this.getareaData(() => {//区省市三级联动
                       this.value6 = res.data.areaId;
                       this.getprovinceData(res.data.areaId, () => {
                         this.value7 = res.data.provinceId;
@@ -1093,7 +1096,9 @@ export default {
                         });
                       });
                     });
-                    this.getConterData(row.carId);
+                    this.getConterData(row.carId); // 获取中间图片内容
+                    this.getMileData(); //初始化里程区间
+                    this.seeFristReport(); //查看检测报告
                   });
                 });
               });
@@ -1157,7 +1162,7 @@ export default {
         list.push(obj1);
         list.push(obj2);
       }
-      var params = {
+      const params = {
         jobId: this.jobId,
         optionIds: this.optionIds.join(","),
         version: this.version
@@ -1169,12 +1174,12 @@ export default {
         obj3["optionId"] = this.placeArr[i].optionId;
         checkRecordList.push(obj3);
       }
-      var data = {
+      const data = {
         imageNote: this.illustrate, //说明
         diagnosticOption: this.advise,
         list: list,
         checkRecordList: checkRecordList
-      };
+      }
       net.request("admin/order/toExamine", "post", params, data).then(res => {
         if (res.retcode == 1) {
           var skip = net.isJump("/ensureOrder");
@@ -1185,19 +1190,13 @@ export default {
             if (skip1) {
               this.$router.push({ path: "/completeOrder" });
             } else {
-              this.getlistData(
-                { pageNo: this.pageNo, pageSize: this.pageSize },
-                { carNumber: this.carPai, type: 4 }
-              )
+              this.getDetectionVerifyList()
             }
           } else {
             if (skip) {
               this.$router.push({ path: "/ensureOrder" });
             } else {
-              this.getlistData(
-                { pageNo: this.pageNo, pageSize: this.pageSize },
-                { carNumber: this.carPai, type: 4 }
-              );
+              this.getDetectionVerifyList()
             }
           }
         } else {
@@ -1206,7 +1205,15 @@ export default {
       })
     },
     reduction(){ // 还原
-
+      this.advise = "";
+      this.illustrate =
+        "上述检测比对是指在同区域，同车型，同里程条件下从大数据检索出来的积碳生成情况三个维度的照片：轻度--表示比对范围内积碳较少；中度--表示比对范围内积碳平均水平；重度--表示比对范围内积碳最多。";
+      this.getConterData(this.carId);
+      setTimeout(() => {
+        $(".tr_sign").each(function() {
+          $(this).hide();
+        });
+      }, 300);
     },
     editAdopt(){ // 编辑并通过
       if (this.illustrate.length > 260) {
@@ -1273,19 +1280,13 @@ export default {
               if (skip1) {
                 this.$router.push({ path: "/completeOrder" });
               } else {
-                this.getlistData(
-                  { pageNo: this.pageNo, pageSize: this.pageSize },
-                  { carNumber: this.carPai, type: 4 }
-                );
+                this.getDetectionVerifyList()
               }
             } else {
               if (skip) {
                 this.$router.push({ path: "/ensureOrder" });
               } else {
-                this.getlistData(
-                  { pageNo: this.pageNo, pageSize: this.pageSize },
-                  { carNumber: this.carPai, type: 4 }
-                );
+                this.getDetectionVerifyList()
               }
             }
           } else {
@@ -1308,10 +1309,7 @@ export default {
             .then(res => {
               this.isShowOpear = false;
               if (res.retcode == 0) {
-                this.getlistData(
-                  { pageNo: this.pageNo, pageSize: this.pageSize },
-                  { type: 4 }
-                );
+                this.getDetectionVerifyList()
               } else {
                 net.message(this, res.retmsg, "warning");
               }

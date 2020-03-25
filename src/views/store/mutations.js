@@ -116,10 +116,15 @@ export default {
     state.rowCarInfo = result
   },
 
-  [RECHECK_IMG_UPLOAD_D_TABLEDATA] (state, {row, result}) {
+  [RECHECK_IMG_UPLOAD_D_TABLEDATA] (state, {row, result, fileList, photoList}) {
     state.recheckonloadPicDialog = true
     state.recheckonloadPicRow = row
     state.recheckrowCarInfo = result
+    state.frecheckrowFleList = fileList
+    state.photoList = photoList
+    console.log(row)
+    console.log(result)
+    console.log(fileList)
   },
 
   [RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA] (state, {productItem, dataModel}) {

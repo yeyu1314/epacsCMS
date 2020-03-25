@@ -92,7 +92,7 @@
                   :on-preview="handlePictureCardPreview"
                   :on-change="change.bind(this,-1)"
                   :on-remove="remove.bind(this,-1,carPhotoId,recheckonloadPicRow.jobId,recheckonloadPicRow.version)"
-                  :file-list="fileList"
+                  :file-list="frecheckrowFleList"
                 >
                   <i class="el-icon-plus"></i>
                 </el-upload>
@@ -217,10 +217,6 @@ export default {
         }
       ],
       isShowRecord: false,
-      chaizhuang: '',
-      jiance: '',
-      gendan: '',
-      zhiliao: '',
       imageUrl: '',
       uploadUrl: '',
       fileList: [],
@@ -230,6 +226,18 @@ export default {
       uploadUrl: net.imageHP + "import/upload",
       dialogVisible1: false, //图片放大显示控制
       dialogImageUrl: "",
+      // photoList: [], //保存上传图片后的信息
+      fileList1: [],
+      placeData: [],
+      //弹窗下拉
+      chaizhuang: "",
+      chaizhuang_data: [],
+      jiance: "",
+      jiance_data: [],
+      gendan: "",
+      gendan_data: [],
+      zhiliao: "",
+      zhiliao_data: []
     }
   },
   created() {
@@ -237,43 +245,77 @@ export default {
   },
   computed: {
     ...mapState(['recheckPicTableData', 'recheckPicLongData', 'recheckPicPagination', 'pageNo', 'pageSize', 'searchData', 
-    'recheckImgUploadBtnArrList', 'recheckonloadPicRow', 'recheckonloadPicDialog', 'recheckrowCarInfo', 'productItem', 'dataModel'])// 读数据
+    'recheckImgUploadBtnArrList', 'recheckonloadPicRow', 'recheckonloadPicDialog', 'recheckrowCarInfo', 'productItem', 'dataModel',
+    'frecheckrowFleList', 'photoList'])// 读数据
   },
   methods: {
     ...mapActions(['getRecheckPicList']),
     searchOrder () { // 查询
       this.getRecheckPicList()
     },
+    printReport(that, row) {
+      this.$router.push({
+        name: "InitSurvey",
+        params: {
+          operId: 4,
+          row: row,
+          pageNo: this.recheckPicPagination.pageNum,
+          pageSize: this.recheckPicPagination.pageSize,
+          carNumber: row.carNumber,
+          enter: false,
+          print: true
+        }
+      })
+    },
+    frozen(that, row){ //冻结工单
+      console.log('冻结工单', that, row)
+      this.$confirm("此操作将冻结此工单, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        console.log(that, row)
+        frozenOrder({jobId: row.jobId, version: row.version}).then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+          this.getRecheckPicList()
+        }).catch(res => {
+          console.log(res)
+          this.getRecheckPicList()
+        })
+      })
+    },
     uploadImgs () {
       console.log('确定上传')
-      console.log(this.$store.state.detectionImgUploadBtnArrList)
-      console.log(this.$store.state.rowCarInfo)
-      const row = this.$store.state.rowCarInfo
+      const row = this.$store.state.recheckonloadPicRow
       let param = {
         jobId: row.jobId,
         version: row.version,
-        chaiZhuang: row.chaizhuang || 0,
-        jianCe: row.jiance || 0,
-        genDan: row.gendan || 0
+        chaiZhuang: this.chaizhuang || 0,
+        jianCe: this.jiance || 0,
+        genDan: this.gendan || 0,
+        zhiLiao: this.zhiliao || 0
       };
-      if (row.jobCode == 20 && row.photoId == undefined) {
-        param["jobCode"] = 30;
+      if (row.jobCode == 600 && row.photoId == undefined) {
+        param["jobCode"] = 630;
       }
-      if (row.jobCode == 30 || row.jobCode == 31 || row.jobCode == 32) {
-        param["jobCode"] = 31;
+      if (row.jobCode == 630 || row.jobCode == 631 || row.jobCode == 632) {
+        param["jobCode"] = 631;
       }
-      if (row.chaizhuang.length == 0 || row.jiance.length == 0 || row.gendan.length == 0) {
+      if (this.chaizhuang.length == 0 || this.jiance.length == 0 || this.gendan.length == 0) {
         let title = "";
-        // if (row.chaizhuang.length == 0) {
-        //   title += "拆装工程师 ";
-        // }
-        // if (row.jiance.length == 0) {
-        //   title += " 检测工程师";
-        // }
-        // if (row.gendan.length == 0) {
-        //   title += " 跟单员";
-        // }
-        if (row.jobCode == 20) {
+        if (this.chaizhuang.length == 0) {
+          title += "拆装工程师 ";
+        }
+        if (this.jiance.length == 0) {
+          title += " 检测工程师";
+        }
+        if (this.gendan.length == 0) {
+          title += " 跟单员";
+        }
+        if (row.jobCode == 620) {
           this.$confirm(
             <span>
               <p> 没有选择{title} 这样操作将会影响到对应人员的数据统计</p>
@@ -286,18 +328,39 @@ export default {
               type: "warning"
             }
           ).then(() => {
-            // this.ensureUpload(param);
+            this.ensureUpload(param);
             console.log(param)
           });
         } else {
-          // this.ensureUpload(param);
+          this.ensureUpload(param);
           console.log(param)
         }
       } else {
-        // this.ensureUpload(param);
+        this.ensureUpload(param);
         console.log(param)
       }
       this.$store.state.recheckonloadPicDialog = false
+    },
+    ensureUpload(param) {
+      console.log(param)
+      net
+        .request(
+          "admin/order/uploadSecondPhotoList",
+          "post",
+          param,
+          this.photoList
+        )
+        .then(res => {
+          if (res.retcode == 1) {
+            net.message(this, res.retmsg, "success");
+            this.version = res.data;
+            // this.updatePicState(optionId);
+            this.dialogVisible = false;
+            this.getRecheckPicList()
+          } else {
+            net.message(this, res.retmsg, "warning");
+          }
+        });
     },
     close () { // 关闭弹窗
       this.$store.state.recheckonloadPicDialog = false
@@ -306,14 +369,47 @@ export default {
       // this.$store.state.onloadPicDialog = false
       console.log('关闭')
     },
-    change(){
-
+    change(idx, file, fileList) { // 监听改变
+      if (fileList.length > 1) {
+        fileList.splice(0, 1);
+      }
     },
-    remove() {
-
+    remove(optionID, photoID, jobID, version1) {
+      console.log(optionID, photoID, jobID, version1);
+      net
+        .request(
+          "admin/order/deleteRecheckPhoto",
+          "post",
+          {
+            optionId: optionID,
+            photoId: photoID,
+            jobId: jobID,
+            version: version1
+          },
+          {}
+        )
+        .then(res => {
+          if (res.retcode == 1) {
+            for (var i = 0; i < this.photoList.length; i++) {
+              if (this.photoList[i].optionId == optionID) {
+                this.photoList.splice(i, 1);
+              }
+            }
+            net.message(this, "删除成功", "warning");
+            this.version = res.data;
+            setTimeout(() => {
+              this.ctroOnloadBtn();
+            }, 500);
+          } else {
+            net.message(this, "删除失败", "warning");
+            setTimeout(() => {
+              this.ctroOnloadBtn();
+            }, 500);
+          }
+        });
     },
     handleExceed() {
-
+      net.message(this, "同时上传限制一个图，请先删除前面上传的图片", "error");
     },
     // 保存产品用量
     addProductNumber() {
@@ -386,34 +482,67 @@ export default {
     //图片上次成功回调
     uploadSuccess(optionId, photoId, response, file, fileList) {
       console.log(optionId, photoId, response, file, fileList);
-      // if (response.retcode != 1) {
-      //   net.message(this, response.retmsg, "error");
-      //   return false;
-      // }
-      // console.log(this.photoList);
-      // this.photoList.push({ optionId: optionId, photoId: response.data });
-      // this.optionId = optionId;
-      // if (optionId == -1) {
-      //   this.carPhotoId = response.data;
-      // } else if (optionId == -11) {
-      //   this.framePhotoId = response.data;
-      // } else {
-      //   for (let i = 0; i < this.placeData.length; i++) {
-      //     const element = this.placeData[i];
-      //     if (optionId == element.optionId) {
-      //       element.photoId = response.data;
-      //       this.placeData.splice(i, 1, element);
-      //     }
-      //   }
-      //   console.log(this.placeData);
-      // }
+      if (response.retcode != 1) {
+        net.message(this, response.retmsg, "error");
+        return false;
+      }
+      this.photoList.push({ optionId: optionId, photoId: response.data });
+      console.log(this.photoList);
+      this.optionId = optionId;
+      if (optionId == -1) {
+        this.carPhotoId = response.data;
+      } else if (optionId == -11) {
+        this.framePhotoId = response.data;
+      } else {
+        for (let i = 0; i < this.placeData.length; i++) {
+          const element = this.placeData[i];
+          if (optionId == element.optionId) {
+            element.photoId = response.data;
+            this.placeData.splice(i, 1, element);
+          }
+        }
+        console.log(this.placeData);
+      }
 
-      // this.ctroOnloadBtn();
+      this.ctroOnloadBtn();
     },
     //点击显示放大
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible1 = true;
+    },
+    //控制上传按钮显示
+    ctroOnloadBtn() {
+      var _this = this;
+      $(".perform").each(function() {
+        var btn = $(this)
+          .children(".right")
+          .children("div")
+          .children(".el-upload--picture-card");
+        var count = $(this)
+          .children(".right")
+          .children("div")
+          .children(".el-upload-list--picture-card")
+          .children().length;
+        if (count == 0) {
+          btn.show();
+        }
+        if (count > 0) {
+          btn.hide();
+          var del = $(this)
+            .children(".right")
+            .children("div")
+            .children(".el-upload-list--picture-card")
+            .children(".el-upload-list__item")
+            .children(".el-upload-list__item-actions")
+            .children(".el-upload-list__item-delete");
+          if (_this.sign == 0) {
+            del.hide();
+          } else {
+            del.show();
+          }
+        }
+      });
     },
   }
 }

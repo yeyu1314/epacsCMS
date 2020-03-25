@@ -368,6 +368,7 @@
 <script>
   import net from "../../assets/js/public";
   import $ from "jquery";
+  import moment from 'moment'
   import tableCom from '../../components/tableCompnment/tableForm'
   import searchCom from '../../components/tableCompnment/searchForm'
   import recordForm from '../../components/tableCompnment/recordForm'
@@ -428,55 +429,55 @@
         isShowRecord: false,
         dialogVisible: false, // 编辑复查报告界面
         //参数
-      title: "",
-      beforeArr: [],
-      afterArr: [],
-      result:
-        "治疗效果非常显著，原来被积碳等沉积物覆盖和包裹的部位经过治疗后，已经露出了金属的光泽。为巩固治疗效果，请在安全行驶的前提下，进行急加速、猛轰油门等操作。建议在每次进站保养时都要给发动机做个健康体检，以便及时发现问题并解决，真正的做到以养代修，保持发动机卓越的动力性和燃油经济性。",
-      isprint: true,
-      isShowSub: false,
-      isShowBtn: true,
-      operId: "",
-      //车辆信息
-      mileNumber: "",
-      gasolinetype: "",
-      oilDeplete: "",
-      testAddr: "",
-      carNumber: "",
-      brandname: "",
-      cartype: "",
-      ReseriesName: "",
-      isPower: true, //控制打印显隐
-      productArr: [],
-      checkProList: [],
-      dataModel: [], //暂存计步器双休绑定
-      useArr: [], //用量暂存
-      showUse: true,
-      version: "",
-      dialogVisible1: false, //照片不合格弹窗
-      checkedPlace: [],
-      position: [], //部位数据
-      carUrl: "", //车牌照片
-      carBigImageID: "",
-      carPai: null,
-      baseArr: [],
-      cPlace: "",
-      exLen: 0,
-      dialogVisible3: false,
-      dialogVisible2: false,
-      dialogVisible4: false,
-      seeArr: [],
-      bigImage: "",
-      imgWidth: 165, //4张图片165，
-      iconTop: 50,
-      enterEditing: 0,
+        title: "",
+        beforeArr: [],
+        afterArr: [],
+        result:
+          "治疗效果非常显著，原来被积碳等沉积物覆盖和包裹的部位经过治疗后，已经露出了金属的光泽。为巩固治疗效果，请在安全行驶的前提下，进行急加速、猛轰油门等操作。建议在每次进站保养时都要给发动机做个健康体检，以便及时发现问题并解决，真正的做到以养代修，保持发动机卓越的动力性和燃油经济性。",
+        isprint: true,
+        isShowSub: false,
+        isShowBtn: true,
+        operId: "",
+        //车辆信息
+        mileNumber: "",
+        gasolinetype: "",
+        oilDeplete: "",
+        testAddr: "",
+        carNumber: "",
+        brandname: "",
+        cartype: "",
+        ReseriesName: "",
+        isPower: true, //控制打印显隐
+        productArr: [],
+        checkProList: [],
+        dataModel: [], //暂存计步器双休绑定
+        useArr: [], //用量暂存
+        showUse: true,
+        version: "",
+        dialogVisible1: false, //照片不合格弹窗
+        checkedPlace: [],
+        position: [], //部位数据
+        carUrl: "", //车牌照片
+        carBigImageID: "",
+        carPai: null,
+        baseArr: [],
+        cPlace: "",
+        exLen: 0,
+        dialogVisible3: false,
+        dialogVisible2: false,
+        dialogVisible4: false,
+        seeArr: [],
+        bigImage: "",
+        imgWidth: 165, //4张图片165，
+        iconTop: 50,
+        enterEditing: 0,
 
-      template: false,
-      templateBut: true,
-      selectTemplateArr: [],
-      editMileNumber: "",
-      step2ImageHeader: "",
-      bg_pic: "",//背景图片
+        template: false,
+        templateBut: true,
+        selectTemplateArr: [],
+        editMileNumber: "",
+        step2ImageHeader: "",
+        bg_pic: "",//背景图片
       }
     },
     created() {
@@ -489,14 +490,15 @@
       ...mapActions(['getEditRecheckList']),
       // 点击操作记录
       showRecord (that, row) {
-        // console.log(that, row)
         this.isShowRecord = true
-        getOperatingRecord({ id: row.jobId })
-                .then(res => {
-                  console.log(res)
-                  const data = res.data.list
-                  this.$store.state.redordData = data
-                }).catch(res => {
+        getOperatingRecord({ id: row.jobId }).then(res => {
+          console.log(res)
+          let data = res.data.list
+          for (let i = 0; i < res.data.list.length; i++){
+            data[i].inputTime = moment(data[i].inputTime).format('YYYY-MM-DD HH:MM')
+          }
+          this.$store.state.redordData = data
+        }).catch(res => {
           console.log('操作记录', res)
         })
       },
@@ -702,8 +704,7 @@
           .request("admin/order/editJobMile", "post", {
             jobId: this.jobId,
             mile: this.editMileNumber
-          })
-          .then(res => {
+          }).then(res => {
             if (res.retcode == 1) {
               net.message(this, "修改成功", "success");
               this.dialogVisible4 = false;
@@ -711,7 +712,7 @@
             } else {
               net.message(this, res.retmsg, "error");
             }
-          });
+          })
       },
       unqualified() { // 照片不合格
         this.position = [];
@@ -739,10 +740,7 @@
               if (skip) {
                 this.$router.push({ path: "/recheckPic" });
               } else {
-                this.getlistData(
-                  { pageNo: this.pageNo, pageSize: this.pageSize },
-                  { carNumber: this.carPai, type: 8 }
-                );
+                this.getEditRecheckList()
               }
             } else {
               net.message(this, res.retmsg, "error");
@@ -784,10 +782,7 @@
               if (skip) {
                 this.$router.push({ path: "/waitVerifyReport" });
               } else {
-                this.getlistData(
-                  { pageNo: this.pageNo, pageSize: this.pageSize },
-                  { carNumber: this.carPai, type: 8 }
-                );
+                this.getEditRecheckList()
               }
             } else {
               net.message(this, res.retmsg, "error");
@@ -819,10 +814,6 @@
           this.$router.push({ path: "/completeOrder" });
         } else {
           this.dialogVisible = false;
-          // this.getlistData(
-          //   { pageNo: this.pageNo, pageSize: this.pageSize },
-          //   { type: 8, carNumber: this.carPai }
-          // );
           this.getEditRecheckList()
         }
       },
@@ -835,6 +826,11 @@
             this.$mount.error(res.retmsg);
           }
         });
+      },
+      select(val) {
+        this.result = val;
+        this.exLen = 160 - val.length;
+        this.template = false;
       },
       getBgImg(orgId) { // 获取背景图
         this.bg_pic =

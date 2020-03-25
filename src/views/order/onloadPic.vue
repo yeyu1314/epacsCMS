@@ -211,10 +211,10 @@ export default {
                     type: 'success',
                     message: '操作成功!'
                   })
-                  this.getDetectionOrderList()
+                  this.getDetectionImgUploadList()
                 }).catch(res => {
           console.log(res)
-          this.getDetectionOrderList()
+          this.getDetectionImgUploadList()
         })
       })
     },

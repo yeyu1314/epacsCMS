@@ -1,5 +1,5 @@
 import {getCheckout, editDetectionOrder, getDetectionOrderListData, getFrozenOrder, getDiscardOrder, getUploadImgBtnData,
-  getSelectData, getProductData, getSearchProductData} from '../../api'
+  getSelectData, getProductData, getSearchProductData, getUploadImgBtnPhotoData} from '../../api'
 import {
   RECEIVE_IMG_UPLOAD_TABLEDATA,
   RECEIVE_TABLEDATA,
@@ -19,6 +19,7 @@ import {
   RECEIVE_ENSURE_ORDER_DIA_TABLEDATA,
   RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA
 } from "./mutation_types";
+import net from "../../assets/js/public"
 import router from '../../router'
 import moment from 'moment'
 import {Message, MessageBox} from 'element-ui'
@@ -451,9 +452,10 @@ export default {
       console.log('that',that, '该行row', row)
       getUploadImgBtnData({carId: row.carId}).then(res => {
         console.log('该行的图片信息',res)
+        const fileList = []
         if(res.retcode === 1){
           const result = res.data
-          commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result})// 提交一个mutation
+          commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList})// 提交一个mutation
         }
       })
       getSelectList(1, row.orgId)
@@ -461,8 +463,13 @@ export default {
       getSelectList(3, row.orgId)
       getSelectList(4, row.orgId)
       // getProductInfo()
-      searchProUse(row.jobId)
+      searchProUse(row.jobId) // 查询产品用量
     }
+    
+    const finshUpload = (that, row) => { // 完成上传
+      console.log(that, row)
+    }
+    
     const getSelectList = (index,orgId) => { // 获取诊断工程师 等 的下拉框的值
       let url;
       if (index === 1) {
@@ -503,8 +510,7 @@ export default {
     //     console.log(error)
     //   })
     // }
-    const searchProUse = (jobId) => {
-
+    const searchProUse = (jobId) => { // 查询产品用量
       let dataModel = []
       getProductData().then(res => {
         console.log('产品用量',res)
@@ -545,9 +551,89 @@ export default {
         }
       })
     }
-    
-    const finshUpload = (that, row) => {
-      console.log(that, row)
+
+    const EditTest = (that, row) => { // 编辑照片
+      console.log('编辑照片', that, row)
+      getUploadImgBtnData({carId: row.carId}).then(rowRes => {
+        if(rowRes.retcode === 1){
+          const result = rowRes.data
+          const params = {
+            jobId: row.jobId,
+            step: 2
+          }
+          getUploadImgBtnPhotoData({params}).then(res => {
+            console.log('该行的图片信息',rowRes)
+            console.log(res)
+            const data = res.data
+            for (var i = 0; i < result.list.length; i++) {
+              for (var j = 0; j < data.length; j++) {
+                if (result.list[i].optionId == data[j].optionId) {
+                  result.list[i]["isQualified"] = data[j].isQualified;
+                  var obj = {};
+                  if (data[j].photoId != null && data[j].photoId > 0) {
+                    obj["url"] =
+                      net.imageHP + "image/get?imageId=" + data[j].photoId;
+                      result.list[i].list.push(obj);
+                      result.list[i]["photoId"] = data[j].photoId;
+                  } else {
+                    result.list[i]["isQualified"] = data[j].isQualified;
+                  }
+                }
+              }
+            }
+            
+            let carPhotoId = ''
+            let fileList = []
+            let s1 = ''
+            let photoList = []
+            for (let g = 0; g < data.length; g++) {
+              if (data[g].photoId != null && data[g].photoId > 0) {
+                let obj1 = {}
+                obj1["url"] =net.imageHP + "image/get?imageId=" + data[g].photoId
+
+                if (data[g].optionId == -2) { // 车牌
+                  // this.carPhotoId = data[g].photoId;
+                  // this.fileList.push(obj1);
+                  // this.s1 = data[g].isQualified;
+                  carPhotoId = data[g].photoId;
+                  fileList.push(obj1);
+                  s1 = data[g].isQualified;
+                  console.log(fileList)
+                }
+                // if (data[g].optionId == -11) {
+                //   this.framePhotoId = data[g].photoId;
+                //   this.fileList1.push(obj1);
+                //   this.s2 = data[g].isQualified;
+                // }
+
+                photoList.push({
+                  optionId: data[g].optionId,
+                  photoId: data[g].photoId
+                });
+              } else {
+                if (data[g].optionId == -2) {
+                  // this.s1 = data[g].isQualified;
+                }
+                if (data[g].optionId == -11) {
+                  // this.s2 = data[g].isQualified;
+                }
+              }
+            }
+            console.log("result",result.list)
+            console.log("carPhotoId",carPhotoId)
+            console.log("fileList",fileList)
+            console.log("s1",s1)
+            commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, photoList})// 提交一个mutation
+
+          })
+        }
+      })
+      getSelectList(1, row.orgId)
+      getSelectList(2, row.orgId)
+      getSelectList(3, row.orgId)
+      getSelectList(4, row.orgId)
+      // getProductInfo()
+      searchProUse(row.jobId) // 查询产品用量
     }
     await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 7,carNumber:state.searchData.carNumber}).then(res => {
       console.log('复查照片上传', res)
@@ -581,7 +667,7 @@ export default {
             )
           } if (tableData[i].jobCode === 630 || tableData[i].jobCode === 631 || tableData[i].jobCode === 632) {
             imgBtnArr.push(
-              {type: 'primary', label: '上传照片', isShow: true, handle: (that, row) => { showEditTest(that, row) }},
+              {type: 'primary', label: '编辑照片', isShow: true, handle: (that, row) => { EditTest(that, row) }},
               {type: 'success', label: '完成上传', isShow: true, handle: (that, row) => { finshUpload(that, row) }}
             )
           }

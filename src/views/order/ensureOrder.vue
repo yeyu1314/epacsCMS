@@ -181,10 +181,7 @@ export default {
             if (skip) {
               this.$router.push({ path: "/treatOrder" });
             } else {
-              this.getlistData(
-                { pageNo: this.pageNo, pageSize: this.pageSize },
-                { carNumber: this.carPai, type: 5 }
-              );
+              this.getEnsureOrderList()
             }
           } else {
             net.message(this, res.retmsg, "warning");
@@ -198,10 +195,10 @@ export default {
       }
       stopEnsureOrder(params).then(res => {
         if (res.retcode == 1) {
-          net.message(this, res.retmsg, "success");
-          this.$router.push({ path: "/completeOrder" });
+          net.message(this, res.retmsg, "success")
+          this.$router.push({ path: "/completeOrder" })
         } else {
-          net.message(this, res.retmsg, "warning");
+          net.message(this, res.retmsg, "warning")
         }
       })
     },

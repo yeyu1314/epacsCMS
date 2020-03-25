@@ -103,6 +103,8 @@ export default {
   recheckrowCarInfo: '',
   productItem: [],
   dataModel: [], //暂存计步器双休绑定
+  frecheckrowFleList: [],
+  photoList: [],
   // 复查报告编辑
   editTecheckTableData: [],
   editTecheckPagination: {

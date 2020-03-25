@@ -1047,7 +1047,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getDetectionOrderEditList']),
+    ...mapActions(['getDetectionOrderEditList', 'getDetectionImgUploadList']),
     showRecord (that, row) { // 点击操作记录
       // console.log(that, row)
       this.isShowRecord = true
@@ -1160,10 +1160,7 @@ export default {
             if (skip) {
               this.$router.push({ path: "/onloadPic" });
             } else {
-              this.getlistData(
-                { pageNo: this.pageNo, pageSize: this.pageSize },
-                { carNumber: this.carPai, type: 2 }
-              );
+              this.getDetectionImgUploadList()
             }
           } else {
             net.message(this, res.retmsg, "error");
@@ -1229,7 +1226,9 @@ export default {
       net
         .request("admin/order/writePresentation", "post", params, data)
         .then(res => {
+            console.log(res)
           if (res.retcode == 1) {
+            console.log(res)
             this.isShowSub = true;
             this.version = res.data;
             net.message(this, res.retmsg, "suuccess");
@@ -1449,8 +1448,13 @@ export default {
     adviseArrow() {
       this.advise = this.opinion;
     },
-    dimensionalityChange() { // 选择综合维度
-
+    select(val) {
+      this.illustrate = val;
+      this.exLen = 260 - val.length;
+      this.template = false;
+    },
+    dimensionalityChange(value) { // 选择综合维度
+      this.dimensionalityValue = value
     },
     submitDimensionality() { // 保存综合维度
       const param = {
@@ -1615,28 +1619,28 @@ export default {
     },
     
     seeFristReport() { //回显报告中的说明，意见
-      // net
-      //   .request("admin/order/queryTestingWeb", "post", {
-      //     jobId: this.jobId,
-      //     step: 1
-      //   })
-      //   .then(res => {
-      //     if (res.retcode == 1) {
-      //       if (res.data != null) {
-      //         this.illustrate = res.data.imageNote;
-      //         this.advise = res.data.diagnosticOption;
-      //         this.artificer = res.data.userName;
-      //         this.time = net.dateFormat(res.data.reportTime, 0);
-      //         this.exLen = 280 - res.data.imageNote.length;
-      //         this.chLen = 100 - res.data.diagnosticOption.length;
-      //         this.step1ImageHeader = res.data.step1ImageHeader;
-      //         this.dimensionalityValue = res.data.avgValue > 0 ? res.data.avgValue : '';//报告维度
-      //       } else {
-      //         this.exLen = 280;
-      //         this.chLen = 100;
-      //       }
-      //     }
-      //   });
+      net
+        .request("admin/order/queryTestingWeb", "post", {
+          jobId: this.firstReportRow.jobId,
+          step: 1
+        })
+        .then(res => {
+          if (res.retcode == 1) {
+            if (res.data != null) {
+              this.illustrate = res.data.imageNote;
+              this.advise = res.data.diagnosticOption;
+              this.artificer = res.data.userName;
+              this.time = net.dateFormat(res.data.reportTime, 0);
+              this.exLen = 280 - res.data.imageNote.length;
+              this.chLen = 100 - res.data.diagnosticOption.length;
+              this.step1ImageHeader = res.data.step1ImageHeader;
+              this.dimensionalityValue = res.data.avgValue > 0 ? res.data.avgValue : '';//报告维度
+            } else {
+              this.exLen = 280;
+              this.chLen = 100;
+            }
+          }
+        });
     },
     getRightList() {//获取右边查询数据
       var start, end;
