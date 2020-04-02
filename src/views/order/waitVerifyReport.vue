@@ -27,7 +27,7 @@
               :redordCols='redordCols'
               :isShowRecord="isShowRecord"
               @closeTip="closeTip"
-      ></record-form>
+      />
     </div>
     <div v-show="!dialogVisible">
       <div style="display:flex; margin-top:20px;">
@@ -70,10 +70,10 @@
                   style="display:none;position:absolute;top: 0;background: #000;opacity: 0.5;width: 100%;height: 100%;z-index: 1;"
                 >
                   <i
-                    class="el-icon-zoom-in"
-                    @click="bigIcon(carBigImageID)"
-                    style="color: #fff;font-size: 25px;margin: 30px;"
-                  ></i>
+                          class="el-icon-zoom-in"
+                          @click="bigIcon(carBigImageID)"
+                          style="color: #fff;font-size: 25px;margin: 30px;"
+                  />
                 </div>
               </div>
               <div style="display: flex;flex-direction: column; margin-left:15px;">
@@ -162,15 +162,15 @@
                   >
                     <img
                       :src="item.url"
-                      v-if="item.url != undefined && item.url != null"
+                      v-if="item.url !== undefined && item.url != null"
                       alt
                       @mouseenter="mouseEnter(item.photoId)"
                       style="width:100%;display:block"
                     />
                     <p
-                      v-else
-                      style="width: 100%;height: 100%;border: 1px solid #eee;margin: 0 auto;"
-                    ></p>
+                            v-else
+                            style="width: 100%;height: 100%;border: 1px solid #eee;margin: 0 auto;"
+                    />
                     <div
                       class="showBigBtn"
                       @mouseleave="mouseLeave(item.photoId)"
@@ -178,11 +178,11 @@
                       style="display:none;position:absolute;top: 0;background: #000;opacity: 0.5;width:100%;height:100%;z-index: 1;"
                     >
                       <i
-                        class="el-icon-zoom-in"
-                        @click="bigIcon(item.photoId)"
-                        style="color: #fff;font-size: 25px;"
-                        :style="{marginTop: iconTop + 'px'}"
-                      ></i>
+                              class="el-icon-zoom-in"
+                              @click="bigIcon(item.photoId)"
+                              style="color: #fff;font-size: 25px;"
+                              :style="{marginTop: iconTop + 'px'}"
+                      />
                     </div>
                   </div>
                   <p style="margin-top:3px;font-size:14px;text-align:center">{{item.optionName}}</p>
@@ -205,15 +205,15 @@
                   >
                     <img
                       :src="item.url"
-                      v-if="item.url != undefined && item.url != null"
+                      v-if="item.url !== undefined && item.url != null"
                       alt
                       @mouseenter="mouseEnter(item.photoId)"
                       style="width:100%;display:block"
                     />
                     <p
-                      v-else
-                      style="width: 100%;height: 100%;border: 1px solid #eee;margin: 0 auto;"
-                    ></p>
+                            v-else
+                            style="width: 100%;height: 100%;border: 1px solid #eee;margin: 0 auto;"
+                    />
                     <div
                       class="showBigBtn"
                       @mouseleave="mouseLeave(item.photoId)"
@@ -221,11 +221,11 @@
                       style="display:none;position:absolute;top: 0;background: #000;opacity: 0.5;width:100%;height:100%;z-index: 1;"
                     >
                       <i
-                        class="el-icon-zoom-in"
-                        @click="bigIcon(item.photoId)"
-                        style="color: #fff;font-size: 25px;"
-                        :style="{marginTop: iconTop + 'px'}"
-                      ></i>
+                              class="el-icon-zoom-in"
+                              @click="bigIcon(item.photoId)"
+                              style="color: #fff;font-size: 25px;"
+                              :style="{marginTop: iconTop + 'px'}"
+                      />
                     </div>
                   </div>
                   <p style="margin-top:3px;font-size:14px;text-align:center">{{item.optionName}}</p>
@@ -239,14 +239,14 @@
               >复查结果:</p>
               <div style="position: relative;" v-show="isprint">
                 <el-input
-                  type="textarea"
-                  id="exCtrl"
-                  :autosize="{minRows: 8}"
-                  maxlength="230"
-                  placeholder="复查结果"
-                  v-model="result"
-                  style="width:570px;margin-top: 10px;"
-                ></el-input>
+                        type="textarea"
+                        id="exCtrl"
+                        :autosize="{minRows: 8}"
+                        maxlength="230"
+                        placeholder="复查结果"
+                        v-model="result"
+                        style="width:570px;margin-top: 10px;"
+                />
                 <span
                   style="font-size: 14px;position: absolute;bottom: 6px;right: 185px;color: #959595;"
                 >还能输入{{exLen}}字</span>
@@ -284,18 +284,18 @@
             <div>
               <el-checkbox-group style="display:flex;flex-direction: column;margin-left:10px;">
                 <el-input-number
-                  class="inputNumber"
-                  :data-id="item.id"
-                  style="margin-top: 6px;margin-bottom:5px;"
-                  v-for="(item,index) in productArr"
-                  :key="index"
-                  :min="0"
-                  v-model="dataModel[index].value1"
-                  @change="handleChange($event,item.id)"
-                  size="small"
-                  label="描述文字"
-                  disabled
-                ></el-input-number>
+                        class="inputNumber"
+                        :data-id="item.id"
+                        style="margin-top: 6px;margin-bottom:5px;"
+                        v-for="(item,index) in productArr"
+                        :key="index"
+                        :min="0"
+                        v-model="dataModel[index].value1"
+                        @change="handleChange($event,item.id)"
+                        size="small"
+                        label="描述文字"
+                        disabled
+                />
               </el-checkbox-group>
             </div>
           </div>
@@ -309,7 +309,7 @@
           </div>
         </el-dialog>
         <el-dialog title="修改里程" :visible.sync="dialogVisible4" width="30%">
-          <el-input placeholder="请输入里程" v-model="editMileNumber" maxlength="8" clearable></el-input>
+          <el-input placeholder="请输入里程" v-model="editMileNumber" maxlength="8" clearable/>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible4 = false">取 消</el-button>
             <el-button type="primary" @click="ensureEdit">确 定</el-button>
@@ -335,7 +335,8 @@
   import tableCom from '../../components/tableCompnment/tableForm'
   import searchCom from '../../components/tableCompnment/searchForm'
   import recordForm from '../../components/tableCompnment/recordForm'
-  import {frozenOrder, getOperatingRecord} from '../../api'
+  import {frozenOrder, getOperatingRecord, queryByIdFirstReport, queryCarTestingPhoto, queryTestingWeb, editAuditingRecheck, auditingRecheck,
+    repulseReport, ensureEdit, getProductData, getSearchProductData} from '../../api'
   import {mapActions, mapState} from 'vuex'
   export default {
     components: {
@@ -459,9 +460,8 @@
     },
     methods: {
       ...mapActions(['getWaitVerifyReportList']),
-      // 点击操作记录
-      showRecord (that, row) {
-        // console.log(that, row)
+
+      showRecord (that, row) {// 点击操作记录
         this.isShowRecord = true
         getOperatingRecord({ id: row.jobId })
                 .then(res => {
@@ -472,17 +472,17 @@
           console.log('操作记录', res)
         })
       },
+
       closeTip () { // 关闭弹窗
         this.isShowRecord = false
       },
-      // 冻结
-      frozen (that, row) {
+
+      frozen (that, row) {// 冻结
         this.$confirm('此操作将冻结此工单, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          console.log(that, row)
           frozenOrder({jobId: row.jobId, version: row.version})
                   .then(res => {
                     console.log(res)
@@ -492,9 +492,11 @@
           })
         })
       },
+
       searchOrder () { // 查询
         this.getWaitVerifyReportList()
       },
+
       printReport(that, row) { // 打印检测报告
         this.$router.push({
           name: "InitSurvey",
@@ -509,6 +511,7 @@
           }
         });
       },
+
       startVerift(that, row) { // 开始审核
         for (let i in this.listData) {
           this.listData[i]["review"] = 0;
@@ -527,19 +530,16 @@
           //初始化产品用量
           this.searchProUse();
         });
-        if (row.jobCode == 700) {
+        if (row.jobCode === 700) {
           this.isShowSub = false;
-        } else if (row.jobCode == 800) {
+        } else if (row.jobCode === 800) {
           this.isShowBtn = false;
           this.isShowSub = true;
         } else {
           this.isShowSub = false;
         }
-
         //车辆信息
-        net
-          .request("admin/car/queryById", "post", { carId: row.carId })
-          .then(res => {
+        queryByIdFirstReport({ carId: row.carId }).then(res => {
             this.gasolinetype = res.data.fuelTypeName;
             this.oilDeplete = res.data.oilDeplete;
             this.carNumber = res.data.carNumber;
@@ -548,68 +548,54 @@
             this.testAddr = res.data.orgName;
             this.cartype = res.data.modelName;
           });
-        net
-          .request("admin/car/queryCarTestingPhoto", "post", {
-            //检测前照片
-            jobId: this.jobId,
-            step: 1
-          })
-          .then(d => {
-            if (d.retcode == 1) {
-              var Arr = d.data,
-                before = [];
+        const param = {
+          jobId: this.jobId,
+          step: 1
+        }
+        queryCarTestingPhoto(param).then(d => {
+            if (d.retcode === 1) {
+              const Arr = d.data,
+                      before = [];
               this.beforeArr = [];
               this.afterArr = [];
-              for (var i = 0; i < Arr.length; i++) {
+              for (let i = 0; i < Arr.length; i++) {
                 Arr[i]["url"] = net.bigImg + Arr[i].photoId;
-                if (
-                  Arr[i].optionId != -1 &&
-                  Arr[i].optionId != -11 &&
-                  Arr[i].optionId != 5 &&
-                  Arr[i].optionId != -2
-                ) {
+                if (Arr[i].optionId !== -1 && Arr[i].optionId !== -11 && Arr[i].optionId !== 5 &&Arr[i].optionId !== -2) {
                   before.push(Arr[i]);
                 }
               }
-
-              net
-                .request("admin/car/queryCarTestingPhoto", "post", {
+              const paramData = {
+                jobId: this.jobId,
+                step: 2
+              }
                   //检测后照片
-                  jobId: this.jobId,
-                  step: 2
-                })
-                .then(r => {
-                  if (r.retcode == 1) {
-                    var after = [],
-                      b_arr = r.data,
-                      Arr = [];
-                    for (var g = 0; g < b_arr.length; g++) {
-                      if (b_arr[g].optionId == -2) {
+              queryCarTestingPhoto(paramData).then(r => {
+                  if (r.retcode === 1) {
+                    const after = [],
+                            b_arr = r.data,
+                            Arr = [];
+                    for (let g = 0; g < b_arr.length; g++) {
+                      if (b_arr[g].optionId === -2) {
                         this.carUrl = net.imgUrl + b_arr[g].photoId;
                         this.carBigImageID = b_arr[g].photoId;
                       }
-                      for (var j = 0; j < before.length; j++) {
-                        if (before[j].optionId == b_arr[g].optionId) {
+                      for (let j = 0; j < before.length; j++) {
+                        if (before[j].optionId === b_arr[g].optionId) {
                           Arr.push(b_arr[g]);
                           break;
                         }
                       }
                     }
 
-                    for (var i = 0; i < Arr.length; i++) {
+                    for (let i = 0; i < Arr.length; i++) {
                       for (let k = 0; k < before.length; k++) {
                         const element = before[k];
-                        if (Arr[i].optionId == element.optionId) {
+                        if (Arr[i].optionId === element.optionId) {
                           this.beforeArr.push(element);
                         }
                       }
                       Arr[i]["url"] = net.bigImg + Arr[i].photoId;
-                      if (
-                        Arr[i].optionId != -2 &&
-                        Arr[i].optionId != -11 &&
-                        Arr[i].optionId != 5 &&
-                        Arr[i].optionId != -1
-                      ) {
+                      if (Arr[i].optionId !== -2 &&Arr[i].optionId !== -11 && Arr[i].optionId !== 5 &&Arr[i].optionId !== -1) {
                         after.push(Arr[i]);
                       }
                     }
@@ -623,14 +609,12 @@
               net.message(this, d.retmsg, "error");
             }
           });
-
-        net
-          .request("admin/order/queryTestingWeb", "post", {
-            jobId: this.jobId,
-            step: 2
-          })
-          .then(res => {
-            if (res.retcode == 1) {
+        const params = {
+          jobId: this.jobId,
+          step: 2
+        }
+        queryTestingWeb(params).then(res => {
+            if (res.retcode === 1) {
               if (res.data != null) {
                 this.result = res.data.diagnosticOption;
                 this.step2ImageHeader = res.data.step2ImageHeader;
@@ -644,55 +628,50 @@
             }
           })
       },
+
       keepData(){ // 编辑并通过
-        var list = this.getProArgs();
+        const list = this.getProArgs();
         let params = {
           jobId: this.jobId,
           diagnosticOption: this.result,
           version: this.version
         };
         let data = list;
-        net
-          .request("admin/order/editAuditingRecheck", "post", params, data)
-          .then(res => {
-            if (res.retcode == 1) {
+        editAuditingRecheck(params, data).then(res => {
+            if (res.retcode === 1) {
               net.message(this, res.retmsg, "suuccess");
-              var skip = net.isJump("/completeOrder");
+              const skip = net.isJump("/completeOrder");
               if (skip) {
                 this.$router.push({ path: "/completeOrder" });
               } else {
-                this.getlistData(
-                  { pageNo: this.pageNo, pageSize: this.pageSize },
-                  { carNumber: this.carPai, type: 10 }
-                );
+                this.getWaitVerifyReportList()
               }
             } else {
               net.message(this, res.retmsg, "error");
             }
           })
       },
+
       submitReport(){ // 审核通过
         let params = {
           jobId: this.jobId,
           version: this.version
         };
-        net.request("admin/order/auditingRecheck", "post", params).then(res => {
-          if (res.retcode == 1) {
+        auditingRecheck(params).then(res => {
+          if (res.retcode === 1) {
             net.message(this, res.retmsg, "suuccess");
-            var skip = net.isJump("/completeOrder");
+            const skip = net.isJump("/completeOrder");
             if (skip) {
               this.$router.push({ path: "/completeOrder" });
             } else {
-              this.getlistData(
-                { pageNo: this.pageNo, pageSize: this.pageSize },
-                { carNumber: this.carPai, type: 10 }
-              );
+              this.getWaitVerifyReportList()
             }
           } else {
             net.message(this, res.retmsg, "error");
           }
         })
       },
+
       repulse() { // 打回
         this.$confirm(
           "此操作将修改工单为复查报告编辑状态，是否确认打回?",
@@ -704,37 +683,31 @@
           }
         )
           .then(() => {
-            net
-              .request("admin/order/repulseStep2", "post", {
-                jobId: this.jobId,
-                version: this.version
-              })
-              .then(res => {
-                if (res.retcode == 0) {
+            const param = {
+              jobId: this.jobId,
+              version: this.version
+            }
+            repulseReport(param).then(res => {
+                if (res.retcode === 0) {
                   this.dialogVisible = true;
-                  this.getlistData(
-                    { pageNo: this.pageNo, pageSize: this.pageSize },
-                    { type: 10 }
-                  );
+                  this.getWaitVerifyReportList()
                 } else {
                   net.message(this, res.retmsg, "warning");
                 }
               });
-            // this.$message({
-            //   type: "success",
-            //   message: "删除成功!"
-            // });
           })
           .catch(() => {});
       },
+
       back() { // 返回列表
-        if (this.operId == 2) {
+        if (this.operId === 2) {
           this.$router.push({ path: "/completeOrder" });
         } else {
           this.dialogVisible = true;
           this.getWaitVerifyReportList()
         }
       },
+
       printdiv() { // 预览 / 打印
         this.isprint = false;
         setTimeout(() => {
@@ -750,23 +723,24 @@
           );
         }, 300);
       },
+
       editMileage() { // 编辑里程
         this.editMileNumber = "";
         this.dialogVisible4 = true;
       },
+
       ensureEdit() { // 确认编辑里程
         let reg = /^\d+$/;
         if (!reg.test(this.editMileNumber)) {
           net.message(this, "里程只能为非负正整数", "error");
           return false;
         }
-        net
-          .request("admin/order/editJobMile", "post", {
-            jobId: this.jobId,
-            mile: this.editMileNumber
-          })
-          .then(res => {
-            if (res.retcode == 1) {
+        const param = {
+          jobId: this.jobId,
+          mile: this.editMileNumber
+        }
+        ensureEdit(param).then(res => {
+            if (res.retcode === 1) {
               net.message(this, "修改成功", "success");
               this.dialogVisible4 = false;
               this.mileNumber = this.editMileNumber + "km";
@@ -775,31 +749,31 @@
             }
           })
       },
+
       getBgImg(orgId) {
-        this.bg_pic =
-          net.imageHP + "web/config/watermark/getImage?orgId=" + orgId;
+        this.bg_pic = net.imageHP + "web/config/watermark/getImage?orgId=" + orgId;
       },
       exChange() {
         $("#exCtrl").on("input propertychange", e => {
           this.exLen = 230 - e.target.value.length;
         });
       },
-      //动态控制打印布局
-      trendsEdit(len) {
-        if (len == 1 || len == 2) {
+
+      trendsEdit(len) {//动态控制打印布局
+        if (len === 1 || len === 2) {
           this.imgWidth = 270;
           this.iconTop = 90;
-        } else if (len == 3) {
+        } else if (len === 3) {
           this.imgWidth = 240;
           this.iconTop = 75;
-        } else if (len == 4) {
+        } else if (len === 4) {
           this.imgWidth = 165;
           this.iconTop = 50;
         }
       },
-      //鼠标进入图片显示放大按钮
-      mouseEnter(d) {
-        if (d == -2) {
+
+      mouseEnter(d) {//鼠标进入图片显示放大按钮
+        if (d === -2) {
           $(".showCPBigBtn").hide();
           $(".showCPBigBtn[data-optionid='" + d + "']").show();
           return;
@@ -816,14 +790,14 @@
         this.dialogVisible2 = true;
         this.bigImage = net.bigImg + id;
       },
-      //获取产品信息
-      getProductInfo(callback) {
+
+      getProductInfo(callback) {//获取产品信息
         callback = callback || function() {};
-        net.request("admin/product/selectProductList", "post", {}).then(res => {
-          if (res.retcode == 1) {
-            var data = res.data;
-            for (var i = 0; i < data.length; i++) {
-              var item = { value1: "", id: data[i].id };
+        getProductData().then(res => {
+          if (res.retcode === 1) {
+            const data = res.data;
+            for (let i = 0; i < data.length; i++) {
+              const item = {value1: "", id: data[i].id};
               this.dataModel.push(item);
             }
             this.productArr = data;
@@ -833,26 +807,21 @@
           }
         });
       },
-      //查询产品用量
-      searchProUse() {
-        net
-          .request("admin/order/queryProductInfoList", "post", {
-            jobId: this.jobId
-          })
-          .then(res => {
-            if (res.retcode == 1) {
-              var data = res.data.rows;
-              for (var i = 0; i < data.length; i++) {
-                if (data[i].number != 0) {
+
+      searchProUse() {//查询产品用量
+        getSearchProductData({jobId: this.jobId}).then(res => {
+            if (res.retcode === 1) {
+              const data = res.data.rows;
+              for (let i = 0; i < data.length; i++) {
+                if (data[i].number !== 0) {
                   this.checkProList.push(data[i].productId);
-                  for (var j = 0; j < this.dataModel.length; j++) {
-                    if (this.dataModel[j].id == data[i].productId) {
+                  for (let j = 0; j < this.dataModel.length; j++) {
+                    if (this.dataModel[j].id === data[i].productId) {
                       this.dataModel[j]["value1"] = data[i].number;
                     }
                   }
                 }
               }
-              // console.log(this.dataModel);
             } else {
               net.message(this, res.retmsg, "error");
             }

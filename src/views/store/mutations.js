@@ -18,7 +18,8 @@ import {
   RECHECK_IMG_UPLOAD_D_TABLEDATA,
   RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA,
   RECEIVE_ENSURE_ORDER_DIA_TABLEDATA,
-  RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA
+  RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA,
+  RECEIVE_IMG_UPLOAD_FINUPLOAD
 } from './mutation_types'
 export default {
   [RECEIVE_TABLEDATA] (state, {tableData, pagination, longDatas, checkButtonList, detectionOrderBtnArrList}) { // 完成工单
@@ -110,10 +111,17 @@ export default {
     state.discardLongData = longDatas
   },
 
-  [RECEIVE_IMG_UPLOAD_D_TABLEDATA] (state, {row, result}) {
+  [RECEIVE_IMG_UPLOAD_D_TABLEDATA] (state, {row, result, fileList, fileList1, photoList, conloadPicCarPhotoId, onloadPicFramePhotoId, onloadPics1, onloadPics2}) { //待上传照片 编辑照片/上传照片
     state.onloadPicDialog = true
     state.onloadPicRow = row
     state.rowCarInfo = result
+    state.onloadPicFileList = fileList
+    state.onloadPicFileList1 = fileList1
+    state.onLoadPicPhotoList = photoList
+    state.conloadPicCarPhotoId = conloadPicCarPhotoId
+    state.onloadPicFramePhotoId = onloadPicFramePhotoId
+    state.onloadPics1 = onloadPics1
+    state.onloadPics2 = onloadPics2
   },
 
   [RECHECK_IMG_UPLOAD_D_TABLEDATA] (state, {row, result, fileList, photoList}) {
@@ -122,9 +130,6 @@ export default {
     state.recheckrowCarInfo = result
     state.frecheckrowFleList = fileList
     state.photoList = photoList
-    console.log(row)
-    console.log(result)
-    console.log(fileList)
   },
 
   [RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA] (state, {productItem, dataModel}) {
@@ -133,15 +138,19 @@ export default {
   },
 
   [RECEIVE_ENSURE_ORDER_DIA_TABLEDATA] (state,{viewPdf20, viewPdf30, viewPdf31}) { //治疗单确认的报告解读弹窗
-    console.log(viewPdf20)
     state.viewPdf20 = viewPdf20
     state.viewPdf30 = viewPdf30
     state.viewPdf31 = viewPdf31
   },
 
   [RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA] (state, {showEditPage, firstReportRow}) { // 待编辑报告界面
-    console.log(showEditPage)
     state.showEditPage = showEditPage
     state.firstReportRow = firstReportRow
-  }
+  },
+
+  [RECEIVE_IMG_UPLOAD_FINUPLOAD](state, {progressBar,loadProgress, row}) { // 待上传照片  完成上传
+    state.progressBar = progressBar
+    state.loadProgress = loadProgress
+    state.onloadPicRow = row
+  },
 }

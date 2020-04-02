@@ -8,7 +8,7 @@
         :searchData="searchData"
         :searchForm="searchForm"
         :searchHandle="searchHandle"
-      ></search-com>
+      />
       <table-com
         :that='that'
         size='medium '
@@ -29,7 +29,7 @@
         :redordCols='redordCols'
         :isShowRecord="isShowRecord"
         @closeTip="closeTip"
-      ></record-form>
+      />
     </div>
      <div v-show="showEditPage" class="warping">
       <!-- 操作栏 -->
@@ -874,7 +874,9 @@ import $ from "jquery";
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
 import recordForm from '../../components/tableCompnment/recordForm'
-import {getOperatingRecord, frozenOrder, getFirstReportEdir} from '../../api'
+import {getOperatingRecord, frozenOrder, getFirstReportEdir, imgUnqualified, submitReport, ensureEdit, submitDimensionality,
+  getArea, getProvince, getCity, getCarBrand, getCarFactory, getCarSeries, getCarModel, getCarMileage, queryTestingWeb, webSelect,
+  queryByIdFirstReport, queryCarTestingPhoto, getEngineType, getOptionByCarId, getExplain, webMatchFirstReport} from '../../api'
 import {mapActions, mapState} from 'vuex'
 export default {
   components: {
@@ -1021,6 +1023,8 @@ export default {
   },
   created () {
     this.getDetectionOrderEditList()
+    this.$store.state.showEditPage = false
+
   },
   computed: {
     ...mapState(['editDetectionTableData', 'editDetectionPagination', 'editDetectionLongData', 'pageNo',
@@ -1037,19 +1041,18 @@ export default {
   },
   filters: {
     type(d) {
-      var arr = ["", "检测", "治疗", "检测+治疗"];
+      const arr = ["", "检测", "治疗", "检测+治疗"];
       return arr[d];
     },
     option(val) {
-      var arr = ["未赋值", "轻微", "轻度", "中度", "重度", "严重"];
-      var str = arr[parseInt(val)];
+      const arr = ["未赋值", "轻微", "轻度", "中度", "重度", "严重"];
+      const str = arr[parseInt(val)];
       return str;
     }
   },
   methods: {
     ...mapActions(['getDetectionOrderEditList', 'getDetectionImgUploadList']),
     showRecord (that, row) { // 点击操作记录
-      // console.log(that, row)
       this.isShowRecord = true
       getOperatingRecord({ id: row.jobId })
         .then(res => {
@@ -1084,7 +1087,6 @@ export default {
       const param = {carId: this.firstReportRow.carId}
       this.getFirstEditData(() => {
         getFirstReportEdir(param).then(res => {
-          console.log('返回',res)
           this.carNumber = res.data.carNumber;
           this.brandname = res.data.brandName;
           this.cartype = res.data.modelName;
@@ -1142,7 +1144,7 @@ export default {
       this.position = this.unqualifiedArr;
     },
     selectPlace() { // 照片不合格确认提交按钮
-      var param = {
+      const param = {
         version: this.firstReportRow.version,
         jobId: this.firstReportRow.jobId,
         code: 32
@@ -1151,12 +1153,10 @@ export default {
         net.message(this, "请选择不合格部位", "error");
         return false;
       }
-      net
-        .request("admin/order/unqualified", "post", param, this.checkedPlace)
-        .then(res => {
-          if (res.retcode == 1) {
+      imgUnqualified(param, this.checkedPlace).then(res => {
+          if (res.retcode === 1) {
             net.message(this, res.retmsg, "success");
-            var skip = net.isJump("/onloadPic");
+            const skip = net.isJump("/onloadPic");
             if (skip) {
               this.$router.push({ path: "/onloadPic" });
             } else {
@@ -1186,9 +1186,9 @@ export default {
       }
       let list = [];
       for (let i = 0; i < this.datapicArr.length; i++) {
-        var obj = {},
-          obj1 = {},
-          obj2 = {};
+        const obj = {},
+                obj1 = {},
+                obj2 = {};
         obj["contrast"] = 2;
         obj["imageId"] = this.datapicArr[i].imageId2;
         obj["optionId"] = this.datapicArr[i].optionId;
@@ -1202,22 +1202,22 @@ export default {
         list.push(obj1);
         list.push(obj2);
       }
-      var params = {
+      const params = {
         jobId: this.firstReportRow.jobId,
         jobCode: 220,
         optionIds: this.optionIds.join(","),
         version: this.firstReportRow.version
       };
       console.log(params)
-      var checkRecordList = [];
+      const checkRecordList = [];
       for (let i = 0; i < this.placeArr.length; i++) {
-        var obj3 = {};
+        const obj3 = {};
         obj3["contrastResult"] = this.placeArr[i].contrastResult;
         obj3["optionId"] = this.placeArr[i].optionId;
         checkRecordList.push(obj3);
       }
       console.log(this.advise.length);
-      var data = {
+      const data = {
         imageNote: this.illustrate, //说明
         diagnosticOption: this.advise,
         list: list,
@@ -1227,7 +1227,7 @@ export default {
         .request("admin/order/writePresentation", "post", params, data)
         .then(res => {
             console.log(res)
-          if (res.retcode == 1) {
+          if (res.retcode === 1) {
             console.log(res)
             this.isShowSub = true;
             this.version = res.data;
@@ -1267,9 +1267,9 @@ export default {
       }
       let list = [];
       for (let i = 0; i < this.datapicArr.length; i++) {
-        var obj = {},
-          obj1 = {},
-          obj2 = {};
+        const obj = {},
+                obj1 = {},
+                obj2 = {};
         obj["contrast"] = 2;
         obj["imageId"] = this.datapicArr[i].imageId2;
         obj["optionId"] = this.datapicArr[i].optionId;
@@ -1283,31 +1283,29 @@ export default {
         list.push(obj1);
         list.push(obj2);
       }
-      var params = {
+      const params = {
         jobId: this.firstReportRow.jobId,
         jobCode: 230,
         optionIds: this.optionIds.join(","),
         version: this.firstReportRow.version
       };
-      var checkRecordList = [];
+      const checkRecordList = [];
       for (let i = 0; i < this.placeArr.length; i++) {
-        var obj3 = {};
+        const obj3 = {};
         obj3["contrastResult"] = this.placeArr[i].contrastResult;
         obj3["optionId"] = this.placeArr[i].optionId;
         checkRecordList.push(obj3);
       }
-      var data = {
+      const data = {
         imageNote: this.illustrate, //说明
         diagnosticOption: this.advise,
         list: list,
         checkRecordList: checkRecordList
       };
-      net
-        .request("admin/order/writePresentation", "post", params, data)
-        .then(res => {
-          if (res.retcode == 1) {
+      submitReport(params, data).then(res => {
+          if (res.retcode === 1) {
             net.message(this, res.retmsg, "suuccess");
-            var skip = net.isJump("/waitVerify");
+            const skip = net.isJump("/waitVerify");
             if (skip) {
               this.$router.push({ path: "/waitVerify" });
             } else {
@@ -1328,13 +1326,12 @@ export default {
         net.message(this, "里程只能为非负正整数", "error");
         return false;
       }
-      net
-        .request("admin/order/editJobMile", "post", {
-          jobId: this.firstReportRow.jobId,
-          mile: this.editMileNumber
-        })
-        .then(res => {
-          if (res.retcode == 1) {
+      const params = {
+        jobId: this.firstReportRow.jobId,
+        mile: this.editMileNumber
+      }
+      ensureEdit(params).then(res => {
+          if (res.retcode === 1) {
             net.message(this, "修改成功", "success");
             this.dialogVisible4 = false;
             this.mileNumber = this.editMileNumber + "km";
@@ -1375,15 +1372,15 @@ export default {
           width: "120px"
         });
       });
-      var iconArr = [];
+      const iconArr = [];
       $(".tr_sign").each(function() {
-        var flag = $(this).is(":hidden");
-        if (flag == false) {
+        const flag = $(this).is(":hidden");
+        if (flag === false) {
           iconArr.push($(this).data("imgid"));
           $(this).hide();
         }
       });
-      if (this.isShowArrow == "不打印") {
+      if (this.isShowArrow === "不打印") {
         $(".arrowIcon").hide();
       }
       setTimeout(() => {
@@ -1398,8 +1395,8 @@ export default {
         this.templateBut = true;
         $(".arrowIcon").show();
         $(".tr_sign").each(function() {
-          if (iconArr.length != 0) {
-            for (var i = 0; i < iconArr.length; i++) {
+          if (iconArr.length !== 0) {
+            for (let i = 0; i < iconArr.length; i++) {
               if ($(this).data("imgid") == iconArr[i]) {
                 $(this).show();
               }
@@ -1461,12 +1458,9 @@ export default {
         value : this.dimensionalityValue,
         jobId: this.firstReportRow.jobId,
       };
-      console.log(param)
-      net
-        .request("/admin/order/editJobValue", "post", param)
-        .then(res => {
+      submitDimensionality(param).then(res => {
           console.log(res)
-          if (res.retcode == 1) {
+          if (res.retcode === 1) {
             net.message(this, res.retmsg, "success");
           } else {
             net.message(this, res.retmsg, "error");
@@ -1475,8 +1469,8 @@ export default {
     },
     getareaData(callback) { //获取区
       callback = callback || function() {};
-      net.request("admin/select/getArea", "post").then(res => {
-        if (res.retcode == 1) {
+      getArea().then(res => {
+        if (res.retcode === 1) {
           this.areaArr = res.data;
           callback();
         } else {
@@ -1493,10 +1487,11 @@ export default {
     },
     getprovinceData(areaId, callback) { //获取省系
       callback = callback || function() {};
-      net
-        .request("admin/select/getProvince", "post", { areaId: areaId })
-        .then(res => {
-          if (res.retcode == 1) {
+      const param = {
+        areaId: areaId
+      }
+      getProvince(param).then(res => {
+          if (res.retcode === 1) {
             this.provinceArr = res.data;
             callback();
           } else {
@@ -1512,10 +1507,9 @@ export default {
     
     getcityData(provinceId, callback) {//获取市县
       callback = callback || function() {};
-      net
-        .request("admin/select/getCity", "post", { provinceId: provinceId })
-        .then(res => {
-          if (res.retcode == 1) {
+      const param = {provinceId: provinceId}
+      getCity(param).then(res => {
+          if (res.retcode === 1) {
             this.cityArr = res.data;
             callback();
           } else {
@@ -1526,8 +1520,8 @@ export default {
     
     getbrandData(callback) {//获取汽车品牌
       callback = callback || function() {};
-      net.request("admin/select/getCarBrand", "post").then(res => {
-        if (res.retcode == 1) {
+      getCarBrand().then(res => {
+        if (res.retcode === 1) {
           this.brandData = res.data;
           callback();
         } else {
@@ -1548,10 +1542,8 @@ export default {
     
     gethostData(brandId, callback) { //获取主机厂商
       callback = callback || function() {};
-      net
-        .request("admin/select/getCarFactory", "post", { brandId: brandId })
-        .then(res => {
-          if (res.retcode == 1) {
+      getCarFactory({ brandId: brandId }).then(res => {
+          if (res.retcode === 1) {
             this.hostData = res.data;
             callback();
           } else {
@@ -1569,10 +1561,8 @@ export default {
      
     getaudiData(factoryId, callback) { //获取车系
       callback = callback || function() {};
-      net
-        .request("admin/select/getCarSeries", "post", { factoryId: factoryId })
-        .then(res => {
-          if (res.retcode == 1) {
+      getCarSeries({factoryId: factoryId}).then(res => {
+          if (res.retcode === 1) {
             this.audiData = res.data;
             callback();
           } else {
@@ -1588,10 +1578,8 @@ export default {
     
     getcarTypeData(seriesId, callback) { //获取车型
       callback = callback || function() {};
-      net
-        .request("admin/select/getCarModel", "post", { seriesId: seriesId })
-        .then(res => {
-          if (res.retcode == 1) {
+      getCarModel({ seriesId: seriesId }).then(res => {
+          if (res.retcode === 1) {
             this.carTypeData = res.data;
             callback();
           } else {
@@ -1606,8 +1594,8 @@ export default {
     
     getMileData(callback) { //里程区间
       callback = callback || function() {};
-      net.request("admin/select/getCarMileage", "post", {}).then(res => {
-        if (res.retcode == 1) {
+      getCarMileage({}).then(res => {
+        if (res.retcode === 1) {
           this.mileSectionArr = res.data;
           this.mileSectionArr.unshift({ id: 0, mileage: "不限里程" });
           this.mileSection = "不限里程";
@@ -1619,13 +1607,12 @@ export default {
     },
     
     seeFristReport() { //回显报告中的说明，意见
-      net
-        .request("admin/order/queryTestingWeb", "post", {
-          jobId: this.firstReportRow.jobId,
-          step: 1
-        })
-        .then(res => {
-          if (res.retcode == 1) {
+      const param = {
+        jobId: this.firstReportRow.jobId,
+        step: 1
+      }
+      queryTestingWeb(param).then(res => {
+          if (res.retcode === 1) {
             if (res.data != null) {
               this.illustrate = res.data.imageNote;
               this.advise = res.data.diagnosticOption;
@@ -1643,10 +1630,10 @@ export default {
         });
     },
     getRightList() {//获取右边查询数据
-      var start, end;
+      let start, end;
 
-      if (this.mileSection != "不限里程") {
-        var mileArr = this.mileSection.split("-");
+      if (this.mileSection !== "不限里程") {
+        const mileArr = this.mileSection.split("-");
         start = mileArr[0];
         end = mileArr[1];
       } else {
@@ -1654,7 +1641,7 @@ export default {
         end = 1000000;
       }
 
-      var param = {
+      const param = {
         brandId: this.value1,
         factoryId: this.value2,
         seriesId: this.value3,
@@ -1667,30 +1654,28 @@ export default {
         provinceId: this.value7,
         engineId: this.engineType2
       };
-      if (this.value5 == "") {
+      if (this.value5 === "") {
         net.message(this, "请选择部位！！", "error");
         return false;
       }
-      net
-        .request("admin/image/polling/webSelect", "post", null, param)
-        .then(res => {
-          if (res.retcode == 1) {
-            var data = res.data.images;
-            var percents = res.data.percents;
-            for (var i = 0; i < data.length; i++) {
-              if (data[i].imageId2 != 0) {
+      webSelect(null, param).then(res => {
+          if (res.retcode === 1) {
+            const data = res.data.images;
+            const percents = res.data.percents;
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].imageId2 !== 0) {
                 data[i]["url2"] = net.imgUrl + data[i].imageId2;
                 data[i]["sign2"] = data[i].imageId2 + "_" + i;
               } else {
                 data[i]["url2"] = null;
               }
-              if (data[i].imageId3 != 0) {
+              if (data[i].imageId3 !== 0) {
                 data[i]["url3"] = net.imgUrl + data[i].imageId3;
                 data[i]["sign3"] = data[i].imageId3 + "_" + i;
               } else {
                 data[i]["url3"] = null;
               }
-              if (data[i].imageId4 != 0) {
+              if (data[i].imageId4 !== 0) {
                 data[i]["url4"] = net.imgUrl + data[i].imageId4;
                 data[i]["sign4"] = data[i].imageId4 + "_" + i;
               } else {
@@ -1704,65 +1689,50 @@ export default {
             this.rightPercent2 = percents[1].value;
             this.rightPercent3 = percents[2].value;
             this.statusArr = data;
-            // console.log(this.statusArr)
           }
         });
     },
     getConterData(carId) {//中间图片数据
-      net
-        .request("admin/car/queryById", "post", {
-          carId: carId
-        })
-        .then(res => {
+      queryByIdFirstReport({carId: carId}).then(res => {
           // console.log(res.data);
-          if (res.retcode == 1) {
+          if (res.retcode === 1) {
             this.engineType3 = res.data.engineId;
             this.fuelTypeName = res.data.fuelTypeName;
             this.modelName = res.data.modelName;
             this.brandName = res.data.brandName;
             this.carCount = res.data.carNumber;
-            var arr = res.data.list;
-            var b_arr = [];
+            const arr = res.data.list;
+            const b_arr = [];
             //获取检测部位数据
-            net
-              .request("admin/car/queryCarTestingPhoto", "post", {
-                jobId: this.firstReportRow.jobId,
-                step: 1
-              })
-              .then(d => {
-                var data = d.data;
-                for (var i = 0; i < arr.length; i++) {
-                  for (var j = 0; j < data.length; j++) {
-                    if (data[j].optionId == -1) {
+            const param = {
+              jobId: this.firstReportRow.jobId,
+              step: 1
+            }
+            queryCarTestingPhoto(param).then(d => {
+                const data = d.data;
+                for (let i = 0; i < arr.length; i++) {
+                  for (let j = 0; j < data.length; j++) {
+                    if (data[j].optionId === -1) {
                       this.carBigImageID = data[j].photoId;
                       this.CarFrameUrl = net.imgUrl + data[j].photoId;
-                    } else if (data[j].optionId == -11) {
+                    } else if (data[j].optionId === -11) {
                       this.carFrameImageId =
                         net.imageHP +
                         "image/getLarge?imageId=" +
                         data[j].photoId;
                     }
+                    let url = ''
                     arr[i]["placeName"] = url;
-                    if (arr[i].optionId == data[j].optionId) {
-                      var url = net.imgUrl + data[j].photoId;
-                      arr[i]["url"] = url;
+                    if (arr[i].optionId === data[j].optionId) {
+                      // var url = net.imgUrl + data[j].photoId; ///sdfghjkl;
+                      arr[i]["url"] = net.imgUrl + data[j].photoId;
                       arr[i]["photoId"] = data[j].photoId;
-                      if (
-                        data[j].contrastResult == 2 ||
-                        data[j].contrastResult == 3 ||
-                        data[j].contrastResult == 4
-                      ) {
+                      if (data[j].contrastResult === 2 || data[j].contrastResult === 3 || data[j].contrastResult === 4) {
                         arr[i]["contrastResult"] = data[j].contrastResult;
                       } else {
-                        if (
-                          data[j].optionValue == 1 ||
-                          data[j].optionValue == 2
-                        ) {
+                        if (data[j].optionValue === 1 || data[j].optionValue === 2) {
                           arr[i]["contrastResult"] = 2;
-                        } else if (
-                          data[j].optionValue == 4 ||
-                          data[j].optionValue == 5
-                        ) {
+                        } else if (data[j].optionValue === 4 || data[j].optionValue === 5) {
                           arr[i]["contrastResult"] = 4;
                         } else {
                           arr[i]["contrastResult"] = 3;
@@ -1778,9 +1748,9 @@ export default {
                   this.trendsEdit(this.placeArr.length);
                 }, 300);
                 this.getCenterRight(); //获取中间右边的渲染图片
-                for (var g = 0; g < this.unqualifiedArr.length; g++) {
-                  for (var h = 0; h < data.length; h++) {
-                    if (this.unqualifiedArr[g].optionId == data[h].optionId) {
+                for (let g = 0; g < this.unqualifiedArr.length; g++) {
+                  for (let h = 0; h < data.length; h++) {
+                    if (this.unqualifiedArr[g].optionId === data[h].optionId) {
                       this.unqualifiedArr[g].optionName =
                         this.unqualifiedArr[g].optionName + " (已上传图片)";
                     }
@@ -1793,19 +1763,14 @@ export default {
         });
     },
     getEngine() { // 获取发动机
-      net.request("admin/select/getEngineType", "post", {}, {}).then(res => {
-        console.log(res.data);
+      getEngineType().then(res => {
         this.engine = res.data;
       });
     },
     getFirstEditData(callback, id) {
       callback = callback || function() {};
-      net
-        .request("admin/select/getOptionByCarId", "post", {
-          carId: id
-        })
-        .then(res => {
-          if (res.retcode == 1) {
+      getOptionByCarId({carId: id}).then(res => {
+          if (res.retcode === 1) {
             this.engineArr = res.data;
             callback();
           } else {
@@ -1813,8 +1778,8 @@ export default {
           }
         });
     },
-    //鼠标进入图片显示放大按钮
-    mouseEnter(d) {
+
+    mouseEnter(d) { //鼠标进入图片显示放大按钮
       $(".showBigBtn").hide();
       $(".showBigBtn[data-optionid='" + d + "']").show();
     },
@@ -1823,18 +1788,17 @@ export default {
     },
     selectTemplate() { //选择模板
       this.template = true;
-      net.request("admin/select/getExplain", "post", null, null).then(res => {
-        if (res.retcode == 1) {
+      getExplain({},{}).then(res => {
+        if (res.retcode === 1) {
           this.selectTemplateArr = res.data;
         } else {
           this.$mount.error(res.retmsg);
         }
       });
     },
-     //获取中间的数据
+     //获取右边的数据
     getCenterRight() {
-      console.log(this.engineType3);
-      var param = {
+      const param = {
         brandId: this.value1,
         factoryId: this.value2,
         seriesId: this.value3,
@@ -1846,48 +1810,44 @@ export default {
         cityId: this.cityId,
         provinceId: this.provinceId,
         engineId: this.engineType3
-      };
-      console.log(this.firstReportRow)
-      console.log(param)
-      net
-        .request("admin/image/polling/webMatch", "post", null, param)
-        .then(res => {
-          if (res.retcode == 1) {
-            var data = res.data;
+      }
+      webMatchFirstReport(null, param).then(res => {
+          if (res.retcode === 1) {
+            const data = res.data
             //添加对应的url
-            for (var i = 0; i < data.length; i++) {
-              if (data[i].imageId2 != 0) {
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].imageId2 !== 0) {
                 data[i]["url2"] = net.imgUrl + data[i].imageId2;
               } else {
-                data[i]["url2"] = null;
+                data[i]["url2"] = null
               }
-              if (data[i].imageId3 != 0) {
+              if (data[i].imageId3 !== 0) {
                 data[i]["url3"] = net.imgUrl + data[i].imageId3;
               } else {
-                data[i]["url3"] = null;
+                data[i]["url3"] = null
               }
-              if (data[i].imageId4 != 0) {
+              if (data[i].imageId4 !== 0) {
                 data[i]["url4"] = net.imgUrl + data[i].imageId4;
               } else {
-                data[i]["url4"] = null;
+                data[i]["url4"] = null
               }
             }
             //根据部位的顺序调整对应的部位图片
-            var datapicArr = [];
-            for (var f = 0; f < this.placeArr.length; f++) {
-              for (var j = 0; j < data.length; j++) {
-                if (this.placeArr[f].optionId == data[j].optionId) {
-                  datapicArr.push(data[j]);
+            const datapicArr = []
+            for (let f = 0; f < this.placeArr.length; f++) {
+              for (let j = 0; j < data.length; j++) {
+                if (this.placeArr[f].optionId === data[j].optionId) {
+                  datapicArr.push(data[j])
                 }
               }
             }
-            this.datapicArr = datapicArr;
+            this.datapicArr = datapicArr
           }
-        });
+        })
     },
     //动态调整打印布局
     trendsEdit(count) {
-      if (count == 1) {
+      if (count === 1) {
         $(".frist").css({
           "margin-top": "20px"
         });
@@ -1906,7 +1866,7 @@ export default {
           "margin-top": "30px"
         });
       }
-      if (count == 2 || count == 3) {
+      if (count === 2 || count === 3) {
         $(".frist").css({
           "margin-top": "20px"
         });
@@ -1931,7 +1891,7 @@ export default {
           "margin-bottom": "30px"
         });
       }
-      if (count == 4) {
+      if (count === 4) {
         $(".frist").css({
           "margin-top": "10px"
         });
@@ -1957,7 +1917,7 @@ export default {
           "margin-bottom": "15px"
         });
       }
-      if (count == 5) {
+      if (count === 5) {
         $(".picTitle").css({
           "margin-bottom": "0px",
           "margin-top": "0px",
@@ -1970,16 +1930,16 @@ export default {
     editPrintData(optionId, url, sign, imgId) {
       let baseArr = this.datapicArr;
       for (let i = 0; i < baseArr.length; i++) {
-        if (baseArr[i].optionId == optionId) {
-          if (sign == 1) {
+        if (baseArr[i].optionId === optionId) {
+          if (sign === 1) {
             baseArr[i]["url2"] = url;
             baseArr[i]["imageId2"] = imgId;
           }
-          if (sign == 2) {
+          if (sign === 2) {
             baseArr[i]["url3"] = url;
             baseArr[i]["imageId3"] = imgId;
           }
-          if (sign == 3) {
+          if (sign === 3) {
             baseArr[i]["url4"] = url;
             baseArr[i]["imageId4"] = imgId;
           }
@@ -2004,18 +1964,18 @@ export default {
     },
     
     Arrow(optionId, contrastResult) { //图标箭头点击
-      var arr = this.placeArr;
-      for (var i = 0; i < arr.length; i++) {
-        if (optionId == arr[i].optionId) {
-          if (contrastResult == 4) {
+      const arr = this.placeArr;
+      for (let i = 0; i < arr.length; i++) {
+        if (optionId === arr[i].optionId) {
+          if (contrastResult === 4) {
             //向上
             arr[i]["contrastResult"] = 3;
           }
-          if (contrastResult == 3) {
+          if (contrastResult === 3) {
             //向下
             arr[i]["contrastResult"] = 2;
           }
-          if (contrastResult == 2) {
+          if (contrastResult === 2) {
             //等于
             arr[i]["contrastResult"] = 4;
           }

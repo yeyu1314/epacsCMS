@@ -137,8 +137,8 @@ export default {
   },
   methods: {
     ...mapActions(['getEnsureOrderList']),
-    //冻结
-    frozen(that, row) {
+
+    frozen(that, row) {//冻结
       console.log(that, row)
       this.$confirm('此操作将冻结此工单, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -147,7 +147,7 @@ export default {
       }).then(() => {
         console.log(that, row)
         frozenOrder({jobId: row.jobId, version: row.version}).then(res => {
-          if (res.retcode == 1) {
+          if (res.retcode === 1) {
             console.log(res)
             net.message(this, "操作成功", "success");
             this.getEnsureOrderList()
@@ -175,10 +175,10 @@ export default {
         step2Type2OptionList: this.step2Type2OptionList.join(",")
       }
       startEnsureOrder(params).then(res => {
-        if (res.retcode == 1) {
+        if (res.retcode === 1) {
             net.message(this, res.retmsg, "success");
-            var skip = net.isJump("/treatOrder");
-            if (skip) {
+          const skip = net.isJump("/treatOrder");
+          if (skip) {
               this.$router.push({ path: "/treatOrder" });
             } else {
               this.getEnsureOrderList()

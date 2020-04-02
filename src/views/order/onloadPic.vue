@@ -44,7 +44,7 @@
             <span>综合油耗：{{rowCarInfo.oilDeplete}}L/100km</span>
             <span>行驶里程：{{onloadPicRow.mile}}KM</span>
           </p>
-          <div style="display:flex;flex-wrap: wrap;">
+          <div style="display:flex;flex-wrap: wrap;" v-show="onloadPicRow.jobCode==20">
             <el-select
               v-model="chaizhuang"
               placeholder="请选择拆装工程师"
@@ -73,35 +73,35 @@
         </div>
         <div class="onlodList">
           <div class="perform">
-            <div class="left">车牌号</div>
+            <div :class="{error:onloadPics1 == 2}" class="left">车牌号</div>
             <div class="right">
               <el-upload
                 style="display:inline-block"
                 :action="uploadUrl"
                 list-type="picture-card"
                 :data="{carNumber:onloadPicRow.carNumber,step:1,option:-1}"
-                :on-success="uploadSuccess.bind(this,-1,carPhotoId)"
+                :on-success="uploadSuccess.bind(this,-1,conloadPicCarPhotoId)"
                 :on-preview="handlePictureCardPreview"
                 :on-change="change.bind(this,-1)"
-                :on-remove="remove.bind(this,-1,carPhotoId,onloadPicRow.jobId,onloadPicRow.version)"
-                :file-list="fileList"
+                :on-remove="remove.bind(this,-1,conloadPicCarPhotoId,onloadPicRow.jobId,onloadPicRow.version)"
+                :file-list="onloadPicFileList"
               >
                 <i class="el-icon-plus"></i>
               </el-upload>
             </div>
           </div>
           <div class="perform">
-            <div class="left">车架号</div>
+            <div :class="{error:onloadPics2 == 2}" class="left">车架号</div>
             <div class="right">
               <el-upload
                 :action="uploadUrl"
                 list-type="picture-card"
                 :data="{carNumber:onloadPicRow.carNumber,step:1,option:-11}"
-                :on-success="uploadSuccess.bind(this,-11,framePhotoId)"
+                :on-success="uploadSuccess.bind(this,-11,onloadPicFramePhotoId)"
                 :on-preview="handlePictureCardPreview"
                 :on-change="change.bind(this,-11)"
-                :on-remove="remove.bind(this,-11,framePhotoId,onloadPicRow.jobId,onloadPicRow.version)"
-                :file-list="fileList"
+                :on-remove="remove.bind(this,-11,onloadPicFramePhotoId,onloadPicRow.jobId,onloadPicRow.version)"
+                :file-list="onloadPicFileList1"
               >
                 <i class="el-icon-plus"></i>
               </el-upload>
@@ -131,14 +131,36 @@
     <el-dialog :visible="dialogVisible1" @close='close1'>
       <img width="100%" :src="dialogImageUrl" alt />
     </el-dialog>
+    <el-dialog
+      :visible="progressBar"
+      title="AI正在识别运算"
+      custom-class="hello"
+      :center="true"
+      :showClose="false"
+      :closeOnClickModal="false"
+      :closeOnPressEscape="false"
+    >
+      <div style="text-align:center">
+        <div style="height:50px">
+          <el-progress
+            :percentage="used"
+            :text-inside="loadProgress"
+            status="exception"
+            :stroke-width="18"
+          />
+        </div>
+        <img src="../../assets/img/ai.gif" />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import net from "../../assets/js/public"
+import $ from "jquery"
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
-import {frozenOrder} from '../../api'
+import {frozenOrder, finshUpload, ensureUploadImgList, deletePhoto} from '../../api'
 import {mapActions, mapState} from 'vuex'
 export default {
   data () {
@@ -178,11 +200,13 @@ export default {
       framePhotoId: undefined,
       dialogVisible1: false,
       dialogImageUrl: '',
-      photoList: [],
+      used : 0,
+      loadProgress: false,
     }
   },
   created () {
     this.getDetectionImgUploadList()
+    this.$store.state.progressBar = false
   },
   components: {
     tableCom,
@@ -190,13 +214,60 @@ export default {
   },
   computed: {
     ...mapState(['imgUploadTableData', 'imgUploadPagination', 'imgUploadLongDatas', 'pageNo', 'pageSize', 'searchData', 'detectionImgUploadBtnArrList',
-    'onloadPicDialog', 'onloadPicRow', 'rowCarInfo'])// 读数据
+    'onloadPicDialog', 'onloadPicRow', 'rowCarInfo', 'onLoadPicPhotoList', 'onloadPicFileList', 'onloadPicFileList1', 'conloadPicCarPhotoId', 'onloadPicFramePhotoId',
+    'onloadPics1', 'onloadPics2', 'progressBar', ])// 读数据
+  },
+  watch: {
+    // 如果 `showEditPage` 发生改变，这个函数就会运行
+    progressBar: function (progressBar) {
+      if(progressBar === true) {
+        this.finshUpload()
+      }
+    }
+  },
+  filters: {
+    type(d) {
+      const arr = ["", "检测", "治疗", "检测+治疗"];
+      return arr[d];
+    }
   },
   methods: {
     ...mapActions(['getDetectionImgUploadList']),
+
+    finshUpload() { // 完成上传
+      this.loadProgress = true
+      const that = this
+      const param = {
+        jobId: that.$store.state.onloadPicRow.jobId,
+        version: that.$store.state.onloadPicRow.version
+      }
+      finshUpload(param).then(res => {
+        if (res.retcode === 1) {
+          let dsq = setInterval(function () {
+            that.used = that.used + 1
+            if (that.used >= 100) {
+              clearInterval(dsq);
+              net.message(that, "AI已经识别,可继续录入数据", "success");
+              const skip = net.isJump("/firstReport");
+              if (skip) {
+                that.$router.push({path: "/firstReport"});
+              } else {
+                this.getDetectionImgUploadList()
+              }
+              that.$store.state.progressBar = false;
+            }
+          }, 50);
+        } else {
+          net.message(this, res.retmsg, "error");
+          that.$store.state.progressBar = false;
+        }
+      });
+    },
+
     searchOrder () { // 查询
       this.getDetectionImgUploadList()
     },
+
     frozen (that, row) { // 冻结工单
       console.log('冻结工单', that, row)
       this.$confirm("此操作将冻结此工单, 是否继续?", "提示", {
@@ -218,18 +289,15 @@ export default {
         })
       })
     },
-    // 确认上传
-    uploadImgs () {
-      console.log('确定上传')
-      console.log(this.$store.state.detectionImgUploadBtnArrList)
-      console.log(this.$store.state.rowCarInfo)
-      const row = this.$store.state.rowCarInfo
+
+    uploadImgs () {// 确认上传
+      const row = this.$store.state.onloadPicRow
       let param = {
         jobId: row.jobId,
         version: row.version,
-        chaiZhuang: row.chaizhuang || 0,
-        jianCe: row.jiance || 0,
-        genDan: row.gendan || 0
+        chaiZhuang: this.chaizhuang || 0,
+        jianCe: this.jiance || 0,
+        genDan: this.gendan || 0
       };
       console.log(row,param)
       if (row.jobCode == 20 && row.photoId == undefined) {
@@ -238,17 +306,17 @@ export default {
       if (row.jobCode == 30 || row.jobCode == 31 || row.jobCode == 32) {
         param["jobCode"] = 31;
       }
-      if (row.chaizhuang.length == 0 || row.jiance.length == 0 || row.gendan.length == 0) {
+      if (this.chaizhuang.length == 0 || this.jiance.length == 0 || this.gendan.length == 0) {
         let title = "";
-        // if (row.chaizhuang.length == 0) {
-        //   title += "拆装工程师 ";
-        // }
-        // if (row.jiance.length == 0) {
-        //   title += " 检测工程师";
-        // }
-        // if (row.gendan.length == 0) {
-        //   title += " 跟单员";
-        // }
+        if (this.chaizhuang.length == 0) {
+          title += "拆装工程师 ";
+        }
+        if (this.jiance.length == 0) {
+          title += " 检测工程师";
+        }
+        if (this.gendan.length == 0) {
+          title += " 跟单员";
+        }
         if (row.jobCode == 20) {
           this.$confirm(
             <span>
@@ -262,77 +330,153 @@ export default {
               type: "warning"
             }
           ).then(() => {
-            // this.ensureUpload(param);
+            this.ensureUpload(param);
             console.log(param)
           });
         } else {
-          // this.ensureUpload(param);
+          this.ensureUpload(param);
           console.log(param)
         }
       } else {
-        // this.ensureUpload(param);
-        console.log(param)
+        this.ensureUpload(param);
       }
       this.$store.state.onloadPicDialog = false
-      // const data = this.$store.state.detectionImgUploadBtnArrList
-      // for (let i = 0; i < data.length; i++) {
-      //   if (row.jobId === data[i].jobId) {
-      //     data[i].btnList[1].isShow = true
-      //   }
-      // }
     },
+
+    ensureUpload(param) { //确认上传接口调取
+      ensureUploadImgList(param, this.onLoadPicPhotoList).then(res => {
+          if (res.retcode == 1) {
+            net.message(this, res.retmsg, "success");
+            this.version = res.data;
+            this.dialogVisible = false;
+            this.getDetectionImgUploadList()
+          } else {
+            net.message(this, res.retmsg, "warning");
+          }
+        });
+    },
+
     close () { // 关闭弹窗
       this.$store.state.onloadPicDialog = false
     },
+
     close1 () { //关闭放大图片
       this.dialogVisible1 = false
     },
+
     closeDialog () {
       // this.$store.state.onloadPicDialog = false
       console.log('关闭')
     },
-    // 上传图片成功
-    uploadSuccess(optionId, photoId, response, file, fileList){
-      if (response.retcode != 1) {
+
+    uploadSuccess(optionId, photoId, response, file, fileList){ // 上传图片成功
+      if (response.retcode !== 1) {
         net.message(this, response.retmsg, "error");
         return false;
       }
-      this.photoList.push({ optionId: optionId, photoId: response.data });
+      this.$store.state.onLoadPicPhotoList.push({ optionId: optionId, photoId: response.data });
       // this.optionId = optionId;
-      if (optionId == -1) {
+      if (optionId === -1) {
         this.carPhotoId = response.data;
-      } else if (optionId == -11) {
+      } else if (optionId === -11) {
         this.framePhotoId = response.data;
       } else {
         const data = this.rowCarInfo
         for (let i = 0; i < data.list.length; i++) {
           const element = data.list[i];
-          if (optionId == element.optionId) {
+          if (optionId === element.optionId) {
             data.list[i].photoId = response.data;
             this.$store.state.rowCarInfo.list.splice(i, 1, element);
           }
         }
-        console.log(this.rowCarInfo);
-        console.log(this.$store.state.rowCarInfo);
       }
     },
-    //监听改变
-    change(idx, file, fileList) {
+
+    change(idx, file, fileList) {//监听改变
       if (fileList.length > 1) {
         fileList.splice(0, 1);
       }
     },
-    // 移除图片的回调
-    remove(optionID, photoID, jobID, version1) {
-      console.log(optionID, photoID, jobID, version1)
+
+    remove(optionID, photoID, jobID, version1) {// 移除图片的回调
+      const param = {
+        optionId: optionID,
+        photoId: photoID,
+        jobId: jobID,
+        version: version1
+      }
+      deletePhoto(param, {}).then(res => {
+          if (res.retcode == 1) {
+            for (let i = 0; i < this.onLoadPicPhotoList.length; i++) {
+              if (this.onLoadPicPhotoList[i].optionId == optionID) {
+                this.onLoadPicPhotoList.splice(i, 1);
+              }
+            }
+            net.message(this, "删除成功", "warning");
+            this.version = res.data;
+            setTimeout(() => {
+              this.ctroOnloadBtn();
+            }, 500);
+          } else {
+            net.message(this, "删除失败", "warning");
+            setTimeout(() => {
+              this.ctroOnloadBtn();
+            }, 500);
+          }
+        });
     },
+
     handleExceed() {
       net.message(this, "同时上传限制一个图，请先删除前面上传的图片", "error")
     },
-    //点击显示放大
-    handlePictureCardPreview(file) {
+
+    handlePictureCardPreview(file) {//点击显示放大
       this.dialogImageUrl = file.url;
       this.dialogVisible1 = true;
+    },
+
+    ctroOnloadBtn() {//控制上传按钮显示
+      const _this = this;
+      $(".perform").each(function() {
+        var btn = $(this)
+                .children(".right")
+                .children("div")
+                .children(".el-upload--picture-card");
+        var count = $(this)
+                .children(".right")
+                .children("div")
+                .children(".el-upload-list--picture-card")
+                .children().length;
+
+        if (count == 0) {
+          btn.show();
+        }
+        if (count > 0) {
+          btn.hide();
+          var del = $(this)
+                  .children(".right")
+                  .children("div")
+                  .children(".el-upload-list--picture-card")
+                  .children(".el-upload-list__item")
+                  .children(".el-upload-list__item-actions")
+                  .children(".el-upload-list__item-delete");
+          if (_this.sign == 0) {
+            del.hide();
+          } else {
+            del.show();
+          }
+        }
+      });
+    },
+
+    reloadDia() {// 显示上传图片系列样式
+      $(".perform").each(function () {
+        const btn = $(this)
+                .children(".right")
+                .children("div")
+                .children(".el-upload--picture-card");
+        btn.show();
+      })
     }
   }
 }

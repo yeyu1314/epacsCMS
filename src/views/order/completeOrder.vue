@@ -524,6 +524,7 @@ export default {
           {label:'车牌',prop:'carNumber'},
           {label:'车辆信息',type:'longData'},
           {label:'下单时间',prop:'inputTime'},
+          {label:'下单站点',prop:'orgName'},
           {label:'业务类型',prop:'checkType'},
           {label:'故障描述',prop:'note'},
           {label:'发动机数量',prop:'carCylinder'},
@@ -743,6 +744,7 @@ export default {
                       note:data[i].note,//故障描述
                       carCylinder:data[i].carCylinder,//发动机缸数
                       jobCode : data[i].jobCode,
+                      orgName : data[i].orgName,
                       //车辆信息
                       factoryName:data[i].factoryName,
                       seriesName:data[i].seriesName,

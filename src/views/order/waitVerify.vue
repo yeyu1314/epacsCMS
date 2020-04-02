@@ -27,7 +27,7 @@
         :redordCols='redordCols'
         :isShowRecord="isShowRecord"
         @closeTip="closeTip"
-      ></record-form>
+      />
     </div>
     <div v-show="isShowOpear" class="warping">
       <!-- 操作栏 -->
@@ -87,7 +87,7 @@
                   v-model="opinion"
                   style="width:217px;"
                   disabled
-          ></el-input>
+          />
           <div class="arrow" @click="adviseArrow">
             <img src="../../assets/img/1.png" alt />
           </div>
@@ -134,10 +134,10 @@
                     style="display:none;position:absolute;top: 0;background: #000;opacity: 0.5;width: 105px;height: 78px;z-index: 1;"
                   >
                     <i
-                      class="el-icon-zoom-in"
-                      @click="bigIcon(carBigImageID)"
-                      style="color: #fff;font-size: 25px;margin: 30px;"
-                    ></i>
+                            class="el-icon-zoom-in"
+                            @click="bigIcon(carBigImageID)"
+                            style="color: #fff;font-size: 25px;margin: 30px;"
+                    />
                   </div>
                 </div>
                 <div style="display: flex;flex-direction: column; margin-left:15px;">
@@ -227,9 +227,9 @@
                         @mouseenter="mouseEnter(item.optionId)"
                       />
                       <p
-                        v-else
-                        style="width: 120px;height: 91px;border: 1px solid #c0c4cc;margin: 0 auto;"
-                      ></p>
+                              v-else
+                              style="width: 120px;height: 91px;border: 1px solid #c0c4cc;margin: 0 auto;"
+                      />
                       <div
                         class="showBigBtn"
                         @click="clickOption(item.optionId)"
@@ -238,15 +238,15 @@
                         style="display:none;position:absolute;top: 0;background: #000;opacity: 0.5;width: 120px;height: 90px;z-index: 1;"
                       >
                         <i
-                          class="el-icon-zoom-in"
-                          @click="bigIcon(item.photoId)"
-                          style="color: #fff;font-size: 22px;margin:35px 5px 0 5px;cursor: pointer;"
-                        ></i>
+                                class="el-icon-zoom-in"
+                                @click="bigIcon(item.photoId)"
+                                style="color: #fff;font-size: 22px;margin:35px 5px 0 5px;cursor: pointer;"
+                        />
                         <i
-                          class="el-icon-delete"
-                          @click="deleteRow(item.optionId)"
-                          style="color: #fff;font-size: 22px;margin-top: 35px;cursor: pointer;"
-                        ></i>
+                                class="el-icon-delete"
+                                @click="deleteRow(item.optionId)"
+                                style="color: #fff;font-size: 22px;margin-top: 35px;cursor: pointer;"
+                        />
                       </div>
                       <p
                         style="font-size: 14px;text-align: center;margin:0;border: 1px solid #c0c4cc;height: 20px;line-height: 20px;    margin: 0;margin-top: -3px;"
@@ -312,10 +312,10 @@
                               style="display:none;position:absolute;top: 0;background: #000;opacity: 0.5;width: 120px;height: 90px;z-index: 1;"
                             >
                               <i
-                                class="el-icon-zoom-in"
-                                @click="bigIcon(c.imageId2)"
-                                style="color: #fff;font-size: 25px;margin: 30px;"
-                              ></i>
+                                      class="el-icon-zoom-in"
+                                      @click="bigIcon(c.imageId2)"
+                                      style="color: #fff;font-size: 25px;margin: 30px;"
+                              />
                             </div>
                             <img
                               :src="c.url2"
@@ -339,9 +339,9 @@
                               style="display:none;position: absolute;top: 0px;width:0;height:0;border-color: transparent #67c23a;border-width: 0px 0px 30px 30px;border-style: solid;z-index: 1;"
                             >
                               <i
-                                class="el-icon-check"
-                                style="position: relative;top: 0px;right: 27px;color: #fff;"
-                              ></i>
+                                      class="el-icon-check"
+                                      style="position: relative;top: 0px;right: 27px;color: #fff;"
+                              />
                             </div>
                           </div>
                           <div v-else style="width: 120px;height: 108px;">
@@ -373,10 +373,10 @@
                               style="display:none;position:absolute;top: 0;background: #000;opacity: 0.5;width: 120px;height: 90px;z-index: 1;"
                             >
                               <i
-                                class="el-icon-zoom-in"
-                                @click="bigIcon(c.imageId3)"
-                                style="color: #fff;font-size: 25px;margin: 30px;"
-                              ></i>
+                                      class="el-icon-zoom-in"
+                                      @click="bigIcon(c.imageId3)"
+                                      style="color: #fff;font-size: 25px;margin: 30px;"
+                              />
                             </div>
                             <img
                               :src="c.url3"
@@ -400,9 +400,9 @@
                               style="display:none;position: absolute;top: 0px;width:0;height:0;border-color: transparent #67c23a;border-width: 0px 0px 30px 30px;border-style: solid;z-index: 1;"
                             >
                               <i
-                                class="el-icon-check"
-                                style="position: relative;top: 0px;right: 27px;color: #fff;"
-                              ></i>
+                                      class="el-icon-check"
+                                      style="position: relative;top: 0px;right: 27px;color: #fff;"
+                              />
                             </div>
                           </div>
                           <div
@@ -435,10 +435,10 @@
                               style="display:none;position:absolute;top: 0;background: #000;opacity: 0.5;width: 120px;height: 90px;z-index: 1;"
                             >
                               <i
-                                class="el-icon-zoom-in"
-                                @click="bigIcon(c.imageId4)"
-                                style="color: #fff;font-size: 25px;margin: 30px;"
-                              ></i>
+                                      class="el-icon-zoom-in"
+                                      @click="bigIcon(c.imageId4)"
+                                      style="color: #fff;font-size: 25px;margin: 30px;"
+                              />
                             </div>
                             <img
                               :src="c.url4"
@@ -463,9 +463,9 @@
                               style="display:none;position: absolute;top: 0px;width:0;height:0;border-color: transparent #67c23a;border-width: 0px 0px 30px 30px;border-style: solid;z-index: 1;"
                             >
                               <i
-                                class="el-icon-check"
-                                style="position: relative;top: 0px;right: 27px;color: #fff;"
-                              ></i>
+                                      class="el-icon-check"
+                                      style="position: relative;top: 0px;right: 27px;color: #fff;"
+                              />
                             </div>
                           </div>
                           <div v-else style="width: 120px;height: 108px;margin-left: 14px;">
@@ -496,15 +496,15 @@
                   >*检测结果</p>
                   <div style="position: relative;" v-show="isprint">
                     <el-input
-                      type="textarea"
-                      id="chCtrl"
-                      :autosize="{ minRows: 4}"
-                      placeholder="请输入意见"
-                      v-model="advise"
-                      maxlength="100"
-                      style="font-size:12px;"
-                      :disabled="!isShowReach"
-                    ></el-input>
+                            type="textarea"
+                            id="chCtrl"
+                            :autosize="{ minRows: 4}"
+                            placeholder="请输入意见"
+                            v-model="advise"
+                            maxlength="100"
+                            style="font-size:12px;"
+                            :disabled="!isShowReach"
+                    />
                     <span
                       style="font-size: 14px;position: absolute;bottom: 8px;right: 20px;color: #959595;"
                     >还能输入{{chLen}}字</span>
@@ -530,13 +530,13 @@
                     @click="select(item.name)"
                   >
                     <el-input
-                      type="textarea"
-                      style="margin-bottom:10px"
-                      :rows="2"
-                      disabled
-                      placeholder="请输入内容"
-                      v-model="item.name"
-                    ></el-input>
+                            type="textarea"
+                            style="margin-bottom:10px"
+                            :rows="2"
+                            disabled
+                            placeholder="请输入内容"
+                            v-model="item.name"
+                    />
                   </p>
                 </el-dialog>
                 <div style="width: 158mm;margin: 0px 0 10px 88px;" class="ctroAdvise">
@@ -546,15 +546,15 @@
                   >*诊断意见</p>
                   <div style="position: relative;" v-show="isprint">
                     <el-input
-                      id="exCtrl"
-                      type="textarea"
-                      :autosize="{ minRows: 4}"
-                      placeholder="请输入说明"
-                      v-model="illustrate"
-                      maxlength="280"
-                      :disabled="!isShowReach"
-                      style="font-size:12px;"
-                    ></el-input>
+                            id="exCtrl"
+                            type="textarea"
+                            :autosize="{ minRows: 4}"
+                            placeholder="请输入说明"
+                            v-model="illustrate"
+                            maxlength="280"
+                            :disabled="!isShowReach"
+                            style="font-size:12px;"
+                    />
                     <span
                       style="font-size: 12px;position: absolute;bottom: 6px;right: 18px;color: #959595;"
                     >还能输入{{exLen}}字</span>
@@ -593,11 +593,11 @@
               class="f_select"
             >
               <el-option
-                v-for="item in dimensionality"
-                :key="item.value"
-                :label="item.laber"
-                :value="item.value"
-              ></el-option>
+                      v-for="item in dimensionality"
+                      :key="item.value"
+                      :label="item.laber"
+                      :value="item.value"
+              />
             </el-select>
             <el-button type="primary" class="search" size="mini" @click="submitDimensionality">修改</el-button>
           </div>
@@ -611,11 +611,11 @@
               class="f_select"
             >
               <el-option
-                v-for="item in areaArr"
-                :key="item.id"
-                :label="item.areaName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in areaArr"
+                      :key="item.id"
+                      :label="item.areaName"
+                      :value="item.id"
+              />
             </el-select>
             <el-select
               v-model="value7"
@@ -625,19 +625,19 @@
               class="f_select"
             >
               <el-option
-                v-for="item in provinceArr"
-                :key="item.id"
-                :label="item.provinceName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in provinceArr"
+                      :key="item.id"
+                      :label="item.provinceName"
+                      :value="item.id"
+              />
             </el-select>
             <el-select v-model="value8" clearable placeholder="请选择市/县" class="f_select">
               <el-option
-                v-for="item in cityArr"
-                :key="item.id"
-                :label="item.cityName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in cityArr"
+                      :key="item.id"
+                      :label="item.cityName"
+                      :value="item.id"
+              />
             </el-select>
           </div>
           <div class="searchCon">
@@ -649,11 +649,11 @@
               class="p_select"
             >
               <el-option
-                v-for="item in brandData"
-                :key="item.id"
-                :label="item.brandName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in brandData"
+                      :key="item.id"
+                      :label="item.brandName"
+                      :value="item.id"
+              />
             </el-select>
             <el-select
               v-model="value2"
@@ -663,11 +663,11 @@
               class="p_select"
             >
               <el-option
-                v-for="item in hostData"
-                :key="item.id"
-                :label="item.factoryName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in hostData"
+                      :key="item.id"
+                      :label="item.factoryName"
+                      :value="item.id"
+              />
             </el-select>
           </div>
           <div class="searchCon">
@@ -679,37 +679,37 @@
               class="p_select"
             >
               <el-option
-                v-for="item in audiData"
-                :key="item.id"
-                :label="item.seriesName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in audiData"
+                      :key="item.id"
+                      :label="item.seriesName"
+                      :value="item.id"
+              />
             </el-select>
             <el-select v-model="value4" clearable placeholder="请选择车型" class="p_select">
               <el-option
-                v-for="item in carTypeData"
-                :key="item.id"
-                :label="item.modelName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in carTypeData"
+                      :key="item.id"
+                      :label="item.modelName"
+                      :value="item.id"
+              />
             </el-select>
           </div>
           <div class="searchCon">
             <el-select v-model="mileSection" clearable placeholder="请选择里程" class="p_select">
               <el-option
-                v-for="item in mileSectionArr"
-                :key="item.id"
-                :label="item.mileage"
-                :value="item.mileage"
-              ></el-option>
+                      v-for="item in mileSectionArr"
+                      :key="item.id"
+                      :label="item.mileage"
+                      :value="item.mileage"
+              />
             </el-select>
             <el-select v-model="engineType2" clearable placeholder="请选择发动机" class="p_select">
               <el-option
-                v-for="item in engine"
-                :key="item.id"
-                :label="item.engineName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in engine"
+                      :key="item.id"
+                      :label="item.engineName"
+                      :value="item.id"
+              />
             </el-select>
           </div>
           <div class="searchCon">
@@ -720,11 +720,11 @@
               style="width:180px;margin: 20px 0 0 20px;"
             >
               <el-option
-                v-for="item in placeArr"
-                :key="item.optionId"
-                :label="item.optionName"
-                :value="item.optionId"
-              ></el-option>
+                      v-for="item in placeArr"
+                      :key="item.optionId"
+                      :label="item.optionName"
+                      :value="item.optionId"
+              />
             </el-select>
             <el-button type="primary" class="search" size="mini" @click="searchClick">搜索</el-button>
           </div>
@@ -748,10 +748,10 @@
                 style="display:none;position:absolute;top: 0;right: 0px;background: #000;opacity: 0.5;width: 112px;height: 85px;z-index: 1;"
               >
                 <i
-                  class="el-icon-zoom-in"
-                  @click="bigIcon(item.imageId2)"
-                  style="color: #fff;font-size: 25px;margin: 30px;"
-                ></i>
+                        class="el-icon-zoom-in"
+                        @click="bigIcon(item.imageId2)"
+                        style="color: #fff;font-size: 25px;margin: 30px;"
+                />
               </div>
             </div>
             <div v-else class="ulrEmpty">
@@ -772,10 +772,10 @@
                 style="display:none;position:absolute;top: 0;right: 0px;background: #000;opacity: 0.5;width: 112px;height: 85px;z-index: 1;"
               >
                 <i
-                  class="el-icon-zoom-in"
-                  @click="bigIcon(item.imageId3)"
-                  style="color: #fff;font-size: 25px;margin: 30px;"
-                ></i>
+                        class="el-icon-zoom-in"
+                        @click="bigIcon(item.imageId3)"
+                        style="color: #fff;font-size: 25px;margin: 30px;"
+                />
               </div>
             </div>
             <div v-else class="ulrEmpty">
@@ -796,10 +796,10 @@
                 style="display:none;position:absolute;top: 0;right: 2px;background: #000;opacity: 0.5;width: 112px;height: 85px;z-index: 1;"
               >
                 <i
-                  class="el-icon-zoom-in"
-                  @click="bigIcon(item.imageId4)"
-                  style="color: #fff;font-size: 25px;margin: 30px;"
-                ></i>
+                        class="el-icon-zoom-in"
+                        @click="bigIcon(item.imageId4)"
+                        style="color: #fff;font-size: 25px;margin: 30px;"
+                />
               </div>
             </div>
             <div v-else class="ulrEmpty">
@@ -818,14 +818,14 @@
     <el-dialog :visible.sync="dialogVisible3" width="700px">
       <div style="width:100%">
         <el-table :data="seeArr" height="450" border style="width: 100%">
-          <el-table-column prop="userName" label="操作人"></el-table-column>
-          <el-table-column prop="remarks" label="操作内容"></el-table-column>
-          <el-table-column prop="inputTime" :formatter="dateFormat" label="操作时间"></el-table-column>
+          <el-table-column prop="userName" label="操作人"/>
+          <el-table-column prop="remarks" label="操作内容"/>
+          <el-table-column prop="inputTime" :formatter="dateFormat" label="操作时间"/>
         </el-table>
       </div>
     </el-dialog>
     <el-dialog title="修改里程" :visible.sync="dialogVisible4" width="30%">
-      <el-input placeholder="请输入里程" v-model="editMileNumber" maxlength="8" clearable></el-input>
+      <el-input placeholder="请输入里程" v-model="editMileNumber" maxlength="8" clearable/>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible4 = false">取 消</el-button>
         <el-button type="primary" @click="ensureEdit">确 定</el-button>
@@ -846,7 +846,9 @@ import moment from 'moment'
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
 import recordForm from '../../components/tableCompnment/recordForm'
-import {getOperatingRecord, frozenOrder} from '../../api'
+import {getOperatingRecord, frozenOrder, startVeriftById, veriftToExamine, veriftPresentation, veriftRepulse, submitDimensionality, getArea,
+  getProvince, getCity, getCarSeries, getCarFactory, getCarModel, getExplain, getEngineType, getOptionByCarId, getCarBrand, getCarMileage,
+  queryTestingWeb, queryCarTestingPhoto, queryByIdFirstReport, webMatchFirstReport, ensureEdit, webSelect} from '../../api'
 import {mapActions, mapState} from 'vuex'
 export default {
   components: {
@@ -917,7 +919,6 @@ export default {
       radio4Item : ["活塞顶大部分区域露出金属色泽；","活塞顶部分区域有金属色泽露出；","活塞顶没有金属色泽露出；"],
       radio5 : '',
       radio5Item : ["缸壁未见异常划痕。","缸壁有轻微划痕。","缸壁有深度划痕。"],
-      opinion: "",
       dimensionalityValue: '', // 综合维度
       dimensionality : [ // 综合维度下拉框
         {id:2,laber:'轻微轻度',value:2},
@@ -986,8 +987,6 @@ export default {
       version: "",
       //获取图片参数
       p_mileStart: "",
-      //控制打印显隐
-      ctroPrinting: true,
       isprint: true,
       selectTemplateArr: [], //对比模板
       dialogVisible2: false,
@@ -1020,8 +1019,8 @@ export default {
   },
   methods: {
     ...mapActions(['getDetectionVerifyList']),
-    // 打印检测报告
-    printReport (that, row) {
+
+    printReport (that, row) { // 打印检测报告
       console.log(that, row)
       this.$router.push({
         name: "InitSurvey",
@@ -1036,8 +1035,8 @@ export default {
         }
       })
     },
-    // 点击操作记录
-    showRecord (that, row) {
+
+    showRecord (that, row) { // 点击操作记录
       this.isShowRecord = true
       getOperatingRecord({ id: row.jobId }).then(res => {
         let data = res.data.list
@@ -1065,8 +1064,7 @@ export default {
       this.getBgImg(row.orgId)
       this.version = row.version
       this.getEngineData(() => {
-        net
-          .request("admin/car/queryById", "post", { carId: row.carId }).then(res => {
+        startVeriftById({ carId: row.carId }).then(res => {
             this.carNumber = res.data.carNumber;
             this.brandname = res.data.brandName;
             this.cartype = res.data.modelName;
@@ -1107,8 +1105,8 @@ export default {
       }, row.carId); //初始化发动机
       this.getEngine();
     },
-    // 冻结
-    frozen (that, row) {
+
+    frozen (that, row) { // 冻结
       this.$confirm('此操作将冻结此工单, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -1124,9 +1122,11 @@ export default {
           })
       })
     },
+
     searchOrder () { // 查询
       this.getDetectionVerifyList()
     },
+
     subExamine(){ // 审核通过
       if (this.illustrate.length > 280) {
         net.message(
@@ -1146,9 +1146,9 @@ export default {
       }
       let list = [];
       for (let i = 0; i < this.datapicArr.length; i++) {
-        var obj = {},
-          obj1 = {},
-          obj2 = {};
+        const obj = {},
+                obj1 = {},
+                obj2 = {};
         obj["contrast"] = 2;
         obj["imageId"] = this.datapicArr[i].imageId2;
         obj["optionId"] = this.datapicArr[i].optionId;
@@ -1167,9 +1167,9 @@ export default {
         optionIds: this.optionIds.join(","),
         version: this.version
       };
-      var checkRecordList = [];
+      const checkRecordList = [];
       for (let i = 0; i < this.placeArr.length; i++) {
-        var obj3 = {};
+        const obj3 = {};
         obj3["contrastResult"] = this.placeArr[i].contrastResult;
         obj3["optionId"] = this.placeArr[i].optionId;
         checkRecordList.push(obj3);
@@ -1180,14 +1180,13 @@ export default {
         list: list,
         checkRecordList: checkRecordList
       }
-      net.request("admin/order/toExamine", "post", params, data).then(res => {
-        if (res.retcode == 1) {
-          var skip = net.isJump("/ensureOrder");
-          var skip1 = net.isJump("/completeOrder");
+      veriftToExamine(params, data).then(res => {
+        if (res.retcode === 1) {
+          const skip = net.isJump("/ensureOrder");
+          const skip1 = net.isJump("/completeOrder");
           net.message(this, res.retmsg, "suuccess");
-          if (this.checkType == 1) {
-            //检测工单
-            if (skip1) {
+          if (this.checkType === 1) {
+            if (skip1) { //检测工单
               this.$router.push({ path: "/completeOrder" });
             } else {
               this.getDetectionVerifyList()
@@ -1204,6 +1203,7 @@ export default {
         }
       })
     },
+
     reduction(){ // 还原
       this.advise = "";
       this.illustrate =
@@ -1215,6 +1215,7 @@ export default {
         });
       }, 300);
     },
+
     editAdopt(){ // 编辑并通过
       if (this.illustrate.length > 260) {
         net.message(
@@ -1234,9 +1235,9 @@ export default {
       }
       let list = [];
       for (let i = 0; i < this.datapicArr.length; i++) {
-        var obj = {},
-          obj1 = {},
-          obj2 = {};
+        const obj = {},
+                obj1 = {},
+                obj2 = {};
         obj["contrast"] = 2;
         obj["imageId"] = this.datapicArr[i].imageId2;
         obj["optionId"] = this.datapicArr[i].optionId;
@@ -1250,34 +1251,31 @@ export default {
         list.push(obj1);
         list.push(obj2);
       }
-      var params = {
+      const params = {
         jobId: this.jobId,
         optionIds: this.optionIds.join(","),
         version: this.version
       };
-      var checkRecordList = [];
+      const checkRecordList = [];
       for (let i = 0; i < this.placeArr.length; i++) {
-        var obj3 = {};
+        const obj3 = {};
         obj3["contrastResult"] = this.placeArr[i].contrastResult;
         obj3["optionId"] = this.placeArr[i].optionId;
         checkRecordList.push(obj3);
       }
-      var data = {
+      const data = {
         imageNote: this.illustrate, //说明
         diagnosticOption: this.advise,
         list: list,
         checkRecordList: checkRecordList
       };
-      net
-        .request("admin/order/updatePresentation", "post", params, data)
-        .then(res => {
-          if (res.retcode == 1) {
-            var skip = net.isJump("/ensureOrder");
-            var skip1 = net.isJump("/completeOrder");
+      veriftPresentation(params, data).then(res => {
+          if (res.retcode === 1) {
+            const skip = net.isJump("/ensureOrder");
+            const skip1 = net.isJump("/completeOrder");
             net.message(this, res.retmsg, "suuccess");
-            if (this.checkType == 1) {
-              //检测工单
-              if (skip1) {
+            if (this.checkType === 1) {
+              if (skip1) {//检测工单
                 this.$router.push({ path: "/completeOrder" });
               } else {
                 this.getDetectionVerifyList()
@@ -1294,6 +1292,7 @@ export default {
           }
         });
     },
+
     repulse(){ // 打回
       this.$confirm("此操作将修改工单为待编辑状态，是否确认打回?", "提示", {
         confirmButtonText: "确定",
@@ -1301,14 +1300,9 @@ export default {
         type: "warning"
       })
         .then(() => {
-          net
-            .request("admin/order/repulseStep1", "post", {
-              jobId: this.jobId,
-              version: this.version
-            })
-            .then(res => {
+          veriftRepulse({jobId: this.jobId,version: this.version}).then(res => {
               this.isShowOpear = false;
-              if (res.retcode == 0) {
+              if (res.retcode === 0) {
                 this.getDetectionVerifyList()
               } else {
                 net.message(this, res.retmsg, "warning");
@@ -1317,17 +1311,21 @@ export default {
         })
         .catch(() => {});
     },
+
     editMileage(){ // 编辑里程
       this.dialogVisible4 = true;
       this.editMileNumber = "";
     },
+
     seeCarFrameNumber(){ // 查看车架号图片
       this.dialogVisible5 = true;
     },
+
     backClick(){ // 返回列表
       this.isShowOpear = false;
       this.getDetectionVerifyList()
     },
+
     printdiv() { // 预览、打印
       this.isprint = false;
       this.templateBut = false;
@@ -1338,10 +1336,10 @@ export default {
           right: "32px"
         });
       });
-      var iconArr = [];
+      const iconArr = [];
       $(".tr_sign").each(function() {
-        var flag = $(this).is(":hidden");
-        if (flag == false) {
+        const flag = $(this).is(":hidden");
+        if (flag === false) {
           iconArr.push($(this).data("imgid"));
           $(this).hide();
         }
@@ -1351,7 +1349,7 @@ export default {
           width: "121px"
         });
       });
-      if (this.isShowArrow == "不打印") {
+      if (this.isShowArrow === "不打印") {
         $(".arrowIcon").hide();
       }
       setTimeout(() => {
@@ -1365,9 +1363,9 @@ export default {
         this.isprint = true;
         $(".arrowIcon").show();
         $(".tr_sign").each(function() {
-          if (iconArr.length != 0) {
+          if (iconArr.length !== 0) {
             for (var i = 0; i < iconArr.length; i++) {
-              if ($(this).data("imgid") == iconArr[i]) {
+              if ($(this).data("imgid") === iconArr[i]) {
                 $(this).show();
               }
             }
@@ -1391,19 +1389,20 @@ export default {
         );
       }, 300);
     },
+
     Arrow(optionId, contrastResult) { //图标箭头点击
-      var arr = this.placeArr;
-      for (var i = 0; i < arr.length; i++) {
-        if (optionId == arr[i].optionId) {
-          if (contrastResult == 4) {
+      const arr = this.placeArr;
+      for (let i = 0; i < arr.length; i++) {
+        if (optionId === arr[i].optionId) {
+          if (contrastResult === 4) {
             //向上
             arr[i]["contrastResult"] = 3;
           }
-          if (contrastResult == 3) {
+          if (contrastResult === 3) {
             //向下
             arr[i]["contrastResult"] = 2;
           }
-          if (contrastResult == 2) {
+          if (contrastResult === 2) {
             //等于
             arr[i]["contrastResult"] = 4;
           }
@@ -1431,23 +1430,23 @@ export default {
       this.radio5 = val
       this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
     },
+
     adviseArrow() {
       this.advise = this.opinion;
     },
+
     dimensionalityChange(value){ // 选择维度
       this.dimensionalityValue = value
     },
+
     submitDimensionality(){ // 修改综合维度
       const param = {
         value : this.dimensionalityValue,
         jobId: this.jobId,
       };
-      console.log(param)
-      net
-        .request("/admin/order/editJobValue", "post", param)
-        .then(res => {
+      submitDimensionality(param).then(res => {
           console.log(res)
-          if (res.retcode == 1) {
+          if (res.retcode === 1) {
             net.message(this, res.retmsg, "success");
           } else {
             net.message(this, res.retmsg, "error");
@@ -1463,10 +1462,11 @@ export default {
       this.value8 = "";
       this.getprovinceData(value);
     },
+
     getareaData(callback) {//获取区
       callback = callback || function() {};
-      net.request("admin/select/getArea", "post").then(res => {
-        if (res.retcode == 1) {
+      getArea().then(res => {
+        if (res.retcode === 1) {
           this.areaArr = res.data;
           callback();
         } else {
@@ -1474,17 +1474,17 @@ export default {
         }
       });
     },
+
     provinceChange(value) { // 选择省份
       this.cityData = [];
       this.value8 = "";
       this.getcityData(value);
     },
+
     getprovinceData(areaId, callback) { //获取省系
       callback = callback || function() {};
-      net
-        .request("admin/select/getProvince", "post", { areaId: areaId })
-        .then(res => {
-          if (res.retcode == 1) {
+      getProvince({ areaId: areaId }).then(res => {
+          if (res.retcode === 1) {
             this.provinceArr = res.data;
             callback();
           } else {
@@ -1492,12 +1492,11 @@ export default {
           }
         });
     },
+
     getcityData(provinceId, callback) { //获取市县
       callback = callback || function() {};
-      net
-        .request("admin/select/getCity", "post", { provinceId: provinceId })
-        .then(res => {
-          if (res.retcode == 1) {
+      getCity({ provinceId: provinceId }).then(res => {
+          if (res.retcode === 1) {
             this.cityArr = res.data;
             callback();
           } else {
@@ -1515,6 +1514,7 @@ export default {
       this.value4 = "";
       this.gethostData(value);
     },
+
     hostChange(value) { // 选择主机厂商
       this.audiData = [];
       this.carTypeData = [];
@@ -1522,12 +1522,11 @@ export default {
       this.value4 = "";
       this.getaudiData(value);//获取主机厂商
     },
+
     getaudiData(factoryId, callback) {//获取车系
       callback = callback || function() {};
-      net
-        .request("admin/select/getCarSeries", "post", { factoryId: factoryId })
-        .then(res => {
-          if (res.retcode == 1) {
+      getCarSeries({ factoryId: factoryId }).then(res => {
+          if (res.retcode === 1) {
             this.audiData = res.data;
             callback();
           } else {
@@ -1535,12 +1534,11 @@ export default {
           }
         });
     },
+
     gethostData(brandId, callback) { //获取主机厂商
       callback = callback || function() {};
-      net
-        .request("admin/select/getCarFactory", "post", { brandId: brandId })
-        .then(res => {
-          if (res.retcode == 1) {
+      getCarFactory({ brandId: brandId }).then(res => {
+          if (res.retcode === 1) {
             this.hostData = res.data;
             callback();
           } else {
@@ -1548,17 +1546,17 @@ export default {
           }
         });
     },
+
     audiChange(value) { // 选择车系
       this.carTypeData = [];
       this.value4 = "";
       this.getcarTypeData(value);
     },
+
     getcarTypeData(seriesId, callback) {//获取车型
       callback = callback || function() {};
-      net
-        .request("admin/select/getCarModel", "post", { seriesId: seriesId })
-        .then(res => {
-          if (res.retcode == 1) {
+      getCarModel({ seriesId: seriesId }).then(res => {
+          if (res.retcode === 1) {
             this.carTypeData = res.data;
             callback();
           } else {
@@ -1566,22 +1564,25 @@ export default {
           }
         });
     },
+
     searchClick() { //搜索
       this.showRightTitle = true;
       this.getRightList();
     },
+
     selectTemplate() {//选择模板
       this.template = true;
-      net.request("admin/select/getExplain", "post", null, null).then(res => {
-        if (res.retcode == 1) {
+      getExplain(null, null).then(res => {
+        if (res.retcode === 1) {
           this.selectTemplateArr = res.data;
         } else {
           this.$mount.error(res.retmsg);
         }
       });
     },
+
     trendsEdit(count) {//动态调整打印布局
-      if (count == 1) {
+      if (count === 1) {
         $(".frist").css({
           "margin-top": "20px"
         });
@@ -1600,7 +1601,7 @@ export default {
           "margin-top": "30px"
         });
       }
-      if (count == 2 || count == 3) {
+      if (count === 2 || count === 3) {
         $(".frist").css({
           "margin-top": "20px"
         });
@@ -1625,7 +1626,7 @@ export default {
           "margin-bottom": "30px"
         });
       }
-      if (count == 4) {
+      if (count === 4) {
         $(".frist").css({
           "margin-top": "10px"
         });
@@ -1651,7 +1652,7 @@ export default {
           "margin-bottom": "15px"
         });
       }
-      if (count == 5) {
+      if (count === 5) {
         $(".picTitle").css({
           "margin-bottom": "0px",
           "margin-top": "0px",
@@ -1660,17 +1661,20 @@ export default {
         });
       }
     },
+
     mouseEnter(d) {//鼠标进入图片显示放大按钮
       $(".showBigBtn").hide();
       $(".showBigBtn[data-optionid='" + d + "']").show();
     },
+
     mouseLeave() {
       $(".showBigBtn").hide();
     },
+
     getBgImg(orgId) {// 获取背景图
-      this.bg_pic =
-        net.imageHP + "web/config/watermark/getImage?orgId=" + orgId;
+      this.bg_pic = net.imageHP + "web/config/watermark/getImage?orgId=" + orgId;
     },
+
     exChange() {//监听说明
       $("#exCtrl").on("input propertychange", e => {
         this.exLen = 280 - e.target.value.length;
@@ -1679,36 +1683,23 @@ export default {
         this.chLen = 100 - e.target.value.length;
       });
     },
-    selectTemplate() {//选择模板
-      this.template = true;
-      net.request("admin/select/getExplain", "post", null, null).then(res => {
-        if (res.retcode == 1) {
-          this.selectTemplateArr = res.data;
-        } else {
-          this.$mount.error(res.retmsg);
-        }
-      });
-    },
+
     select(val) {
       this.illustrate = val;
       this.exLen = 260 - val.length;
       this.template = false;
     },
-    getEngine() {
-      net.request("admin/select/getEngineType", "post", {}, {}).then(res => {
-        console.log(res.data);
+
+    getEngine() { // 获取发动机
+      getEngineType({}, {}).then(res => {
         this.engine = res.data;
       });
     },
-    //获取发动机下拉数据
-    getEngineData(callback, id) {
+
+    getEngineData(callback, id) {//获取部位
       callback = callback || function() {};
-      net
-        .request("admin/select/getOptionByCarId", "post", {
-          carId: id
-        })
-        .then(res => {
-          if (res.retcode == 1) {
+      getOptionByCarId({carId: id}).then(res => {
+          if (res.retcode === 1) {
             this.engineArr = res.data;
             callback();
           } else {
@@ -1716,11 +1707,11 @@ export default {
           }
         });
     },
-    //获取汽车品牌
-    getbrandData(callback) {
+
+    getbrandData(callback) {//获取汽车品牌
       callback = callback || function() {};
-      net.request("admin/select/getCarBrand", "post").then(res => {
-        if (res.retcode == 1) {
+      getCarBrand().then(res => {
+        if (res.retcode === 1) {
           this.brandData = res.data;
           callback();
         } else {
@@ -1728,11 +1719,11 @@ export default {
         }
       });
     },
-    //里程区间
-    getMileData(callback) {
+
+    getMileData(callback) {//里程区间
       callback = callback || function() {};
-      net.request("admin/select/getCarMileage", "post", {}).then(res => {
-        if (res.retcode == 1) {
+      getCarMileage({}).then(res => {
+        if (res.retcode === 1) {
           this.mileSectionArr = res.data;
           this.mileSectionArr.unshift({ id: 0, mileage: "不限里程" });
           this.mileSection = "不限里程";
@@ -1742,14 +1733,14 @@ export default {
         }
       });
     },
+
     seeFristReport() {//回显报告中的说明，意见
-      net
-        .request("admin/order/queryTestingWeb", "post", {
-          jobId: this.jobId,
-          step: 1
-        })
-        .then(res => {
-          if (res.retcode == 1) {
+      const param = {
+        jobId: this.jobId,
+        step: 1
+      }
+      queryTestingWeb(param).then(res => {
+          if (res.retcode === 1) {
             if (res.data != null) {
               this.illustrate = res.data.imageNote;
               this.advise = res.data.diagnosticOption;
@@ -1762,13 +1753,10 @@ export default {
           }
         });
     },
+
     getConterData(carId) {//中间图片数据
-      net
-        .request("admin/car/queryById", "post", {
-          carId: carId
-        })
-        .then(res => {
-          if (res.retcode == 1) {
+      queryByIdFirstReport({carId: carId}).then(res => {
+          if (res.retcode === 1) {
             this.fuelTypeName = res.data.fuelTypeName;
             this.modelName = res.data.modelName;
             this.brandName = res.data.brandName;
@@ -1776,45 +1764,34 @@ export default {
             var arr = res.data.list;
             var b_arr = [];
             //获取检测部位数据
-            net
-              .request("admin/car/queryCarTestingPhoto", "post", {
-                jobId: this.jobId,
-                step: 1
-              })
-              .then(d => {
+            const param = {
+              jobId: this.jobId,
+              step: 1
+            }
+            queryCarTestingPhoto(param).then(d => {
                 var data = d.data;
                 for (var i = 0; i < arr.length; i++) {
                   for (var j = 0; j < data.length; j++) {
-                    if (data[j].optionId == -1) {
+                    if (data[j].optionId === -1) {
                       this.carBigImageID = data[j].photoId;
                       this.CarFrameUrl = net.imgUrl + data[j].photoId;
-                    } else if (data[j].optionId == -11) {
+                    } else if (data[j].optionId === -11) {
                       this.carFrameImageId =
                         net.imageHP +
                         "image/getLarge?imageId=" +
                         data[j].photoId;
                     }
                     arr[i]["placeName"] = url;
-                    if (arr[i].optionId == data[j].optionId) {
+                    if (arr[i].optionId === data[j].optionId) {
                       var url = net.imgUrl + data[j].photoId;
                       arr[i]["url"] = url;
                       arr[i]["photoId"] = data[j].photoId;
-                      if (
-                        data[j].contrastResult == 2 ||
-                        data[j].contrastResult == 3 ||
-                        data[j].contrastResult == 4
-                      ) {
+                      if (data[j].contrastResult === 2 || data[j].contrastResult === 3 || data[j].contrastResult === 4 ) {
                         arr[i]["contrastResult"] = data[j].contrastResult;
                       } else {
-                        if (
-                          data[j].optionValue == 1 ||
-                          data[j].optionValue == 2
-                        ) {
+                        if (data[j].optionValue === 1 || data[j].optionValue === 2) {
                           arr[i]["contrastResult"] = 2;
-                        } else if (
-                          data[j].optionValue == 4 ||
-                          data[j].optionValue == 5
-                        ) {
+                        } else if (data[j].optionValue === 4 || data[j].optionValue === 5) {
                           arr[i]["contrastResult"] = 4;
                         } else {
                           arr[i]["contrastResult"] = 3;
@@ -1836,8 +1813,9 @@ export default {
           }
         });
     },
+
     getCenterRight() {//获取中间右边的渲染图片
-      var param = {
+      const param = {
         brandId: this.value1,
         factoryId: this.value2,
         seriesId: this.value3,
@@ -1849,57 +1827,56 @@ export default {
         cityId: this.cityId,
         provinceId: this.provinceId
       };
-      net
-        .request("admin/image/polling/webMatch", "post", null, param)
-        .then(res => {
-          if (res.retcode == 1) {
-            var data = res.data;
+      webMatchFirstReport(null, param).then(res => {
+          if (res.retcode === 1) {
+            const data = res.data;
             //添加对应的url
-            for (var i = 0; i < data.length; i++) {
-              if (data[i].imageId2 != 0) {
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].imageId2 !== 0) {
                 data[i]["url2"] = net.imgUrl + data[i].imageId2;
               } else {
                 data[i]["url2"] = null;
               }
-              if (data[i].imageId3 != 0) {
+              if (data[i].imageId3 !== 0) {
                 data[i]["url3"] = net.imgUrl + data[i].imageId3;
               } else {
                 data[i]["url3"] = null;
               }
-              if (data[i].imageId4 != 0) {
+              if (data[i].imageId4 !== 0) {
                 data[i]["url4"] = net.imgUrl + data[i].imageId4;
               } else {
                 data[i]["url4"] = null;
               }
             }
             //根据部位的顺序调整对应的部位图片
-            var datapicArr = [];
-            for (var g = 0; g < this.placeArr.length; g++) {
-              for (var j = 0; j < data.length; j++) {
-                if (this.placeArr[g].optionId == data[j].optionId) {
+            const datapicArr = [];
+            for (let g = 0; g < this.placeArr.length; g++) {
+              for (let j = 0; j < data.length; j++) {
+                if (this.placeArr[g].optionId === data[j].optionId) {
                   datapicArr.push(data[j]);
                 }
               }
             }
             this.datapicArr = datapicArr;
-            console.log("===", datapicArr);
           }
         });
     },
+
     clickOption(optionId) {
       this.value5 = optionId;
     },
+
     getRightList() {//获取右边查询数据
-      var start, end;
-      if (this.mileSection != "不限里程") {
-        var mileArr = this.mileSection.split("-");
+      let start, end;
+      if (this.mileSection !== "不限里程") {
+        const mileArr = this.mileSection.split("-");
         start = mileArr[0];
         end = mileArr[1];
       } else {
         start = 0;
         end = 1000000;
       }
-      var param = {
+      const param = {
         brandId: this.value1,
         factoryId: this.value2,
         seriesId: this.value3,
@@ -1912,30 +1889,28 @@ export default {
         provinceId: this.value7,
         engineId: this.engineType2
       };
-      if (this.value5 == "") {
+      if (this.value5 === "") {
         net.message(this, "请选择部位！！", "error");
         return false;
       }
-      net
-        .request("admin/image/polling/webSelect", "post", null, param)
-        .then(res => {
-          if (res.retcode == 1) {
-            var data = res.data.images;
-            var percents = res.data.percents;
-            for (var i = 0; i < data.length; i++) {
-              if (data[i].imageId2 != 0) {
+      webSelect(null, param).then(res => {
+          if (res.retcode === 1) {
+            const data = res.data.images;
+            const percents = res.data.percents;
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].imageId2 !== 0) {
                 data[i]["url2"] = net.imgUrl + data[i].imageId2;
                 data[i]["sign2"] = data[i].imageId2 + "_" + i;
               } else {
                 data[i]["url2"] = null;
               }
-              if (data[i].imageId3 != 0) {
+              if (data[i].imageId3 !== 0) {
                 data[i]["url3"] = net.imgUrl + data[i].imageId3;
                 data[i]["sign3"] = data[i].imageId3 + "_" + i;
               } else {
                 data[i]["url3"] = null;
               }
-              if (data[i].imageId4 != 0) {
+              if (data[i].imageId4 !== 0) {
                 data[i]["url4"] = net.imgUrl + data[i].imageId4;
                 data[i]["sign4"] = data[i].imageId4 + "_" + i;
               } else {
@@ -1952,19 +1927,20 @@ export default {
           }
         });
     },
+
     editPrintData(optionId, url, sign, imgId) { //点击最右边查询的图片
       let baseArr = this.datapicArr;
       for (let i = 0; i < baseArr.length; i++) {
-        if (baseArr[i].optionId == optionId) {
-          if (sign == 1) {
+        if (baseArr[i].optionId === optionId) {
+          if (sign === 1) {
             baseArr[i]["url2"] = url;
             baseArr[i]["imageId2"] = imgId;
           }
-          if (sign == 2) {
+          if (sign === 2) {
             baseArr[i]["url3"] = url;
             baseArr[i]["imageId3"] = imgId;
           }
-          if (sign == 3) {
+          if (sign === 3) {
             baseArr[i]["url4"] = url;
             baseArr[i]["imageId4"] = imgId;
           }
@@ -1975,14 +1951,17 @@ export default {
         $(".tr_sign[data-imgid = '" + imgId + "']").show();
       }, 300);
     },
+
     bigIcon(id) {// 放大图片图标
       this.dialogVisible2 = true;
       this.bigImage = net.bigImg + id;
     },
+
     dateFormat(row) {
       let time = net.dateFormat(row.inputTime);
       return time;
     },
+
     ensureEdit() {//确认编辑里程
       let reg = /^\d+$/;
       console.log(this.editMileNumber);
@@ -1990,13 +1969,12 @@ export default {
         net.message(this, "里程只能为非负正整数", "error");
         return false;
       }
-      net
-        .request("admin/order/editJobMile", "post", {
-          jobId: this.jobId,
-          mile: this.editMileNumber
-        })
-        .then(res => {
-          if (res.retcode == 1) {
+      const param = {
+        jobId: this.jobId,
+        mile: this.editMileNumber
+      }
+      ensureEdit(param).then(res => {
+          if (res.retcode === 1) {
             net.message(this, "修改成功", "success");
             this.dialogVisible4 = false;
             this.mileNumber = this.editMileNumber + "km";
@@ -2005,6 +1983,7 @@ export default {
           }
         });
     },
+
     deleteRow(id) {//删除部位照片
       this.$confirm("是否删除该部位图片", "提示", {
         confirmButtonText: "确定",
@@ -2013,15 +1992,15 @@ export default {
       })
         .then(() => {
           this.optionIds.push(id);
-          var arr1 = [],
-            arr2 = [];
-          for (var i = 0; i < this.placeArr.length; i++) {
-            if (this.placeArr[i].optionId != id) {
+          const arr1 = [],
+                  arr2 = [];
+          for (let i = 0; i < this.placeArr.length; i++) {
+            if (this.placeArr[i].optionId !== id) {
               arr1.push(this.placeArr[i]);
             }
           }
-          for (var j = 0; j < this.datapicArr.length; j++) {
-            if (this.datapicArr[j].optionId != id) {
+          for (let j = 0; j < this.datapicArr.length; j++) {
+            if (this.datapicArr[j].optionId !== id) {
               arr2.push(this.datapicArr[j]);
             }
           }

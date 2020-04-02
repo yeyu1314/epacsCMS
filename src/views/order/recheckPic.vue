@@ -21,7 +21,7 @@
             :newBtnList="recheckImgUploadBtnArrList"
     >
     </table-com>
-    <el-dialog title="上传照片" :visible="recheckonloadPicDialog" @click="closeDialog" @close='close'>
+    <el-dialog title="上传照片" :visible="recheckonloadPicDialog" @close='close'>
       <div class="contentBody">
         <div class="carInfo">
           <p class="title" style="height:40px;">
@@ -44,7 +44,7 @@
             <span>行驶里程：{{recheckonloadPicRow.mile}}KM</span>
           </p>
         </div>
-        <div style="display:flex;flex-wrap: wrap;width: 500px;margin-left: 100px;" v-show="recheckonloadPicRow.jobCode==600">
+        <div style="display:flex;flex-wrap: wrap;width: 500px;margin-left: 100px;" v-show="recheckonloadPicRow.jobCode===600">
           <el-select
             v-model="chaizhuang"
             placeholder="请选择拆装工程师"
@@ -142,18 +142,18 @@
                 <div>
                   <el-checkbox-group style="display:flex;flex-direction: column;margin-left:10px;">
                     <el-input-number
-                      class="inputNumber"
-                      :data-id="item.id"
-                      style="margin-top: 6px;margin-bottom:5px;"
-                      v-for="(item,index) in productItem"
-                      :key="index"
-                      :min="0"
-                      v-model="dataModel[index].value1"
-                      size="small"
-                      label="描述文字"
-                      :step="0.5"
-                      @change="handleChange(item.id,dataModel[index].value1)"
-                    ></el-input-number>
+                            class="inputNumber"
+                            :data-id="item.id"
+                            style="margin-top: 6px;margin-bottom:5px;"
+                            v-for="(item,index) in productItem"
+                            :key="index"
+                            :min="0"
+                            v-model="dataModel[index].value1"
+                            size="small"
+                            label="描述文字"
+                            :step="0.5"
+                            @change="handleChange(item.id,dataModel[index].value1)"
+                    />
                   </el-checkbox-group>
                 </div>
               </div>
@@ -172,7 +172,7 @@ import $ from "jquery"
 import net from "../../assets/js/public"
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
-import {frozenOrder, saveProductData} from '../../api'
+import {frozenOrder, saveProductData, uploadSecondPhotoList, deleteRecheckPhoto} from '../../api'
 import {mapActions, mapState} from 'vuex'
 export default {
   components: {
@@ -218,7 +218,6 @@ export default {
       ],
       isShowRecord: false,
       imageUrl: '',
-      uploadUrl: '',
       fileList: [],
       carPhotoId: undefined,
       productArr: [],
@@ -253,7 +252,8 @@ export default {
     searchOrder () { // 查询
       this.getRecheckPicList()
     },
-    printReport(that, row) {
+
+    printReport(that, row) { // 打印报告
       this.$router.push({
         name: "InitSurvey",
         params: {
@@ -267,8 +267,8 @@ export default {
         }
       })
     },
+
     frozen(that, row){ //冻结工单
-      console.log('冻结工单', that, row)
       this.$confirm("此操作将冻结此工单, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -287,8 +287,8 @@ export default {
         })
       })
     },
-    uploadImgs () {
-      console.log('确定上传')
+
+    uploadImgs () { // 确认上传
       const row = this.$store.state.recheckonloadPicRow
       let param = {
         jobId: row.jobId,
@@ -298,24 +298,24 @@ export default {
         genDan: this.gendan || 0,
         zhiLiao: this.zhiliao || 0
       };
-      if (row.jobCode == 600 && row.photoId == undefined) {
+      if (row.jobCode === 600 && row.photoId === undefined) {
         param["jobCode"] = 630;
       }
-      if (row.jobCode == 630 || row.jobCode == 631 || row.jobCode == 632) {
+      if (row.jobCode === 630 || row.jobCode === 631 || row.jobCode === 632) {
         param["jobCode"] = 631;
       }
-      if (this.chaizhuang.length == 0 || this.jiance.length == 0 || this.gendan.length == 0) {
+      if (this.chaizhuang.length === 0 || this.jiance.length === 0 || this.gendan.length === 0) {
         let title = "";
-        if (this.chaizhuang.length == 0) {
+        if (this.chaizhuang.length === 0) {
           title += "拆装工程师 ";
         }
-        if (this.jiance.length == 0) {
+        if (this.jiance.length === 0) {
           title += " 检测工程师";
         }
-        if (this.gendan.length == 0) {
+        if (this.gendan.length === 0) {
           title += " 跟单员";
         }
-        if (row.jobCode == 620) {
+        if (row.jobCode === 620) {
           this.$confirm(
             <span>
               <p> 没有选择{title} 这样操作将会影响到对应人员的数据统计</p>
@@ -329,29 +329,19 @@ export default {
             }
           ).then(() => {
             this.ensureUpload(param);
-            console.log(param)
           });
         } else {
           this.ensureUpload(param);
-          console.log(param)
         }
       } else {
         this.ensureUpload(param);
-        console.log(param)
       }
       this.$store.state.recheckonloadPicDialog = false
     },
+
     ensureUpload(param) {
-      console.log(param)
-      net
-        .request(
-          "admin/order/uploadSecondPhotoList",
-          "post",
-          param,
-          this.photoList
-        )
-        .then(res => {
-          if (res.retcode == 1) {
+      uploadSecondPhotoList(param, this.photoList).then(res => {
+          if (res.retcode === 1) {
             net.message(this, res.retmsg, "success");
             this.version = res.data;
             // this.updatePicState(optionId);
@@ -362,35 +352,27 @@ export default {
           }
         });
     },
+
     close () { // 关闭弹窗
       this.$store.state.recheckonloadPicDialog = false
     },
-    closeDialog () {
-      // this.$store.state.onloadPicDialog = false
-      console.log('关闭')
-    },
+
     change(idx, file, fileList) { // 监听改变
       if (fileList.length > 1) {
         fileList.splice(0, 1);
       }
     },
+
     remove(optionID, photoID, jobID, version1) {
-      console.log(optionID, photoID, jobID, version1);
-      net
-        .request(
-          "admin/order/deleteRecheckPhoto",
-          "post",
-          {
-            optionId: optionID,
-            photoId: photoID,
-            jobId: jobID,
-            version: version1
-          },
-          {}
-        )
-        .then(res => {
-          if (res.retcode == 1) {
-            for (var i = 0; i < this.photoList.length; i++) {
+      const param = {
+        optionId: optionID,
+        photoId: photoID,
+        jobId: jobID,
+        version: version1
+      }
+      deleteRecheckPhoto(param, {}).then(res => {
+          if (res.retcode === 1) {
+            for (let i = 0; i < this.photoList.length; i++) {
               if (this.photoList[i].optionId == optionID) {
                 this.photoList.splice(i, 1);
               }
@@ -408,21 +390,19 @@ export default {
           }
         });
     },
+
     handleExceed() {
       net.message(this, "同时上传限制一个图，请先删除前面上传的图片", "error");
     },
-    // 保存产品用量
-    addProductNumber() {
-      var params = {
+
+    addProductNumber() {// 保存产品用量
+      const params = {
         version: this.recheckonloadPicRow.version,
         jobId: this.recheckonloadPicRow.jobId
       };
-      console.log(params)
-      var data = this.getProArgs();
-      console.log(data)
+      const data = this.getProArgs();
       saveProductData(params, data).then(res => {
-        if (res.retcode == 1) {
-          // net.message(this, res.retmsg, "success");
+        if (res.retcode === 1) {
           this.$message({
           message: res.retmsg,
           type: 'success'
@@ -432,23 +412,22 @@ export default {
           net.message(this, res.retmsg, "error");
         }
       }).catch(error => {
-        console.log(error)
+        net.message(error, "error");
       })
     },
-    //获取产品用量参数对象
-    getProArgs() {
-      console.log('sss')
-      var list = [];
-      var _this = this;
+
+    getProArgs() {//获取产品用量参数对象
+      const list = [];
+      const _this = this;
       $(".inputNumber").each(function() {
-        var productId = $(this).data("id");
-        var number = $(this)
-          .children(".el-input--small")
-          .children("input")
-          .val();
-        var obj;
-        var flag = _this.checkProList.indexOf(productId);
-        if (flag == -1) {
+        const productId = $(this).data("id");
+        const number = $(this)
+                .children(".el-input--small")
+                .children("input")
+                .val();
+        let obj;
+        const flag = _this.checkProList.indexOf(productId);
+        if (flag === -1) {
           obj = {
             productId: productId,
             number: 0
@@ -463,80 +442,75 @@ export default {
       });
       return list;
     },
-    // 监听输入的产品用量
-    handleChange(id, val) {
-      // this.checkProList.push(id)
+
+    handleChange(id, val) {// 监听输入的产品用量
       if (val > 0) {
-        var s = this.checkProList.indexOf(id);
-        if (s == -1) {
+        const s = this.checkProList.indexOf(id);
+        if (s === -1) {
           this.checkProList.push(id);
         }
       }
-      if (val == 0) {
-        var s1 = this.checkProList.indexOf(id);
-        if (s1 != -1) {
+      if (val === 0) {
+        const s1 = this.checkProList.indexOf(id);
+        if (s1 !== -1) {
           this.checkProList.splice(s1, 1);
         }
       }
     },
-    //图片上次成功回调
-    uploadSuccess(optionId, photoId, response, file, fileList) {
-      console.log(optionId, photoId, response, file, fileList);
-      if (response.retcode != 1) {
+
+    uploadSuccess(optionId, photoId, response, file, fileList) {//图片上次成功回调
+      if (response.retcode !== 1) {
         net.message(this, response.retmsg, "error");
         return false;
       }
       this.photoList.push({ optionId: optionId, photoId: response.data });
-      console.log(this.photoList);
       this.optionId = optionId;
-      if (optionId == -1) {
+      if (optionId === -1) {
         this.carPhotoId = response.data;
-      } else if (optionId == -11) {
+      } else if (optionId === -11) {
         this.framePhotoId = response.data;
       } else {
         for (let i = 0; i < this.placeData.length; i++) {
           const element = this.placeData[i];
-          if (optionId == element.optionId) {
+          if (optionId === element.optionId) {
             element.photoId = response.data;
             this.placeData.splice(i, 1, element);
           }
         }
-        console.log(this.placeData);
       }
-
       this.ctroOnloadBtn();
     },
-    //点击显示放大
-    handlePictureCardPreview(file) {
+
+    handlePictureCardPreview(file) {//点击显示放大
       this.dialogImageUrl = file.url;
       this.dialogVisible1 = true;
     },
-    //控制上传按钮显示
-    ctroOnloadBtn() {
-      var _this = this;
+
+    ctroOnloadBtn() {//控制上传按钮显示
+      const _this = this;
       $(".perform").each(function() {
-        var btn = $(this)
-          .children(".right")
-          .children("div")
-          .children(".el-upload--picture-card");
-        var count = $(this)
-          .children(".right")
-          .children("div")
-          .children(".el-upload-list--picture-card")
-          .children().length;
-        if (count == 0) {
+        const btn = $(this)
+                .children(".right")
+                .children("div")
+                .children(".el-upload--picture-card");
+        const count = $(this)
+                .children(".right")
+                .children("div")
+                .children(".el-upload-list--picture-card")
+                .children().length;
+        if (count === 0) {
           btn.show();
         }
         if (count > 0) {
           btn.hide();
-          var del = $(this)
-            .children(".right")
-            .children("div")
-            .children(".el-upload-list--picture-card")
-            .children(".el-upload-list__item")
-            .children(".el-upload-list__item-actions")
-            .children(".el-upload-list__item-delete");
-          if (_this.sign == 0) {
+          const del = $(this)
+                  .children(".right")
+                  .children("div")
+                  .children(".el-upload-list--picture-card")
+                  .children(".el-upload-list__item")
+                  .children(".el-upload-list__item-actions")
+                  .children(".el-upload-list__item-delete");
+          if (_this.sign === 0) {
             del.hide();
           } else {
             del.show();

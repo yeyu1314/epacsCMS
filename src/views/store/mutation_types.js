@@ -22,4 +22,7 @@ export const RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA = 'receive_recheckpic_order_p_
 export const RECEIVE_ENSURE_ORDER_DIA_TABLEDATA = 'receive_ensure_order_dis_tabledata' // 治疗单确认的报告解读弹窗
 
 export const RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA = 'receive_detection_order_edit_tabledata' // 待编辑报告 按钮
+export const RECEIVE_IMG_UPLOAD_FINUPLOAD = 'receive_img_upload_finupload' // 待上传照片 完成上传
+
+
 

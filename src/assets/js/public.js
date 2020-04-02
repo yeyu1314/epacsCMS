@@ -59,9 +59,9 @@ $http.interceptors.response.use(function (response) {
 export default {
     /**
      *
-     * @param {接口地址} url
-     * @param {请求方式} method
-     * @param {参数}  data
+     * @param {string} url
+     * @param {string} method
+     * @param {{}}  data
      */
     request(url, method, params, data) {
         var addr = baseUrl + url;

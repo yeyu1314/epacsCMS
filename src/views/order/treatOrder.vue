@@ -6,7 +6,7 @@
             :searchData="searchData"
             :searchForm="searchForm"
             :searchHandle="searchHandle"
-    ></search-com>
+    />
     <table-com
             :that='that'
             size='medium '
@@ -90,9 +90,9 @@ export default {
         version: row.version
       }
       startTeaet(params).then(res => {
-        if (res.retcode == 1) {
+        if (res.retcode === 1) {
           net.message(this, res.retmsg, "success");
-          var skip = net.isJump("/recheckPic");
+          const skip = net.isJump("/recheckPic");
           if (skip) {
             this.$router.push({ path: "/recheckPic" });
           } else {
@@ -104,7 +104,6 @@ export default {
       })
     },
     printReport (that, row) { // 打印检测报告
-      console.log(that, row)
       this.$router.push({
         name: "InitSurvey",
         params: {
@@ -119,7 +118,6 @@ export default {
       });
     },
     frozen (that, row) { // 冻结
-      console.log(that, row)
       this.$confirm('此操作将冻结此工单, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

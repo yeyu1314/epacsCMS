@@ -17,7 +17,8 @@ import {
   RECHECK_IMG_UPLOAD_D_TABLEDATA,
   RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA,
   RECEIVE_ENSURE_ORDER_DIA_TABLEDATA,
-  RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA
+  RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA,
+  RECEIVE_IMG_UPLOAD_FINUPLOAD,
 } from "./mutation_types";
 import net from "../../assets/js/public"
 import router from '../../router'
@@ -71,7 +72,6 @@ export default {
       console.log('完成工单列表', res)
       if (res.data.retcode === 1) {
         const tableData = res.data.data.rows // 表格数据
-        // console.log(tableData)
         const pagination = { // 分页数据
           pageSize: res.data.data.pageSize,
           pageNum: res.data.data.pageNo,
@@ -147,18 +147,102 @@ export default {
   // 待上传照片 
   async getDetectionImgUploadList ({commit, state}) {
     const showEditTest = (that, row) => { // 上传照片
-      console.log(that, row)
       getUploadImgBtnData({carId: row.carId}).then(res => {
-        console.log(res)
         if(res.retcode === 1){
           const result = res.data
-          commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {row, result})// 提交一个mutation
+          let fileList = []
+          const photoList = []
+          commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, photoList})// 提交一个mutation
         }
       })
       getSelectList(1, row.orgId)
       getSelectList(2, row.orgId)
       getSelectList(3, row.orgId)
     }
+
+    const EditImg = (that, row) => { // 编辑照片
+      console.log(that, row)
+      getUploadImgBtnData({carId: row.carId}).then(res => {
+        console.log(res)
+        if(res.retcode === 1){
+          const result = res.data
+          const params = {
+            jobId: row.jobId,
+            step: 1
+          }
+          getUploadImgBtnPhotoData({params}).then( res => {
+            console.log(res)
+            const data = res.data
+            for (let i = 0; i < result.list.length; i++) {
+              for (let j = 0; j < data.length; j++) {
+                if (result.list[i].optionId == data[j].optionId) {
+                  result.list[i]["isQualified"] = data[j].isQualified;
+                  const obj = {};
+                  if (data[j].photoId != null && data[j].photoId > 0) {
+                    obj["url"] =
+                        net.imageHP + "image/get?imageId=" + data[j].photoId;
+                    result.list[i].list.push(obj);
+                    result.list[i]["photoId"] = data[j].photoId;
+                  } else {
+                    result.list[i]["isQualified"] = data[j].isQualified;
+                  }
+                }
+              }
+            }
+            let conloadPicCarPhotoId = ''
+            let onloadPicFramePhotoId = ''
+            let fileList = []
+            let fileList1 = []
+            let onloadPics1 = ''
+            let onloadPics2 = ''
+            let photoList = []
+            for (let g = 0; g < data.length; g++) {
+              const obj1 = {};
+              if (data[g].photoId != null && data[g].photoId > 0) {
+                obj1["url"] =net.imageHP + "image/getLarge?imageId=" + data[g].photoId;
+
+                if (data[g].optionId === -1) {// 车牌号
+                  conloadPicCarPhotoId = data[g].photoId;
+                  fileList.push(obj1);
+                  onloadPics1 = data[g].isQualified;
+                }
+                if (data[g].optionId === -11) {// 车架号
+                  onloadPicFramePhotoId = data[g].photoId;
+                  fileList1.push(obj1);
+                  onloadPics2 = data[g].isQualified;
+                }
+
+                photoList.push({
+                  optionId: data[g].optionId,
+                  photoId: data[g].photoId
+                });
+                // console.log(this.photoList)
+              } else {
+                if (data[g].optionId == -1) {
+                  onloadPics1 = data[g].isQualified;
+                }
+                if (data[g].optionId == -11) {
+                  onloadPics2 = data[g].isQualified;
+                }
+              }
+            }
+            commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, fileList1, photoList, conloadPicCarPhotoId, onloadPicFramePhotoId, onloadPics1, onloadPics2})// 提交一个mutation
+          })
+
+        }
+      })
+      getSelectList(1, row.orgId)
+      getSelectList(2, row.orgId)
+      getSelectList(3, row.orgId)
+    }
+
+    const finshUpload = (that, row) => { // 完成上传
+      console.log(that, row)
+      const progressBar = true
+      const loadProgress = true
+      commit(RECEIVE_IMG_UPLOAD_FINUPLOAD, {progressBar,loadProgress, row})// 提交一个mutation
+    }
+
     const getSelectList = (index,orgId) => {
       console.log(index,orgId)
       let url;
@@ -177,9 +261,6 @@ export default {
       }).catch(error => {
         console.log(error)
       })
-    }
-    const finshUpload = (that, row) => {
-      console.log(that, row)
     }
     await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 2,carNumber:state.searchData.carNumber}).then(res => {
       console.log('待上传照片', res)
@@ -212,8 +293,8 @@ export default {
             )
           } if (tableData[i].jobCode === 30 || tableData[i].jobCode === 31 || tableData[i].jobCode === 32) {
             imgBtnArr.push(
-              {type: 'primary', label: '上传照片', isShow: true, handle: (that, row) => { showEditTest(that, row) }},
-              {type: 'success', label: '完成', isShow: true, handle: (that, row) => { finshUpload(that, row) }}
+              {type: 'primary', label: '编辑照片', isShow: true, handle: (that, row) => { EditImg(that, row) }},
+              {type: 'success', label: '完成上传', isShow: true, handle: (that, row) => { finshUpload(that, row) }}
             )
           }
         }
@@ -238,11 +319,10 @@ export default {
   // 待编辑报告
   async getDetectionOrderEditList ({commit, state}) {
     const showEditTest = (that, row) => { // 开始编辑
-      console.log('点击啦!!!!', that, row, row.jobId)
       editDetectionOrder({jobId: row.jobId, version: row.version})
         .then(res => {
           console.log(res)
-          if (res.data.retcode === 1) {
+          if (res.retcode === 1) {
             const data = state.detectionOrderBtnArrList
             Message.success('请再次点击进入报告编辑')
             for (let i = 0; i < data.length; i++) {
@@ -251,6 +331,7 @@ export default {
                 data[i].btnList[1].isShow = true
               }
             }
+            // location.reload()
             // getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 3})
           }
         }).catch(error => {
@@ -291,11 +372,12 @@ export default {
           if (tableData[i].jobCode === 100) {
             btnArr.push(
               {type: 'success', label: '开始编辑', isShow: true, handle: (that, row) => { showEditTest(that, row) }},
-              {type: 'warning', label: '编辑检测报告', isShow: false, handle: (that, row) => { starEdit(that, row) }}
+              {type: 'warning', label: '编辑检测报告', isShow: false, }
             )
-          } if (tableData[i].jobCode === 210 || tableData[i].jobCode === 220 || tableData[i].jobCode === 221) {
+          }
+          if (tableData[i].jobCode === 210 || tableData[i].jobCode === 220 || tableData[i].jobCode === 221) {
             btnArr.push(
-              {type: 'success', label: '开始编辑', isShow: false, handle: (that, row) => { showEditTest(that, row) }},
+              {type: 'success', label: '开始编辑', isShow: false, },
               {type: 'warning', label: '编辑检测报告', isShow: true, handle: (that, row) => { starEdit(that, row) }}
             )
           }
