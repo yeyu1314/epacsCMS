@@ -245,7 +245,7 @@ export default {
   computed: {
     ...mapState(['recheckPicTableData', 'recheckPicLongData', 'recheckPicPagination', 'pageNo', 'pageSize', 'searchData', 
     'recheckImgUploadBtnArrList', 'recheckonloadPicRow', 'recheckonloadPicDialog', 'recheckrowCarInfo', 'productItem', 'dataModel',
-    'frecheckrowFleList', 'photoList'])// 读数据
+    'frecheckrowFleList', 'recheckPicPhotoList'])// 读数据
   },
   methods: {
     ...mapActions(['getRecheckPicList']),
@@ -340,17 +340,19 @@ export default {
     },
 
     ensureUpload(param) {
-      uploadSecondPhotoList(param, this.photoList).then(res => {
-          if (res.retcode === 1) {
-            net.message(this, res.retmsg, "success");
-            this.version = res.data;
-            // this.updatePicState(optionId);
-            this.dialogVisible = false;
-            this.getRecheckPicList()
-          } else {
-            net.message(this, res.retmsg, "warning");
-          }
-        });
+      console.log(param)
+      console.log(this.recheckPicPhotoList)
+      // uploadSecondPhotoList(param, this.photoList).then(res => {
+      //     if (res.retcode === 1) {
+      //       net.message(this, res.retmsg, "success");
+      //       this.version = res.data;
+      //       // this.updatePicState(optionId);
+      //       this.dialogVisible = false;
+      //       this.getRecheckPicList()
+      //     } else {
+      //       net.message(this, res.retmsg, "warning");
+      //     }
+      //   });
     },
 
     close () { // 关闭弹窗

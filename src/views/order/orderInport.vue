@@ -135,11 +135,11 @@
         <el-button size="small" @click="clickCondition">车况模板</el-button>
       </div>
       <el-input
-        type="textarea"
-        v-model="desc"
-        :autosize="{ minRows: 3}"
-        style="margin:15px 0 15px 0px;width:500px;"
-      ></el-input>
+              type="textarea"
+              v-model="desc"
+              :autosize="{ minRows: 3}"
+              style="margin:15px 0 15px 0px;width:500px;"
+      />
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="ensure">确 定</el-button>

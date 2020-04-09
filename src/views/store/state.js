@@ -70,6 +70,7 @@ export default {
   detectionOrderEditBtnArrList: [],
   showEditPage: false,
   firstReportRow: '', //点击的行数据
+  refresh: false,
   // 待审核报告
   verifyDetectionOrderTableData: [],
   verifyDetectionOrderLongDatas: [],
@@ -113,7 +114,7 @@ export default {
   productItem: [],
   dataModel: [], //暂存计步器双休绑定
   frecheckrowFleList: [],
-  photoList: [],
+  recheckPicPhotoList: [],
   // 复查报告编辑
   editTecheckTableData: [],
   editTecheckPagination: {

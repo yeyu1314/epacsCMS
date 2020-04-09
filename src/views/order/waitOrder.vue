@@ -74,13 +74,13 @@ export default {
   },
   methods: {
     ...mapActions(['getDetectionOrderList']),
+
     startDetection (that, row) { // 开始检测
-      console.log('开始检测', that, row)
       getStartTesting({jobId: row.jobId, version: row.version})
         .then((res) => {
-          if (res.retcode == 1) {
+          if (res.retcode === 1) {
             net.message(this, res.retmsg, "success")
-            var skip = net.isJump("/waitOrder")
+            const skip = net.isJump("/waitOrder");
             if (skip) {
               this.$router.push({ path: "/onloadPic" })
             } else {
@@ -94,14 +94,13 @@ export default {
         this.getDetectionOrderList()
       })
     },
+
     frozen (that, row) { // 冻结工单
-      console.log('冻结工单', that, row)
       this.$confirm("此操作将冻结此工单, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        console.log(that, row)
         frozenOrder({jobId: row.jobId, version: row.version})
           .then(() => {
             this.$message({
@@ -110,11 +109,11 @@ export default {
             })
             this.getDetectionOrderList()
           }).catch(res => {
-            console.log(res)
             this.getDetectionOrderList()
           })
       })
     },
+
     searchOrder () { // 查询
       this.getDetectionOrderList()
     }

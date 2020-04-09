@@ -878,6 +878,7 @@ import {getOperatingRecord, frozenOrder, getFirstReportEdir, imgUnqualified, sub
   getArea, getProvince, getCity, getCarBrand, getCarFactory, getCarSeries, getCarModel, getCarMileage, queryTestingWeb, webSelect,
   queryByIdFirstReport, queryCarTestingPhoto, getEngineType, getOptionByCarId, getExplain, webMatchFirstReport} from '../../api'
 import {mapActions, mapState} from 'vuex'
+import moment from "moment";
 export default {
   components: {
     tableCom,
@@ -1024,18 +1025,23 @@ export default {
   created () {
     this.getDetectionOrderEditList()
     this.$store.state.showEditPage = false
-
+    this.$store.state.refresh = false
   },
   computed: {
     ...mapState(['editDetectionTableData', 'editDetectionPagination', 'editDetectionLongData', 'pageNo',
      'pageSize', 'searchData', 'redordData', 'redordCols', 'detectionOrderEditBtnArrList', 'showEditPage',
-     'firstReportRow'])// 读数据
+     'firstReportRow', 'refresh'])// 读数据
   },
   watch: {
     // 如果 `showEditPage` 发生改变，这个函数就会运行
     showEditPage: function (showEditPage) {
       if(showEditPage === true) {
         this.getData()
+      }
+    },
+    refresh: function (refresh) {
+      if(refresh === true) {
+        this.getDetectionOrderEditList()
       }
     }
   },
@@ -1056,8 +1062,10 @@ export default {
       this.isShowRecord = true
       getOperatingRecord({ id: row.jobId })
         .then(res => {
-          console.log(res)
-          const data = res.data.list
+          let data = res.data.list
+          for (let i = 0; i < res.data.list.length; i++){
+            data[i].inputTime = moment(data[i].inputTime).format('YYYY-MM-DD HH:MM')
+          }
           this.$store.state.redordData = data
         }).catch(res => {
           console.log('操作记录', res)

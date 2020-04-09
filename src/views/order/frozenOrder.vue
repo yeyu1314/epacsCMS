@@ -26,7 +26,7 @@
                 :redordCols='redordCols'
                 :isShowRecord="isShowRecord"
                 @closeTip="closeTip"
-        ></record-form>
+        />
     </div>
 </template>
 
@@ -36,6 +36,7 @@
   import recordForm from '../../components/tableCompnment/recordForm'
   import {getOperatingRecord, recoverOrder, cancellationOrder} from '../../api'
   import {mapActions, mapState} from 'vuex'
+  import moment from "moment";
 export default {
   components: {
     tableCom,
@@ -98,9 +99,11 @@ export default {
       this.isShowRecord = true
       getOperatingRecord({ id: row.jobId })
         .then(res => {
-          console.log(res)
-          const data = res.data.list
-          this.$store.state.redordData = data
+            let data = res.data.list
+            for (let i = 0; i < res.data.list.length; i++){
+                data[i].inputTime = moment(data[i].inputTime).format('YYYY-MM-DD HH:MM')
+            }
+            this.$store.state.redordData = data
         }).catch(res => {
         console.log('操作记录', res)
       })

@@ -338,6 +338,7 @@
   import {frozenOrder, getOperatingRecord, queryByIdFirstReport, queryCarTestingPhoto, queryTestingWeb, editAuditingRecheck, auditingRecheck,
     repulseReport, ensureEdit, getProductData, getSearchProductData} from '../../api'
   import {mapActions, mapState} from 'vuex'
+  import moment from "moment";
   export default {
     components: {
       tableCom,
@@ -463,12 +464,13 @@
 
       showRecord (that, row) {// 点击操作记录
         this.isShowRecord = true
-        getOperatingRecord({ id: row.jobId })
-                .then(res => {
-                  console.log(res)
-                  const data = res.data.list
-                  this.$store.state.redordData = data
-                }).catch(res => {
+        getOperatingRecord({ id: row.jobId }).then(res => {
+          let data = res.data.list
+          for (let i = 0; i < res.data.list.length; i++){
+            data[i].inputTime = moment(data[i].inputTime).format('YYYY-MM-DD HH:MM')
+          }
+          this.$store.state.redordData = data
+        }).catch(res => {
           console.log('操作记录', res)
         })
       },

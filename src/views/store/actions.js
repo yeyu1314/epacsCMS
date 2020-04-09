@@ -19,6 +19,7 @@ import {
   RECEIVE_ENSURE_ORDER_DIA_TABLEDATA,
   RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA,
   RECEIVE_IMG_UPLOAD_FINUPLOAD,
+  RECEIVE_DETECTION_ORDER_REFRESH
 } from "./mutation_types";
 import net from "../../assets/js/public"
 import router from '../../router'
@@ -331,8 +332,8 @@ export default {
                 data[i].btnList[1].isShow = true
               }
             }
-            // location.reload()
-            // getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 3})
+            const refresh = true
+            commit(RECEIVE_DETECTION_ORDER_REFRESH, {refresh}) // 提交更新界面
           }
         }).catch(error => {
           console.log(error)
@@ -531,13 +532,12 @@ export default {
   // 复查照片上传
   async getRecheckPicList ({commit, state}) {
     const showEditTest = (that, row) => { // 上传照片
-      console.log('that',that, '该行row', row)
       getUploadImgBtnData({carId: row.carId}).then(res => {
-        console.log('该行的图片信息',res)
         const fileList = []
+        const photoList = []
         if(res.retcode === 1){
           const result = res.data
-          commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList})// 提交一个mutation
+          commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, photoList})// 提交一个mutation
         }
       })
       getSelectList(1, row.orgId)
@@ -566,7 +566,7 @@ export default {
       if (index === 4) {
         url = "admin/engineer/ZLListByOrgId";
       }
-      getSelectData(url,{orgId: orgId}).then(res => {
+      getSelectData(url,{orgId: orgId}).then(() => {
         // commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {res})// 提交一个mutation
       }).catch(error => {
         console.log(error)
@@ -595,7 +595,6 @@ export default {
     const searchProUse = (jobId) => { // 查询产品用量
       let dataModel = []
       getProductData().then(res => {
-        console.log('产品用量',res)
         if(res.retcode == 1) {
           const productItem = res.data
           for(let i = 0; i < productItem.length; i++){
@@ -604,27 +603,22 @@ export default {
               id: productItem[i].id
             })
           }
-          console.log(dataModel)
           commit(RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA, {productItem, dataModel})
         }
       }).catch(error => {
         console.log(error)
       })
       getSearchProductData({jobId: jobId}).then(res => {
-        console.log('查询',res)
         if (res.retcode === 1) {
           const productItem = res.data.rows;
-          console.log(productItem)
           for (let i = 0; i < productItem.length; i++) {
             if (productItem[i].number != 0) {
               // this.checkProList.push(data[i].productId);
-              console.log(dataModel)
               for (let j = 0; j < dataModel.length; j++) {
                 if (dataModel[j].id == productItem[i].productId) {
                   dataModel[j]["value1"] = productItem[i].number;
                 }
               }
-              console.log(dataModel)
             }
           }
           // commit(RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA, {productItem, dataModel})

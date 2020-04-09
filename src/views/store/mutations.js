@@ -19,7 +19,8 @@ import {
   RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA,
   RECEIVE_ENSURE_ORDER_DIA_TABLEDATA,
   RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA,
-  RECEIVE_IMG_UPLOAD_FINUPLOAD
+  RECEIVE_IMG_UPLOAD_FINUPLOAD,
+  RECEIVE_DETECTION_ORDER_REFRESH
 } from './mutation_types'
 export default {
   [RECEIVE_TABLEDATA] (state, {tableData, pagination, longDatas, checkButtonList, detectionOrderBtnArrList}) { // 完成工单
@@ -129,7 +130,7 @@ export default {
     state.recheckonloadPicRow = row
     state.recheckrowCarInfo = result
     state.frecheckrowFleList = fileList
-    state.photoList = photoList
+    state.recheckPicPhotoList = photoList
   },
 
   [RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA] (state, {productItem, dataModel}) {
@@ -152,5 +153,9 @@ export default {
     state.progressBar = progressBar
     state.loadProgress = loadProgress
     state.onloadPicRow = row
+  },
+
+  [RECEIVE_DETECTION_ORDER_REFRESH](state, {refresh}) {
+    state.refresh = refresh
   },
 }
