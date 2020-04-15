@@ -542,24 +542,6 @@
         </div>
         <!-- 右侧 -->
         <div class="rightTool">
-<!--          <p style="text-align:center;font-weight: bold;">综合维度</p>-->
-<!--          <div class="searchCon" style="margin-bottom: 20px;">-->
-<!--            <el-select-->
-<!--              v-model="dimensionalityValue"-->
-<!--              clearable-->
-<!--              placeholder="请选择报告综合维度"-->
-<!--              @change="dimensionalityChange"-->
-<!--              class="f_select"-->
-<!--            >-->
-<!--              <el-option-->
-<!--                      v-for="item in dimensionality"-->
-<!--                      :key="item.value"-->
-<!--                      :label="item.laber"-->
-<!--                      :value="item.value"-->
-<!--              />-->
-<!--            </el-select>-->
-<!--            <el-button type="primary" class="search" size="mini" @click="submitDimensionality">保存</el-button>-->
-<!--          </div>-->
 
 
           <rightItem />
