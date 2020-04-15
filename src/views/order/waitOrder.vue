@@ -108,7 +108,7 @@ export default {
               message: '操作成功!'
             })
             this.getDetectionOrderList()
-          }).catch(res => {
+          }).catch(() => {
             this.getDetectionOrderList()
           })
       })

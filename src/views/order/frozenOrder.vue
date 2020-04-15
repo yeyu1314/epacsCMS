@@ -89,6 +89,46 @@ export default {
   created() {
     this.getFrozenList()
   },
+    filters: {
+        type(d) {
+            var arr = ["", "检测", "治疗", "检测+治疗"];
+            return arr[d];
+        },
+        orderState(d) {
+            let str = "其他";
+            if (d <= 10) {
+                str = "待检测工单";
+            }
+            if (d > 10 && d < 100) {
+                str = "待上传照片";
+            }
+            if (d > 100 && d < 230) {
+                str = "待编辑报告";
+            }
+            if (d == 230) {
+                str = "待审核报告";
+            }
+            if (d >= 500 && d <= 510) {
+                str = "治疗单待确认";
+            }
+            if (d == 550) {
+                str = "待复查工单";
+            }
+            if (d >= 600 && d <= 700) {
+                str = "待上传复查照片";
+            }
+            if (d >= 700 && d <= 850) {
+                str = "待编辑复查报告";
+            }
+            if (d == 850) {
+                str = "复查报告待审";
+            }
+            if (d >= 1000) {
+                str = "工单已完成";
+            }
+            return str;
+        }
+    },
   computed: {
     ...mapState(['frozenTableData', 'frozenLongData', 'frozenPagination', 'pageNo', 'pageSize', 'searchData', 'redordData', 'redordCols'])// 读数据
   },

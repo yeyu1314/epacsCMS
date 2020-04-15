@@ -537,7 +537,7 @@ export default {
         const photoList = []
         if(res.retcode === 1){
           const result = res.data
-          commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, photoList})// 提交一个mutation
+          commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, photoList, prodectArr})// 提交一个mutation
         }
       })
       getSelectList(1, row.orgId)
@@ -551,7 +551,7 @@ export default {
     const finshUpload = (that, row) => { // 完成上传
       console.log(that, row)
     }
-    
+    let prodectArr = [];
     const getSelectList = (index,orgId) => { // 获取诊断工程师 等 的下拉框的值
       let url;
       if (index === 1) {
@@ -595,7 +595,7 @@ export default {
     const searchProUse = (jobId) => { // 查询产品用量
       let dataModel = []
       getProductData().then(res => {
-        if(res.retcode == 1) {
+        if(res.retcode === 1) {
           const productItem = res.data
           for(let i = 0; i < productItem.length; i++){
             dataModel.push({
@@ -612,10 +612,11 @@ export default {
         if (res.retcode === 1) {
           const productItem = res.data.rows;
           for (let i = 0; i < productItem.length; i++) {
-            if (productItem[i].number != 0) {
+            if (productItem[i].number !== 0) {
               // this.checkProList.push(data[i].productId);
+              prodectArr.push(productItem[i].productId)
               for (let j = 0; j < dataModel.length; j++) {
-                if (dataModel[j].id == productItem[i].productId) {
+                if (dataModel[j].id === productItem[i].productId) {
                   dataModel[j]["value1"] = productItem[i].number;
                 }
               }
@@ -629,7 +630,6 @@ export default {
     }
 
     const EditTest = (that, row) => { // 编辑照片
-      console.log('编辑照片', that, row)
       getUploadImgBtnData({carId: row.carId}).then(rowRes => {
         if(rowRes.retcode === 1){
           const result = rowRes.data
@@ -638,17 +638,14 @@ export default {
             step: 2
           }
           getUploadImgBtnPhotoData({params}).then(res => {
-            console.log('该行的图片信息',rowRes)
-            console.log(res)
             const data = res.data
-            for (var i = 0; i < result.list.length; i++) {
-              for (var j = 0; j < data.length; j++) {
-                if (result.list[i].optionId == data[j].optionId) {
+            for (let i = 0; i < result.list.length; i++) {
+              for (let j = 0; j < data.length; j++) {
+                if (result.list[i].optionId === data[j].optionId) {
                   result.list[i]["isQualified"] = data[j].isQualified;
-                  var obj = {};
+                  const obj = {};
                   if (data[j].photoId != null && data[j].photoId > 0) {
-                    obj["url"] =
-                      net.imageHP + "image/get?imageId=" + data[j].photoId;
+                    obj["url"] = net.imageHP + "image/get?imageId=" + data[j].photoId;
                       result.list[i].list.push(obj);
                       result.list[i]["photoId"] = data[j].photoId;
                   } else {
@@ -668,20 +665,10 @@ export default {
                 obj1["url"] =net.imageHP + "image/get?imageId=" + data[g].photoId
 
                 if (data[g].optionId == -2) { // 车牌
-                  // this.carPhotoId = data[g].photoId;
-                  // this.fileList.push(obj1);
-                  // this.s1 = data[g].isQualified;
                   carPhotoId = data[g].photoId;
                   fileList.push(obj1);
                   s1 = data[g].isQualified;
-                  console.log(fileList)
                 }
-                // if (data[g].optionId == -11) {
-                //   this.framePhotoId = data[g].photoId;
-                //   this.fileList1.push(obj1);
-                //   this.s2 = data[g].isQualified;
-                // }
-
                 photoList.push({
                   optionId: data[g].optionId,
                   photoId: data[g].photoId
@@ -695,11 +682,7 @@ export default {
                 }
               }
             }
-            console.log("result",result.list)
-            console.log("carPhotoId",carPhotoId)
-            console.log("fileList",fileList)
-            console.log("s1",s1)
-            commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, photoList})// 提交一个mutation
+            commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, photoList, prodectArr})// 提交一个mutation
 
           })
         }
@@ -832,6 +815,7 @@ export default {
       console.log('冻结工单列表', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
+        console.log(tableData)
         const pagination = { // 分页数据
           pageSize: res.data.pageSize,
           pageNum: res.data.pageNo,
@@ -842,6 +826,29 @@ export default {
           tableData[i].checkTypeLaber = tableData[i].checkType === 1 ? '检测' : (tableData[i].checkType === 3 ? '治疗+检测' : '治疗') // 业务类型
           tableData[i].inputTime = moment(tableData[i].inputTime).format('YYYY-MM-DD HH:MM')
           tableData[i].frozenStatusLaber = tableData[i].frozenStatus==1?"系统冻结":tableData[i].frozenStatus==2?"人工冻结":"其他"
+          if (tableData[i].jobCode <= 10) {
+            tableData[i].jobCode = "待检测工单"
+          }else if (tableData[i].jobCode > 10 && tableData[i].jobCode < 100) {
+            tableData[i].jobCode = "待上传照片"
+          }else if (tableData[i].jobCode > 100 && tableData[i].jobCode < 230) {
+            tableData[i].jobCode = "待编辑报告"
+          }else if (tableData[i].jobCode === 230) {
+            tableData[i].jobCode = "待审核报告"
+          }else if (tableData[i].jobCode >= 500 && tableData[i].jobCode <= 510) {
+            tableData[i].jobCode = "治疗单待确认"
+          }else if (tableData[i].jobCode === 550) {
+            tableData[i].jobCode = "待复查工单"
+          }else if (tableData[i].jobCode >= 600 && tableData[i].jobCode <= 700) {
+            tableData[i].jobCode = "待上传复查照片"
+          }else if (tableData[i].jobCode >= 700 && tableData[i].jobCode <= 850) {
+            tableData[i].jobCode = "待编辑复查报告"
+          }else if (tableData[i].jobCode === 850) {
+            tableData[i].jobCode = "复查报告待审"
+          }else if (tableData[i].jobCode >= 1000) {
+            tableData[i].jobCode = "工单已完成"
+          }else {
+            tableData[i].jobCode = '其他'
+          }
           longDatas.push({ // 车辆信息
             jobId: tableData[i].jobId,
             note: [

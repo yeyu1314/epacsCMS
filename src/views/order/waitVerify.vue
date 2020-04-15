@@ -221,7 +221,7 @@
                     >
                       <img
                         :src="item.url"
-                        v-if="item.url != undefined && item.url != null"
+                        v-if="item.url !== undefined && item.url != null"
                         alt
                         style="width: 100%;"
                         @mouseenter="mouseEnter(item.optionId)"
@@ -260,7 +260,7 @@
                         class="arrowIcon"
                       >
                         <img
-                          v-show="item.contrastResult == 4"
+                          v-show="item.contrastResult === 4"
                           src="../../assets/img/2.png"
                           alt
                           style="width:100%;"
@@ -269,13 +269,13 @@
                         <img
                           src="../../assets/img/3.png"
                           style="width:100%;"
-                          v-show="item.contrastResult == 2"
+                          v-show="item.contrastResult === 2"
                           @click="Arrow(item.optionId,item.contrastResult)"
                         />
                         <img
                           src="../../assets/img/equal.png"
                           style="width:80%;position: relative;top: 13px;"
-                          v-show="item.contrastResult==3"
+                          v-show="item.contrastResult===3"
                           @click="Arrow(item.optionId,item.contrastResult)"
                         />
                       </div>
@@ -1008,12 +1008,12 @@ export default {
   },
   filters: {
     type(d) {
-      var arr = ["", "检测", "治疗", "检测+治疗"];
+      const arr = ["", "检测", "治疗", "检测+治疗"];
       return arr[d];
     },
     option(val) {
-      var arr = ["未赋值", "轻微", "轻度", "中度", "重度", "严重"];
-      var str = arr[parseInt(val)];
+      const arr = ["未赋值", "轻微", "轻度", "中度", "重度", "严重"];
+      const str = arr[parseInt(val)];
       return str;
     }
   },
@@ -1051,8 +1051,8 @@ export default {
     closeTip () { // 关闭操作记录的弹窗
       this.isShowRecord = false
     },
-    // 开始审核
-    startVerift (that, row) {
+
+    startVerift (that, row) {// 开始审核
       this.isShowOpear = true
       row.review = 1
       this.exChange()
@@ -1761,17 +1761,17 @@ export default {
             this.modelName = res.data.modelName;
             this.brandName = res.data.brandName;
             this.carCount = res.data.carNumber;
-            var arr = res.data.list;
-            var b_arr = [];
+            const arr = res.data.list;
+            const b_arr = [];
             //获取检测部位数据
             const param = {
               jobId: this.jobId,
               step: 1
             }
             queryCarTestingPhoto(param).then(d => {
-                var data = d.data;
-                for (var i = 0; i < arr.length; i++) {
-                  for (var j = 0; j < data.length; j++) {
+              const data = d.data;
+              for (let i = 0; i < arr.length; i++) {
+                  for (let j = 0; j < data.length; j++) {
                     if (data[j].optionId === -1) {
                       this.carBigImageID = data[j].photoId;
                       this.CarFrameUrl = net.imgUrl + data[j].photoId;

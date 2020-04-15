@@ -127,7 +127,7 @@
               <div style="margin-top:15px;display:flex;flex-direction: row;">
                 <div>
                   <el-checkbox-group
-                    v-model="checkProList"
+                    v-model="prodectArr"
                     style="display:flex;flex-direction: column;"
                   >
                     <el-checkbox
@@ -245,7 +245,7 @@ export default {
   computed: {
     ...mapState(['recheckPicTableData', 'recheckPicLongData', 'recheckPicPagination', 'pageNo', 'pageSize', 'searchData', 
     'recheckImgUploadBtnArrList', 'recheckonloadPicRow', 'recheckonloadPicDialog', 'recheckrowCarInfo', 'productItem', 'dataModel',
-    'frecheckrowFleList', 'recheckPicPhotoList'])// 读数据
+    'frecheckrowFleList', 'recheckPicPhotoList', 'prodectArr'])// 读数据
   },
   methods: {
     ...mapActions(['getRecheckPicList']),
@@ -428,7 +428,8 @@ export default {
                 .children("input")
                 .val();
         let obj;
-        const flag = _this.checkProList.indexOf(productId);
+        // const flag = _this.checkProList.indexOf(productId);
+        const flag = _this.prodectArr.indexOf(productId);
         if (flag === -1) {
           obj = {
             productId: productId,
@@ -447,15 +448,17 @@ export default {
 
     handleChange(id, val) {// 监听输入的产品用量
       if (val > 0) {
-        const s = this.checkProList.indexOf(id);
+        const s = this.prodectArr.indexOf(id);
         if (s === -1) {
-          this.checkProList.push(id);
+          // this.checkProList.push(id);
+          this.$store.state.prodectArr.push(id)
         }
       }
       if (val === 0) {
-        const s1 = this.checkProList.indexOf(id);
+        const s1 = this.prodectArr.indexOf(id);
         if (s1 !== -1) {
-          this.checkProList.splice(s1, 1);
+          // this.checkProList.splice(s1, 1);
+          this.$store.state.prodectArr.splice(s1, 1);
         }
       }
     },

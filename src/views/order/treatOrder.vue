@@ -25,7 +25,6 @@
 
 <script>
 import net from "../../assets/js/public";
-import $ from "jquery";
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
 import {frozenOrder, startTeaet} from '../../api'
@@ -84,7 +83,6 @@ export default {
   methods: {
     ...mapActions(['getTreatOrderEditList']),
     startTeaet (that, row) { // 开始复查
-      console.log(that, row)
       const params = {
         jobId: row.jobId,
         version: row.version
@@ -124,11 +122,10 @@ export default {
         type: 'warning'
       }).then(() => {
         console.log(that, row)
-        frozenOrder({jobId: row.jobId, version: row.version})
-                .then(res => {
-                  console.log(res)
-                }).catch(res => {
+        frozenOrder({jobId: row.jobId, version: row.version}).then(res => {
           console.log(res)
+        }).catch(error => {
+          console.log(error)
           this.getDetectionOrderList()
         })
       })

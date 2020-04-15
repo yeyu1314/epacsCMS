@@ -50,64 +50,9 @@
       <div class="centent" id="firstContent">
         <!-- 左侧 -->
         <div style="background:aliceblue;width: 320px;" @mouseover="showTemplate = !showTemplate">
-          <p style="margin:190px 0 0 0;font-size: 20px;">*检测结果模板</p>
-          <div class="radio-box">
-            <p class="radio-title">进气道</p>
-            <el-radio-group v-model="radio1" class="radio-content" @change="radio1Change">
-              <el-radio v-for="(item,i) in radio1Item" :key="i" :label="item" :title='item'>{{item}}</el-radio>
-            </el-radio-group>
-          </div>
-          <div class="radio-box">
-            <p class="radio-title">进气阀</p>
-            <el-radio-group v-model="radio2" class="radio-content" @change="radio2Change">
-              <el-radio v-for="(item,i) in radio2Item" :key="i" :label="item" :title='item'>{{item}}</el-radio>
-            </el-radio-group>
-          </div>
-          <div class="radio-box">
-            <p class="radio-title">喷油嘴</p>
-            <el-radio-group v-model="radio3" class="radio-content" @change="radio3Change">
-              <el-radio v-for="(item,i) in radio3Item" :key="i" :label="item" :title='item'>{{item}}</el-radio>
-            </el-radio-group>
-          </div>
-          <div class="radio-box">
-            <p class="radio-title">活塞顶</p>
-            <el-radio-group v-model="radio4" class="radio-content" @change="radio4Change">
-              <el-radio v-for="(item,i) in radio4Item" :key="i" :label="item" :title='item'>{{item}}</el-radio>
-            </el-radio-group>
-          </div>
-          <div class="radio-box">
-            <p class="radio-title">缸壁</p>
-            <el-radio-group v-model="radio5" class="radio-content" @change="radio5Change">
-              <el-radio v-for="(item,i) in radio5Item" :key="i" :label="item" :title='item'>{{item}}</el-radio>
-            </el-radio-group>
-          </div>
-          <el-input
-                  class="repostCon"
-                  type="textarea"
-                  :autosize="{ mixRows: 6}"
-                  placeholder="请选择检测结果"
-                  v-model="opinion"
-                  style="width:217px;"
-                  disabled
-          ></el-input>
-          <div class="arrow" @click="adviseArrow">
-            <img src="../../assets/img/1.png" alt />
-          </div>
-          <div class="ctroArrow">
-            <span style="font-size: 14px;    height: 36px;line-height: 36px;">箭头：</span>
-            <el-tooltip :content="isShowArrow" placement="top" class="derail">
-              <el-switch
-                      v-model="isShowArrow"
-                      active-color="#13ce66"
-                      inactive-color="#ff4949"
-                      active-value="不打印"
-                      inactive-value="打印"
-                      active-text="不打印"
-                      inactive-text="打印"
-              >></el-switch>
-            </el-tooltip>
-          </div>
 
+          <leftItem />
+          <contentItem />
 
         </div>
         <!-- 中间 -->
@@ -501,15 +446,15 @@
                   >*检测结果</p>
                   <div style="position: relative;" v-show="isprint">
                     <el-input
-                      type="textarea"
-                      id="chCtrl"
-                      :autosize="{ minRows: 4}"
-                      placeholder="请输入意见"
-                      v-model="advise"
-                      maxlength="100"
-                      :disabled="!isShowReach"
-                      style="font-size:12px;"
-                    ></el-input>
+                            type="textarea"
+                            id="chCtrl"
+                            :autosize="{ minRows: 4}"
+                            placeholder="请输入意见"
+                            v-model="advise"
+                            maxlength="100"
+                            :disabled="!isShowReach"
+                            style="font-size:12px;"
+                    />
                     <span
                       style="font-size: 12px;position: absolute;bottom: 8px;right: 20px;color: #959595;"
                     >还能输入{{chLen}}字</span>
@@ -542,13 +487,13 @@
                     @click="select(item.name)"
                   >
                     <el-input
-                      type="textarea"
-                      style="margin-bottom:10px"
-                      :rows="2"
-                      disabled
-                      placeholder="请输入内容"
-                      v-model="item.name"
-                    ></el-input>
+                            type="textarea"
+                            style="margin-bottom:10px"
+                            :rows="2"
+                            disabled
+                            placeholder="请输入内容"
+                            v-model="item.name"
+                    />
                   </p>
                 </el-dialog>
                 <div style="width: 158mm;margin: 0px 0 10px 88px;" class="ctroAdvise">
@@ -558,15 +503,15 @@
                   >*诊断意见</p>
                   <div style="position: relative;" v-show="isprint">
                     <el-input
-                      id="exCtrl"
-                      type="textarea"
-                      :autosize="{ minRows: 4}"
-                      placeholder="请输入说明"
-                      v-model="illustrate"
-                      maxlength="280"
-                      style="font-size:12px;"
-                      :disabled="!isShowReach"
-                    ></el-input>
+                            id="exCtrl"
+                            type="textarea"
+                            :autosize="{ minRows: 4}"
+                            placeholder="请输入说明"
+                            v-model="illustrate"
+                            maxlength="280"
+                            style="font-size:12px;"
+                            :disabled="!isShowReach"
+                    />
                     <span
                       style="font-size: 12px;position: absolute;bottom: 6px;right: 18px;color: #959595;"
                     >还能输入{{exLen}}字</span>
@@ -597,64 +542,67 @@
         </div>
         <!-- 右侧 -->
         <div class="rightTool">
-          <p style="text-align:center;font-weight: bold;">综合维度</p>
-          <div class="searchCon" style="margin-bottom: 20px;">
-            <el-select
-              v-model="dimensionalityValue"
-              clearable
-              placeholder="请选择报告综合维度"
-              @change="dimensionalityChange"
-              class="f_select"
-            >
-              <el-option
-                v-for="item in dimensionality"
-                :key="item.value"
-                :label="item.laber"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-            <el-button type="primary" class="search" size="mini" @click="submitDimensionality">保存</el-button>
-          </div>
+<!--          <p style="text-align:center;font-weight: bold;">综合维度</p>-->
+<!--          <div class="searchCon" style="margin-bottom: 20px;">-->
+<!--            <el-select-->
+<!--              v-model="dimensionalityValue"-->
+<!--              clearable-->
+<!--              placeholder="请选择报告综合维度"-->
+<!--              @change="dimensionalityChange"-->
+<!--              class="f_select"-->
+<!--            >-->
+<!--              <el-option-->
+<!--                      v-for="item in dimensionality"-->
+<!--                      :key="item.value"-->
+<!--                      :label="item.laber"-->
+<!--                      :value="item.value"-->
+<!--              />-->
+<!--            </el-select>-->
+<!--            <el-button type="primary" class="search" size="mini" @click="submitDimensionality">保存</el-button>-->
+<!--          </div>-->
 
-          <p style="text-align:center;font-weight: bold;">关联车型数据</p>
-          <div class="searchCon">
-            <el-select
-              v-model="value6"
-              clearable
-              placeholder="请选择区"
-              @change="areaChange"
-              class="f_select"
-            >
-              <el-option
-                v-for="item in areaArr"
-                :key="item.id"
-                :label="item.areaName"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-            <el-select
-              v-model="value7"
-              clearable
-              placeholder="请选择省份"
-              @change="provinceChange"
-              class="f_select"
-            >
-              <el-option
-                v-for="item in provinceArr"
-                :key="item.id"
-                :label="item.provinceName"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-            <el-select v-model="value8" clearable placeholder="请选择市/县" class="f_select">
-              <el-option
-                v-for="item in cityArr"
-                :key="item.id"
-                :label="item.cityName"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </div>
+
+          <rightItem />
+
+<!--          <p style="text-align:center;font-weight: bold;">关联车型数据</p>-->
+<!--          <div class="searchCon">-->
+<!--            <el-select-->
+<!--              v-model="value6"-->
+<!--              clearable-->
+<!--              placeholder="请选择区"-->
+<!--              @change="areaChange"-->
+<!--              class="f_select"-->
+<!--            >-->
+<!--              <el-option-->
+<!--                      v-for="item in areaArr"-->
+<!--                      :key="item.id"-->
+<!--                      :label="item.areaName"-->
+<!--                      :value="item.id"-->
+<!--              />-->
+<!--            </el-select>-->
+<!--            <el-select-->
+<!--              v-model="value7"-->
+<!--              clearable-->
+<!--              placeholder="请选择省份"-->
+<!--              @change="provinceChange"-->
+<!--              class="f_select"-->
+<!--            >-->
+<!--              <el-option-->
+<!--                      v-for="item in provinceArr"-->
+<!--                      :key="item.id"-->
+<!--                      :label="item.provinceName"-->
+<!--                      :value="item.id"-->
+<!--              />-->
+<!--            </el-select>-->
+<!--            <el-select v-model="value8" clearable placeholder="请选择市/县" class="f_select">-->
+<!--              <el-option-->
+<!--                      v-for="item in cityArr"-->
+<!--                      :key="item.id"-->
+<!--                      :label="item.cityName"-->
+<!--                      :value="item.id"-->
+<!--              />-->
+<!--            </el-select>-->
+<!--          </div>-->
           <div class="searchCon">
             <el-select
               v-model="value1"
@@ -664,11 +612,11 @@
               class="p_select"
             >
               <el-option
-                v-for="item in brandData"
-                :key="item.id"
-                :label="item.brandName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in brandData"
+                      :key="item.id"
+                      :label="item.brandName"
+                      :value="item.id"
+              />
             </el-select>
             <el-select
               v-model="value2"
@@ -678,11 +626,11 @@
               class="p_select"
             >
               <el-option
-                v-for="item in hostData"
-                :key="item.id"
-                :label="item.factoryName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in hostData"
+                      :key="item.id"
+                      :label="item.factoryName"
+                      :value="item.id"
+              />
             </el-select>
           </div>
           <div class="searchCon">
@@ -695,37 +643,37 @@
               class="p_select"
             >
               <el-option
-                v-for="item in audiData"
-                :key="item.id"
-                :label="item.seriesName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in audiData"
+                      :key="item.id"
+                      :label="item.seriesName"
+                      :value="item.id"
+              />
             </el-select>
             <el-select v-model="value4" clearable placeholder="请选择车型" class="p_select">
               <el-option
-                v-for="item in carTypeData"
-                :key="item.id"
-                :label="item.modelName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in carTypeData"
+                      :key="item.id"
+                      :label="item.modelName"
+                      :value="item.id"
+              />
             </el-select>
           </div>
           <div class="searchCon">
             <el-select v-model="engineType2" clearable placeholder="请选择发动机" class="p_select">
               <el-option
-                v-for="item in engine"
-                :key="item.id"
-                :label="item.engineName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in engine"
+                      :key="item.id"
+                      :label="item.engineName"
+                      :value="item.id"
+              />
             </el-select>
             <el-select v-model="mileSection" clearable placeholder="请选择里程" class="p_select">
               <el-option
-                v-for="item in mileSectionArr"
-                :key="item.id"
-                :label="item.mileage"
-                :value="item.mileage"
-              ></el-option>
+                      v-for="item in mileSectionArr"
+                      :key="item.id"
+                      :label="item.mileage"
+                      :value="item.mileage"
+              />
             </el-select>
           </div>
           <div class="searchCon">
@@ -736,11 +684,11 @@
               style="width:180px;margin: 20px 0 0 20px;"
             >
               <el-option
-                v-for="item in engineArr"
-                :key="item.id"
-                :label="item.optionName"
-                :value="item.id"
-              ></el-option>
+                      v-for="item in engineArr"
+                      :key="item.id"
+                      :label="item.optionName"
+                      :value="item.id"
+              />
             </el-select>
             <el-button type="primary" class="search" size="mini" @click="searchClick">搜索</el-button>
           </div>
@@ -764,10 +712,10 @@
                 style="display:none;position:absolute;top: 0;right: 0px;background: #000;opacity: 0.5;width: 112px;height: 85px;z-index: 1;"
               >
                 <i
-                  class="el-icon-zoom-in"
-                  @click="bigIcon(item.imageId2)"
-                  style="color: #fff;font-size: 25px;margin: 30px;"
-                ></i>
+                        class="el-icon-zoom-in"
+                        @click="bigIcon(item.imageId2)"
+                        style="color: #fff;font-size: 25px;margin: 30px;"
+                />
               </div>
             </div>
             <div v-else class="ulrEmpty">
@@ -788,10 +736,10 @@
                 style="display:none;position:absolute;top: 0;right: 0px;background: #000;opacity: 0.5;width: 112px;height: 85px;z-index: 1;"
               >
                 <i
-                  class="el-icon-zoom-in"
-                  @click="bigIcon(item.imageId3)"
-                  style="color: #fff;font-size: 25px;margin: 30px;"
-                ></i>
+                        class="el-icon-zoom-in"
+                        @click="bigIcon(item.imageId3)"
+                        style="color: #fff;font-size: 25px;margin: 30px;"
+                />
               </div>
             </div>
             <div v-else class="ulrEmpty">
@@ -812,10 +760,10 @@
                 style="display:none;position:absolute;top: 0;right: 2px;background: #000;opacity: 0.5;width: 112px;height: 85px;z-index: 1;"
               >
                 <i
-                  class="el-icon-zoom-in"
-                  @click="bigIcon(item.imageId4)"
-                  style="color: #fff;font-size: 25px;margin: 30px;"
-                ></i>
+                        class="el-icon-zoom-in"
+                        @click="bigIcon(item.imageId4)"
+                        style="color: #fff;font-size: 25px;margin: 30px;"
+                />
               </div>
             </div>
             <div v-else class="ulrEmpty">
@@ -874,16 +822,23 @@ import $ from "jquery";
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
 import recordForm from '../../components/tableCompnment/recordForm'
+import leftItem from "./firstReport/leftItem";
+import contentItem from "./firstReport/contentItem";
+import rightItem from "./firstReport/rightItem";
 import {getOperatingRecord, frozenOrder, getFirstReportEdir, imgUnqualified, submitReport, ensureEdit, submitDimensionality,
   getArea, getProvince, getCity, getCarBrand, getCarFactory, getCarSeries, getCarModel, getCarMileage, queryTestingWeb, webSelect,
   queryByIdFirstReport, queryCarTestingPhoto, getEngineType, getOptionByCarId, getExplain, webMatchFirstReport} from '../../api'
 import {mapActions, mapState} from 'vuex'
 import moment from "moment";
+import Bus from '../bus'
 export default {
   components: {
     tableCom,
     searchCom,
-    recordForm
+    recordForm,
+    leftItem,
+    contentItem,
+    rightItem
   },
   data () {
     return {
@@ -919,18 +874,6 @@ export default {
         }
       ],
       isShowRecord: false, // 操作记录弹窗
-      radio1 : '',
-      radio1Item : ["进气道露出金属光泽；","进气道部分区域露出金属光泽；","进气道没有金属光泽露出；"],
-      radio2 : '',
-      radio2Item : ["进气阀阀杆和阀座露出金属色泽；","进气阀阀杆露出金属色泽，阀座无金属色泽露出；","进气阀阀杆和阀座无金属色泽露出；"],
-      radio3 : '',
-      radio3Item : ["喷油嘴及喷孔可见；","喷油嘴喷孔部分可见；","喷油嘴喷孔不可见；"],
-      radio4 : '',
-      radio4Item : ["活塞顶大部分区域露出金属色泽；","活塞顶部分区域有金属色泽露出；","活塞顶没有金属色泽露出；"],
-      radio5 : '',
-      radio5Item : ["缸壁未见异常划痕。","缸壁有轻微划痕。","缸壁有深度划痕。"],
-      opinion: "",
-      isShowArrow: "不打印", //打印是否显示箭头
       showTemplate: false,
       dimensionality : [// 增和维度下拉框
               {id:2,laber:'轻微轻度',value:2},
@@ -1090,6 +1033,7 @@ export default {
           })
       })
     },
+
     getData() { // 获取数据
       console.log('成功啦',this.firstReportRow)
       const param = {carId: this.firstReportRow.carId}
@@ -1157,7 +1101,7 @@ export default {
         jobId: this.firstReportRow.jobId,
         code: 32
       };
-      if (this.checkedPlace.length == 0) {
+      if (this.checkedPlace.length === 0) {
         net.message(this, "请选择不合格部位", "error");
         return false;
       }
@@ -1429,27 +1373,7 @@ export default {
         );
       }, 300);
     },
-    //检测模板
-    radio1Change(val) {
-      this.radio1 = val
-      this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
-    },
-    radio2Change(val) {
-      this.radio2 = val
-      this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
-    },
-    radio3Change(val) {
-      this.radio3 = val
-      this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
-    },
-    radio4Change(val) {
-      this.radio4 = val
-      this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
-    },
-    radio5Change(val) {
-      this.radio5 = val
-      this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
-    },
+
     adviseArrow() {
       this.advise = this.opinion;
     },

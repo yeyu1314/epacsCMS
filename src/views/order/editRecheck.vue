@@ -118,12 +118,12 @@
                   <span style="display: inline-block;width: 215px;text-align: left;">
                     综合油耗：
                     <span
-                      v-if="oilDeplete!=0"
+                      v-if="oilDeplete!==0"
                       style="display: inline-block;height: 25px;padding: 0 5px;border-bottom: 1px solid"
                     >{{oilDeplete}}L/100km</span>
 
                     <span
-                      v-if="oilDeplete==0"
+                      v-if="oilDeplete===0"
                       style="display: inline-block;height: 25px;padding: 0 5px;border-bottom: 1px solid"
                     >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                   </span>
@@ -513,10 +513,9 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          frozenOrder({jobId: row.jobId, version: row.version})
-                  .then(res => {
-                    console.log(res)
-                  }).catch(res => {
+          frozenOrder({jobId: row.jobId, version: row.version}).then(res => {
+            console.log(res)
+          }).catch(res => {
             console.log(res)
             this.getDetectionOrderList()
           })
@@ -557,8 +556,7 @@
         this.version = row.version;
         this.getBgImg(row.orgId);
         this.getProductInfo(() => {
-          //初始化产品用量
-          this.searchProUse();
+          this.searchProUse();//初始化产品用量
         });
         if (row.jobCode === 700) {
           this.isShowSub = false;

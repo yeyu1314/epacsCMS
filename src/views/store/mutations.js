@@ -125,12 +125,13 @@ export default {
     state.onloadPics2 = onloadPics2
   },
 
-  [RECHECK_IMG_UPLOAD_D_TABLEDATA] (state, {row, result, fileList, photoList}) {
+  [RECHECK_IMG_UPLOAD_D_TABLEDATA] (state, {row, result, fileList, photoList, prodectArr}) {
     state.recheckonloadPicDialog = true
     state.recheckonloadPicRow = row
     state.recheckrowCarInfo = result
     state.frecheckrowFleList = fileList
     state.recheckPicPhotoList = photoList
+    state.prodectArr = prodectArr
   },
 
   [RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA] (state, {productItem, dataModel}) {

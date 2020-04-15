@@ -11,6 +11,8 @@ Vue.config.productionTip = false
 // 引用组件
 Vue.use(ElementUI)
 
+Vue.prototype.Bus = new Vue()
+
 new Vue({
   router,
   store,

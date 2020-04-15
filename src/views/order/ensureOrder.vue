@@ -162,7 +162,7 @@ export default {
       this.treatOrderRow = row
     },
     handleStep2Type2OptionList(value) { // 选择治疗项目
-      if (value.indexOf(0) == -1) {
+      if (value.indexOf(0) === -1) {
         net.message(this, "治疗项目必须包含动力康复", "warning");
         value.push(0);
       }
@@ -194,7 +194,7 @@ export default {
         version: this.treatOrderRow.version,
       }
       stopEnsureOrder(params).then(res => {
-        if (res.retcode == 1) {
+        if (res.retcode === 1) {
           net.message(this, res.retmsg, "success")
           this.$router.push({ path: "/completeOrder" })
         } else {

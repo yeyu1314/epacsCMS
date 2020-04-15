@@ -22,7 +22,7 @@
       :longDatas="imgUploadLongDatas"
     >
     </table-com>
-    <el-dialog title="上传照片" :visible="onloadPicDialog" @click="closeDialog" @close='close'>
+    <el-dialog title="上传照片" :visible="onloadPicDialog" @close='close'>
       <div class="contentBody">
         <div class="carInfo">
           <p class="title" style="height:40px;">
@@ -44,14 +44,13 @@
             <span>综合油耗：{{rowCarInfo.oilDeplete}}L/100km</span>
             <span>行驶里程：{{onloadPicRow.mile}}KM</span>
           </p>
-          <div style="display:flex;flex-wrap: wrap;" v-show="onloadPicRow.jobCode==20">
+          <div style="display:flex;flex-wrap: wrap;" v-show="onloadPicRow.jobCode===20">
             <el-select
               v-model="chaizhuang"
               placeholder="请选择拆装工程师"
               clearable
               style="margin-right:10px;margin-top:10px"
             >
-              
             </el-select>
             <el-select
               v-model="jiance"
@@ -59,7 +58,6 @@
               clearable
               style="margin-right:10px;margin-top:10px"
             >
-              
             </el-select>
             <el-select
               v-model="gendan"
@@ -67,13 +65,12 @@
               clearable
               style="margin-right:10px;margin-top:10px"
             >
-              
             </el-select>
           </div>
         </div>
         <div class="onlodList">
           <div class="perform">
-            <div :class="{error:onloadPics1 == 2}" class="left">车牌号</div>
+            <div :class="{error:onloadPics1 === 2}" class="left">车牌号</div>
             <div class="right">
               <el-upload
                 style="display:inline-block"
@@ -86,12 +83,12 @@
                 :on-remove="remove.bind(this,-1,conloadPicCarPhotoId,onloadPicRow.jobId,onloadPicRow.version)"
                 :file-list="onloadPicFileList"
               >
-                <i class="el-icon-plus"></i>
+                <i class="el-icon-plus"/>
               </el-upload>
             </div>
           </div>
           <div class="perform">
-            <div :class="{error:onloadPics2 == 2}" class="left">车架号</div>
+            <div :class="{error:onloadPics2 === 2}" class="left">车架号</div>
             <div class="right">
               <el-upload
                 :action="uploadUrl"
@@ -103,7 +100,7 @@
                 :on-remove="remove.bind(this,-11,onloadPicFramePhotoId,onloadPicRow.jobId,onloadPicRow.version)"
                 :file-list="onloadPicFileList1"
               >
-                <i class="el-icon-plus"></i>
+                <i class="el-icon-plus"/>
               </el-upload>
             </div>
           </div>
@@ -121,7 +118,7 @@
                 :on-remove="remove.bind(this,item.optionId,item.photoId,onloadPicRow.jobId,onloadPicRow.version)"
                 :on-exceed="handleExceed"
               >
-                <i class="el-icon-plus"></i>
+                <i class="el-icon-plus"/>
               </el-upload>
             </div>
           </div>
@@ -300,24 +297,24 @@ export default {
         genDan: this.gendan || 0
       };
       console.log(row,param)
-      if (row.jobCode == 20 && row.photoId == undefined) {
-        param["jobCode"] = 30;
+      if (row.jobCode === 20 && row.photoId === undefined) {
+        param["jobCode"] = 30
       }
-      if (row.jobCode == 30 || row.jobCode == 31 || row.jobCode == 32) {
-        param["jobCode"] = 31;
+      if (row.jobCode === 30 || row.jobCode === 31 || row.jobCode === 32) {
+        param["jobCode"] = 31
       }
-      if (this.chaizhuang.length == 0 || this.jiance.length == 0 || this.gendan.length == 0) {
-        let title = "";
-        if (this.chaizhuang.length == 0) {
-          title += "拆装工程师 ";
+      if (this.chaizhuang.length === 0 || this.jiance.length === 0 || this.gendan.length === 0) {
+        let title = ""
+        if (this.chaizhuang.length === 0) {
+          title += "拆装工程师 "
         }
-        if (this.jiance.length == 0) {
-          title += " 检测工程师";
+        if (this.jiance.length === 0) {
+          title += " 检测工程师"
         }
-        if (this.gendan.length == 0) {
-          title += " 跟单员";
+        if (this.gendan.length === 0) {
+          title += " 跟单员"
         }
-        if (row.jobCode == 20) {
+        if (row.jobCode === 20) {
           this.$confirm(
             <span>
               <p> 没有选择{title} 这样操作将会影响到对应人员的数据统计</p>
@@ -331,11 +328,9 @@ export default {
             }
           ).then(() => {
             this.ensureUpload(param);
-            console.log(param)
           });
         } else {
           this.ensureUpload(param);
-          console.log(param)
         }
       } else {
         this.ensureUpload(param);
@@ -345,7 +340,7 @@ export default {
 
     ensureUpload(param) { //确认上传接口调取
       ensureUploadImgList(param, this.onLoadPicPhotoList).then(res => {
-          if (res.retcode == 1) {
+          if (res.retcode === 1) {
             net.message(this, res.retmsg, "success");
             this.version = res.data;
             this.dialogVisible = false;
@@ -364,23 +359,18 @@ export default {
       this.dialogVisible1 = false
     },
 
-    closeDialog () {
-      // this.$store.state.onloadPicDialog = false
-      console.log('关闭')
-    },
-
-    uploadSuccess(optionId, photoId, response, file, fileList){ // 上传图片成功
+    uploadSuccess(optionId, photoId, response){ // 上传图片成功
       if (response.retcode !== 1) {
         net.message(this, response.retmsg, "error");
         return false;
       }
       this.$store.state.onLoadPicPhotoList.push({ optionId: optionId, photoId: response.data });
       // this.optionId = optionId;
-      if (optionId === -1) {
+      if (optionId === -1) { // 车牌
         this.carPhotoId = response.data;
-      } else if (optionId === -11) {
+      } else if (optionId === -11) { // 车架号
         this.framePhotoId = response.data;
-      } else {
+      } else { // 部位
         const data = this.rowCarInfo
         for (let i = 0; i < data.list.length; i++) {
           const element = data.list[i];
@@ -406,24 +396,24 @@ export default {
         version: version1
       }
       deletePhoto(param, {}).then(res => {
-          if (res.retcode == 1) {
+          if (res.retcode === 1) {
             for (let i = 0; i < this.onLoadPicPhotoList.length; i++) {
-              if (this.onLoadPicPhotoList[i].optionId == optionID) {
+              if (this.onLoadPicPhotoList[i].optionId === optionID) {
                 this.onLoadPicPhotoList.splice(i, 1);
               }
             }
-            net.message(this, "删除成功", "warning");
+            net.message(this, "删除成功", "warning")
             this.version = res.data;
             setTimeout(() => {
-              this.ctroOnloadBtn();
-            }, 500);
+              this.ctroOnloadBtn()
+            }, 500)
           } else {
-            net.message(this, "删除失败", "warning");
+            net.message(this, "删除失败", "warning")
             setTimeout(() => {
-              this.ctroOnloadBtn();
-            }, 500);
+              this.ctroOnloadBtn()
+            }, 500)
           }
-        });
+        })
     },
 
     handleExceed() {
@@ -438,29 +428,29 @@ export default {
     ctroOnloadBtn() {//控制上传按钮显示
       const _this = this;
       $(".perform").each(function() {
-        var btn = $(this)
+        const btn = $(this)
                 .children(".right")
                 .children("div")
                 .children(".el-upload--picture-card");
-        var count = $(this)
+        const count = $(this)
                 .children(".right")
                 .children("div")
                 .children(".el-upload-list--picture-card")
                 .children().length;
 
-        if (count == 0) {
+        if (count === 0) {
           btn.show();
         }
         if (count > 0) {
           btn.hide();
-          var del = $(this)
+          const del = $(this)
                   .children(".right")
                   .children("div")
                   .children(".el-upload-list--picture-card")
                   .children(".el-upload-list__item")
                   .children(".el-upload-list__item-actions")
                   .children(".el-upload-list__item-delete");
-          if (_this.sign == 0) {
+          if (_this.sign === 0) {
             del.hide();
           } else {
             del.show();
