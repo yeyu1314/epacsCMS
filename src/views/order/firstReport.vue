@@ -52,7 +52,6 @@
         <div style="background:aliceblue;width: 320px;" @mouseover="showTemplate = !showTemplate">
 
           <leftItem />
-          <contentItem />
 
         </div>
         <!-- 中间 -->
@@ -546,45 +545,6 @@
 
           <rightItem />
 
-<!--          <p style="text-align:center;font-weight: bold;">关联车型数据</p>-->
-<!--          <div class="searchCon">-->
-<!--            <el-select-->
-<!--              v-model="value6"-->
-<!--              clearable-->
-<!--              placeholder="请选择区"-->
-<!--              @change="areaChange"-->
-<!--              class="f_select"-->
-<!--            >-->
-<!--              <el-option-->
-<!--                      v-for="item in areaArr"-->
-<!--                      :key="item.id"-->
-<!--                      :label="item.areaName"-->
-<!--                      :value="item.id"-->
-<!--              />-->
-<!--            </el-select>-->
-<!--            <el-select-->
-<!--              v-model="value7"-->
-<!--              clearable-->
-<!--              placeholder="请选择省份"-->
-<!--              @change="provinceChange"-->
-<!--              class="f_select"-->
-<!--            >-->
-<!--              <el-option-->
-<!--                      v-for="item in provinceArr"-->
-<!--                      :key="item.id"-->
-<!--                      :label="item.provinceName"-->
-<!--                      :value="item.id"-->
-<!--              />-->
-<!--            </el-select>-->
-<!--            <el-select v-model="value8" clearable placeholder="请选择市/县" class="f_select">-->
-<!--              <el-option-->
-<!--                      v-for="item in cityArr"-->
-<!--                      :key="item.id"-->
-<!--                      :label="item.cityName"-->
-<!--                      :value="item.id"-->
-<!--              />-->
-<!--            </el-select>-->
-<!--          </div>-->
           <div class="searchCon">
             <el-select
               v-model="value1"
@@ -674,6 +634,7 @@
             </el-select>
             <el-button type="primary" class="search" size="mini" @click="searchClick">搜索</el-button>
           </div>
+
           <div class="searchPercent" v-show="showRightTitle">
             <p>{{rightPercent1}}</p>
             <p>{{rightPercent2}}</p>
