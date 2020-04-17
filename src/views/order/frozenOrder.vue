@@ -3,7 +3,7 @@
         <search-com
                 size='medium '
                 labelWidth = '80px'
-                :searchData = "searchData"
+                :searchData = "frozenSearchData"
                 :searchForm = "searchForm"
                 :searchHandle="searchHandle">
         </search-com>
@@ -18,6 +18,8 @@
                 :isPagination='true'
                 :tablePage='frozenPagination'
                 :longDatas="frozenLongData"
+                @CurrentChange = 'CurrentChange'
+                @SizeChange = 'SizeChange'
         >
         </table-com>
         <record-form
@@ -87,6 +89,17 @@ export default {
     }
   },
   created() {
+    this.$store.state.frozenSearchData = {
+      carNumber: null,
+      carMsg: null,
+      station: null,
+      checkType: null
+    }
+    this.$store.state.frozenPagination = {
+      pageSize: 10,
+      pageNum: 1,
+      total: 0
+    }
     this.getFrozenList()
   },
     filters: {
@@ -130,7 +143,7 @@ export default {
         }
     },
   computed: {
-    ...mapState(['frozenTableData', 'frozenLongData', 'frozenPagination', 'pageNo', 'pageSize', 'searchData', 'redordData', 'redordCols'])// 读数据
+    ...mapState(['frozenTableData', 'frozenLongData', 'frozenPagination', 'frozenSearchData', 'redordData', 'redordCols'])// 读数据
   },
   methods: {
     ...mapActions(['getFrozenList']),
@@ -202,6 +215,19 @@ export default {
           message: '已取消作废'
         })
       })
+    },
+    //翻页
+    CurrentChange(val){
+      this.$store.state.frozenPagination.pageNum = val;
+      this.getFrozenList()
+    },
+    //选择 每页显示数量
+    SizeChange(val){
+      this.$store.state.frozenPagination.pageSize = val;
+      this.getFrozenList()
+    },
+    searchNews() { // 查询
+      this.getFrozenList()
     }
   }
 }

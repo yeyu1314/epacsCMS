@@ -117,7 +117,7 @@ export default {
   },
   // 待检测工单
   async getDetectionOrderList ({commit, state}) {
-    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 1,carNumber:state.searchData.carNumber}).then(res => {
+    await getDetectionOrderListData({pageNo: state.detectionOrderPagination.pageNum, pageSize: state.detectionOrderPagination.pageSize}, {type: 1,carNumber:state.searchData.carNumber}).then(res => {
       console.log('待检测工单', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -145,7 +145,7 @@ export default {
       console.log('待检测工单', res)
     })
   },
-  // 待上传照片 
+  // 待上传照片
   async getDetectionImgUploadList ({commit, state}) {
     const showEditTest = (that, row) => { // 上传照片
       getUploadImgBtnData({carId: row.carId}).then(res => {
@@ -263,7 +263,7 @@ export default {
         console.log(error)
       })
     }
-    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 2,carNumber:state.searchData.carNumber}).then(res => {
+    await getDetectionOrderListData({pageNo: state.imgUploadPagination.pageNum, pageSize: state.imgUploadPagination.pageSize}, {type: 2,carNumber:state.searchData.carNumber}).then(res => {
       console.log('待上传照片', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -337,7 +337,7 @@ export default {
           }
         }).catch(error => {
           console.log(error)
-          
+
         })
     }
     const starEdit = (that, row) => { // 编辑检测报告
@@ -346,7 +346,7 @@ export default {
       const firstReportRow = row
       commit(RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA, {showEditPage, firstReportRow})
     }
-    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 3,carNumber:state.searchData.carNumber}).then(res => {
+    await getDetectionOrderListData({pageNo: state.editDetectionPagination.pageNum, pageSize: state.editDetectionPagination.pageSize}, {type: 3,carNumber:state.searchData.carNumber}).then(res => {
       console.log('待编辑报告数据',res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -403,7 +403,7 @@ export default {
   },
   // 待审核报告
   async getDetectionVerifyList ({commit, state}) {
-    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 4,carNumber:state.searchData.carNumber}).then(res => {
+    await getDetectionOrderListData({pageNo: state.verifyDetectionOrderPagination.pageNum, pageSize: state.verifyDetectionOrderPagination.pageSize}, {type: 4,carNumber:state.searchData.carNumber}).then(res => {
       console.log('待审核报告', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -445,7 +445,7 @@ export default {
       const viewPdf31 = true
       commit(RECEIVE_ENSURE_ORDER_DIA_TABLEDATA, {viewPdf31})
     }
-    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 5,carNumber:state.searchData.carNumber}).then(res => {
+    await getDetectionOrderListData({pageNo: state.ensureOrderPagination.pageNum, pageSize: state.ensureOrderPagination.pageSize}, {type: 5,carNumber:state.searchData.carNumber}).then(res => {
       console.log('治疗单确认', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -501,7 +501,7 @@ export default {
   },
  // 待复查工单
   async getTreatOrderEditList({commit, state}) {
-    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 6,carNumber:state.searchData.carNumber}).then(res => {
+    await getDetectionOrderListData({pageNo: state.treatPagination.pageNum, pageSize: state.treatPagination.pageSize}, {type: 6,carNumber:state.searchData.carNumber}).then(res => {
       console.log('待复查工单', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -547,7 +547,7 @@ export default {
       // getProductInfo()
       searchProUse(row.jobId) // 查询产品用量
     }
-    
+
     const finshUpload = (that, row) => { // 完成上传
       console.log(that, row)
     }
@@ -654,7 +654,7 @@ export default {
                 }
               }
             }
-            
+
             let carPhotoId = ''
             let fileList = []
             let s1 = ''
@@ -694,7 +694,7 @@ export default {
       // getProductInfo()
       searchProUse(row.jobId) // 查询产品用量
     }
-    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 7,carNumber:state.searchData.carNumber}).then(res => {
+    await getDetectionOrderListData({pageNo: state.recheckPicPagination.pageNum, pageSize: state.recheckPicPagination.pageSize}, {type: 7,carNumber:state.searchData.carNumber}).then(res => {
       console.log('复查照片上传', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -751,7 +751,7 @@ export default {
   },
   // 复查报告编辑
   async getEditRecheckList ({commit, state}) {
-    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 8,carNumber:state.searchData.carNumber}).then(res => {
+    await getDetectionOrderListData({pageNo: state.editTecheckPagination.pageNum, pageSize: state.editTecheckPagination.pageSize}, {type: 8,carNumber:state.searchData.carNumber}).then(res => {
       console.log('复查报告编辑', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -781,7 +781,7 @@ export default {
   },
   //复查报告待审
   async getWaitVerifyReportList ({commit, state}) {
-    await getDetectionOrderListData({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 10,carNumber:state.searchData.carNumber}).then(res => {
+    await getDetectionOrderListData({pageNo: state.waitVerifyReportPagination.pageNum, pageSize: state.waitVerifyReportPagination.pageSize}, {type: 10,carNumber:state.searchData.carNumber}).then(res => {
       console.log('复查报告待审', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -811,11 +811,12 @@ export default {
   },
   // 冻结工单列表
   async getFrozenList ({commit, state}) {
-    await getFrozenOrder({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 11}).then(res => {
+    await getFrozenOrder(
+      {pageNo: state.frozenPagination.pageNum, pageSize: state.frozenPagination.pageSize},
+      {type: 11,carNumber:state.frozenSearchData.carNumber,carMsg:state.frozenSearchData.carMsg,station:state.frozenSearchData.station,checkType:state.frozenSearchData.checkType}).then(res => {
       console.log('冻结工单列表', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
-        console.log(tableData)
         const pagination = { // 分页数据
           pageSize: res.data.pageSize,
           pageNum: res.data.pageNo,
@@ -866,7 +867,9 @@ export default {
   },
   // 废弃工单列表
   async getDiscaedList ({commit, state}) {
-    await getDiscardOrder({pageNo: state.pageNo, pageSize: state.pageSize}, {type: 12}).then(res => {
+    await getDiscardOrder(
+      {pageNo: state.discardPagination.pageNum, pageSize: state.discardPagination.pageSize},
+      {type: 12,carNumber:state.discardSearchData.carNumber,carMsg:state.discardSearchData.carMsg,station:state.discardSearchData.station,checkType:state.discardSearchData.checkType}).then(res => {
       console.log('废弃工单列表', res)
       if (res.retcode === 1) {
         const tableData = res.data.rows
@@ -896,6 +899,6 @@ export default {
     })
   },
 
-  
-  
+
+
 }

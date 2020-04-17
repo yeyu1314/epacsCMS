@@ -19,6 +19,8 @@
       :isPagination='true'
       :tablePage='detectionOrderPagination'
       :longDatas="detectionOrderLongDatas"
+      @CurrentChange = 'CurrentChange'
+      @SizeChange = 'SizeChange'
     >
     </table-com>
   </div>
@@ -116,7 +118,17 @@ export default {
 
     searchOrder () { // 查询
       this.getDetectionOrderList()
-    }
+    },
+    //翻页
+    CurrentChange(val){
+      this.$store.state.detectionOrderPagination.pageNum = val;
+      this.getDetectionOrderList()
+    },
+    //选择 每页显示数量
+    SizeChange(val){
+      this.$store.state.detectionOrderPagination.pageSize = val;
+      this.getDetectionOrderList()
+    },
   }
 }
 </script>

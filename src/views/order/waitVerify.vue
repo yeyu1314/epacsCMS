@@ -19,6 +19,8 @@
         :isPagination='true'
         :tablePage='verifyDetectionOrderPagination'
         :longDatas="verifyDetectionOrderLongDatas"
+        @CurrentChange = 'CurrentChange'
+        @SizeChange = 'SizeChange'
       >
       </table-com>
       <record-form
@@ -386,7 +388,7 @@
                             />
                             <p
                               style="font-size: 14px;text-align: center;margin-top: -3px;
-                              background:#ff0000; 
+                              background:#ff0000;
                               color: #fff;
                               height: 20px;
                               line-height: 22px;
@@ -412,7 +414,7 @@
                             <div style="width: 118px;height: 88px;border: 1px solid #eee;"></div>
                             <p
                               style="font-size: 14px;text-align: center;
-                              background: #ff0000; 
+                              background: #ff0000;
                               color: #fff;
                               font-size: 14px;
                               height: 20px;
@@ -472,7 +474,7 @@
                             <div style="width: 118px;height: 88px;border: 1px solid #eee;"></div>
                             <p
                               style="font-size: 14px;text-align: center;
-                              background: #ff0000; 
+                              background: #ff0000;
                               color: #fff;
                               font-size: 14px;
                               height: 20px;
@@ -1048,6 +1050,16 @@ export default {
           console.log('操作记录', error)
         })
     },
+    //翻页
+    CurrentChange(val){
+      this.$store.state.verifyDetectionOrderPagination.pageNum = val;
+      this.getDetectionVerifyList()
+    },
+    //选择 每页显示数量
+    SizeChange(val){
+      this.$store.state.verifyDetectionOrderPagination.pageSize = val;
+      this.getDetectionVerifyList()
+    },
     closeTip () { // 关闭操作记录的弹窗
       this.isShowRecord = false
     },
@@ -1076,7 +1088,7 @@ export default {
             this.cityId = res.data.cityId;
             this.provinceId = res.data.provinceId;
             this.engineType2 = res.data.engineId;
-           
+
             this.getbrandData(() => { //品牌四级联动
               this.value1 = res.data.brandId;
               this.gethostData(res.data.brandId, () => {
@@ -1453,8 +1465,8 @@ export default {
           }
         });
     },
-        
-    
+
+
     areaChange(value) { // 选择区
       this.provinceData = [];
       this.cityData = [];
@@ -1504,7 +1516,7 @@ export default {
           }
         });
     },
-    
+
     brandChange(value) {//监听下拉
       this.hostData = [];
       this.audiData = [];

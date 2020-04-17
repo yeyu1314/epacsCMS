@@ -142,6 +142,13 @@ export default {
     total: 0
   },
   frozenLongData: [],
+  frozenSearchData: {
+    carNumber: null,
+    carMsg: null,
+    station: null,
+    checkType: null
+  },
+
   // 废弃工单列表
   discardTableData: [],
   discardPagination: {
@@ -150,4 +157,10 @@ export default {
     total: 0
   },
   discardLongData: [],
+  discardSearchData: {
+    carNumber: null,
+    carMsg: null,
+    station: null,
+    checkType: null
+  },
 }

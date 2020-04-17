@@ -21,6 +21,8 @@
         :isPagination='true'
         :tablePage='editDetectionPagination'
         :longDatas="editDetectionLongData"
+        @CurrentChange = 'CurrentChange'
+        @SizeChange = 'SizeChange'
       >
       </table-com>
       <record-form
@@ -50,9 +52,63 @@
       <div class="centent" id="firstContent">
         <!-- 左侧 -->
         <div style="background:aliceblue;width: 320px;" @mouseover="showTemplate = !showTemplate">
-
-          <leftItem />
-
+          <p style="margin:190px 0 0 0;font-size: 20px;">*检测结果模板</p>
+          <div class="radio-box">
+            <p class="radio-title">进气道</p>
+            <el-radio-group v-model="radio1" class="radio-content" @change="radio1Change">
+              <el-radio v-for="(item,i) in radio1Item" :key="i" :label="item" :title='item'>{{item}}</el-radio>
+            </el-radio-group>
+          </div>
+          <div class="radio-box">
+            <p class="radio-title">进气阀</p>
+            <el-radio-group v-model="radio2" class="radio-content" @change="radio2Change">
+              <el-radio v-for="(item,i) in radio2Item" :key="i" :label="item" :title='item'>{{item}}</el-radio>
+            </el-radio-group>
+          </div>
+          <div class="radio-box">
+            <p class="radio-title">喷油嘴</p>
+            <el-radio-group v-model="radio3" class="radio-content" @change="radio3Change">
+              <el-radio v-for="(item,i) in radio3Item" :key="i" :label="item" :title='item'>{{item}}</el-radio>
+            </el-radio-group>
+          </div>
+          <div class="radio-box">
+            <p class="radio-title">活塞顶</p>
+            <el-radio-group v-model="radio4" class="radio-content" @change="radio4Change">
+              <el-radio v-for="(item,i) in radio4Item" :key="i" :label="item" :title='item'>{{item}}</el-radio>
+            </el-radio-group>
+          </div>
+          <div class="radio-box">
+            <p class="radio-title">缸壁</p>
+            <el-radio-group v-model="radio5" class="radio-content" @change="radio5Change">
+              <el-radio v-for="(item,i) in radio5Item" :key="i" :label="item" :title='item'>{{item}}</el-radio>
+            </el-radio-group>
+          </div>
+          <el-input
+                  class="repostCon"
+                  type="textarea"
+                  :autosize="{ mixRows: 6}"
+                  placeholder="请选择检测结果"
+                  v-model="opinion"
+                  style="width:217px;"
+                  disabled
+          />
+          <div class="arrow" @click="adviseArrow">
+            <img src="../../assets/img/1.png" alt />
+          </div>
+          <div class="ctroArrow">
+            <span style="font-size: 14px;    height: 36px;line-height: 36px;">箭头：</span>
+            <el-tooltip :content="isShowArrow" placement="top" class="derail">
+              <el-switch
+                      v-model="isShowArrow"
+                      active-color="#13ce66"
+                      inactive-color="#ff4949"
+                      active-value="不打印"
+                      inactive-value="打印"
+                      active-text="不打印"
+                      inactive-text="打印"
+              >></el-switch>
+            </el-tooltip>
+          </div>
         </div>
         <!-- 中间 -->
         <div
@@ -541,9 +597,63 @@
         </div>
         <!-- 右侧 -->
         <div class="rightTool">
-
-
-          <rightItem />
+          <p style="text-align:center;font-weight: bold;">综合维度</p>
+          <div class="searchCon" style="margin-bottom: 20px;">
+            <el-select
+                    v-model="dimensionalityValue"
+                    clearable
+                    placeholder="请选择报告综合维度"
+                    @change="dimensionalityChange"
+                    class="f_select"
+            >
+              <el-option
+                      v-for="item in dimensionality"
+                      :key="item.value"
+                      :label="item.laber"
+                      :value="item.value"
+              />
+            </el-select>
+            <el-button type="primary" class="search" size="mini" @click="submitDimensionality">保存</el-button>
+          </div>
+          <p style="text-align:center;font-weight: bold;">关联车型数据</p>
+          <div class="searchCon">
+            <el-select
+                    v-model="value6"
+                    clearable
+                    placeholder="请选择区"
+                    @change="areaChange"
+                    class="f_select"
+            >
+              <el-option
+                      v-for="item in areaArr"
+                      :key="item.id"
+                      :label="item.areaName"
+                      :value="item.id"
+              />
+            </el-select>
+            <el-select
+                    v-model="value7"
+                    clearable
+                    placeholder="请选择省份"
+                    @change="provinceChange"
+                    class="f_select"
+            >
+              <el-option
+                      v-for="item in provinceArr"
+                      :key="item.id"
+                      :label="item.provinceName"
+                      :value="item.id"
+              />
+            </el-select>
+            <el-select v-model="value8" clearable placeholder="请选择市/县" class="f_select">
+              <el-option
+                      v-for="item in cityArr"
+                      :key="item.id"
+                      :label="item.cityName"
+                      :value="item.id"
+              />
+            </el-select>
+          </div>
 
           <div class="searchCon">
             <el-select
@@ -718,7 +828,7 @@
 
 
       </div>
-      
+
       <el-dialog :visible.sync="dialogVisible2" width="700px">
         <div style="width:100%">
           <img :src="bigImage" alt style="width:100%" />
@@ -755,7 +865,7 @@
           <el-button type="primary" @click="dialogVisible5 = false">确 定</el-button>
         </span>
       </el-dialog>
-      
+
     </div>
   </div>
 </template>
@@ -906,6 +1016,18 @@ export default {
       //控制图片放大
       dialogVisible2: false,
       bigImage: "",
+      radio1: '',
+      radio1Item : ["进气道露出金属光泽；","进气道部分区域露出金属光泽；","进气道没有金属光泽露出；"],
+      radio2 : '',
+      radio2Item : ["进气阀阀杆和阀座露出金属色泽；","进气阀阀杆露出金属色泽，阀座无金属色泽露出；","进气阀阀杆和阀座无金属色泽露出；"],
+      radio3 : '',
+      radio3Item : ["喷油嘴及喷孔可见；","喷油嘴喷孔部分可见；","喷油嘴喷孔不可见；"],
+      radio4 : '',
+      radio4Item : ["活塞顶大部分区域露出金属色泽；","活塞顶部分区域有金属色泽露出；","活塞顶没有金属色泽露出；"],
+      radio5 : '',
+      radio5Item : ["缸壁未见异常划痕。","缸壁有轻微划痕。","缸壁有深度划痕。"],
+      opinion: "",
+      isShowArrow: "不打印", //打印是否显示箭头
     }
   },
   created () {
@@ -928,6 +1050,7 @@ export default {
     refresh: function (refresh) {
       if(refresh === true) {
         this.getDetectionOrderEditList()
+        // this.radio1 = ''
       }
     }
   },
@@ -975,6 +1098,40 @@ export default {
             this.getDetectionOrderList()
           })
       })
+    },
+    //翻页
+    CurrentChange(val){
+      this.$store.state.editDetectionPagination.pageNum = val;
+      this.getDetectionOrderEditList()
+    },
+    //选择 每页显示数量
+    SizeChange(val){
+      this.$store.state.editDetectionPagination.pageSize = val;
+      this.getDetectionOrderEditList()
+    },
+
+    radio1Change(val) {
+      this.radio1 = val
+      this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
+    },
+    radio2Change(val) {
+      this.radio2 = val
+      this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
+    },
+    radio3Change(val) {
+      this.radio3 = val
+      this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
+    },
+    radio4Change(val) {
+      this.radio4 = val
+      this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
+    },
+    radio5Change(val) {
+      this.radio5 = val
+      this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
+    },
+    adviseArrow() {
+       this.advise = this.opinion;
     },
 
     getData() { // 获取数据
@@ -1026,7 +1183,7 @@ export default {
           console.log(error)
         })
       },this.firstReportRow.carId)
-      
+
       this.getEngine();
     },
     searchOrder () {
@@ -1037,6 +1194,8 @@ export default {
       this.dialogVisible1 = true;
       this.checkedPlace = [];
       this.position = this.unqualifiedArr;
+      console.log(this.position)
+      console.log(this.unqualifiedArr)
     },
     selectPlace() { // 照片不合格确认提交按钮
       const param = {
@@ -1379,7 +1538,7 @@ export default {
       this.value8 = "";
       this.getcityData(value);
     },
-    
+
     getcityData(provinceId, callback) {//获取市县
       callback = callback || function() {};
       const param = {provinceId: provinceId}
@@ -1392,7 +1551,7 @@ export default {
           }
         });
     },
-    
+
     getbrandData(callback) {//获取汽车品牌
       callback = callback || function() {};
       getCarBrand().then(res => {
@@ -1404,7 +1563,7 @@ export default {
         }
       });
     },
-    
+
     brandChange(value) { //监听下拉  请选择品牌
       this.hostData = [];
       this.audiData = [];
@@ -1414,7 +1573,7 @@ export default {
       this.value4 = "";
       this.gethostData(value);
     },
-    
+
     gethostData(brandId, callback) { //获取主机厂商
       callback = callback || function() {};
       getCarFactory({ brandId: brandId }).then(res => {
@@ -1433,7 +1592,7 @@ export default {
       this.value4 = "";
       this.getaudiData(value);
     },
-     
+
     getaudiData(factoryId, callback) { //获取车系
       callback = callback || function() {};
       getCarSeries({factoryId: factoryId}).then(res => {
@@ -1450,7 +1609,7 @@ export default {
       this.value4 = "";
       this.getcarTypeData(value);
     },
-    
+
     getcarTypeData(seriesId, callback) { //获取车型
       callback = callback || function() {};
       getCarModel({ seriesId: seriesId }).then(res => {
@@ -1466,7 +1625,7 @@ export default {
       this.showRightTitle = true;
       this.getRightList();
     },
-    
+
     getMileData(callback) { //里程区间
       callback = callback || function() {};
       getCarMileage({}).then(res => {
@@ -1480,7 +1639,7 @@ export default {
         }
       });
     },
-    
+
     seeFristReport() { //回显报告中的说明，意见
       const param = {
         jobId: this.firstReportRow.jobId,
@@ -1623,11 +1782,20 @@ export default {
                   this.trendsEdit(this.placeArr.length);
                 }, 300);
                 this.getCenterRight(); //获取中间右边的渲染图片
-                for (let g = 0; g < this.unqualifiedArr.length; g++) {
+                let aaa = [
+                  { optionId: -1, optionName: "车牌号" },
+                  { optionId: -11, optionName: "车架号" },
+                  { optionId: 1, optionName: "喷油嘴" },
+                  { optionId: 2, optionName: "进气道" },
+                  { optionId: 3, optionName: "进气阀" },
+                  { optionId: 4, optionName: "活塞顶" },
+                  { optionId: 5, optionName: "缸壁" }
+                ]
+                for (let g = 0; g < aaa.length; g++) {
                   for (let h = 0; h < data.length; h++) {
-                    if (this.unqualifiedArr[g].optionId === data[h].optionId) {
-                      this.unqualifiedArr[g].optionName =
-                        this.unqualifiedArr[g].optionName + " (已上传图片)";
+                    if (aaa[g].optionId === data[h].optionId) {
+                      aaa[g].optionName = aaa[g].optionName + " (已上传图片)";
+                      this.unqualifiedArr = aaa
                     }
                   }
                 }
@@ -1825,7 +1993,7 @@ export default {
         $(".tr_sign[data-imgid = '" + imgId + "']").show();
       }, 300);
     },
-    
+
     clickOption(optionId) { //点击左边部位图片，同步右边下拉框
       this.value5 = optionId;
     },
@@ -1837,7 +2005,7 @@ export default {
         this.bigImage = net.bigImg + id;
       }
     },
-    
+
     Arrow(optionId, contrastResult) { //图标箭头点击
       const arr = this.placeArr;
       for (let i = 0; i < arr.length; i++) {

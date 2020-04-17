@@ -18,6 +18,8 @@
             :isPagination='true'
             :tablePage='treatPagination'
             :longDatas="treatLongData"
+            @CurrentChange = 'CurrentChange'
+            @SizeChange = 'SizeChange'
     >
     </table-com>
   </div>
@@ -132,7 +134,17 @@ export default {
     },
     searchOrder () { // 查询
       this.getTreatOrderEditList()
-    }
+    },
+    //翻页
+    CurrentChange(val){
+      this.$store.state.treatPagination.pageNum = val;
+      this.getTreatOrderEditList()
+    },
+    //选择 每页显示数量
+    SizeChange(val){
+      this.$store.state.treatPagination.pageSize = val;
+      this.getTreatOrderEditList()
+    },
   }
 }
 </script>

@@ -20,6 +20,8 @@
       :isPagination='true'
       :tablePage='imgUploadPagination'
       :longDatas="imgUploadLongDatas"
+      @CurrentChange = 'CurrentChange'
+      @SizeChange = 'SizeChange'
     >
     </table-com>
     <el-dialog title="上传照片" :visible="onloadPicDialog" @close='close'>
@@ -33,7 +35,7 @@
                     type="primary"
             >确认上传</el-button>
           </p>
-          
+
           <p>
             <span>车牌号：{{onloadPicRow.carNumber}}</span>
             <span>车系：{{onloadPicRow.seriesName}}</span>
@@ -285,6 +287,17 @@ export default {
           this.getDetectionImgUploadList()
         })
       })
+    },
+
+    //翻页
+    CurrentChange(val){
+      this.$store.state.imgUploadPagination.pageNum = val;
+      this.getDetectionImgUploadList()
+    },
+    //选择 每页显示数量
+    SizeChange(val){
+      this.$store.state.imgUploadPagination.pageSize = val;
+      this.getDetectionImgUploadList()
     },
 
     uploadImgs () {// 确认上传

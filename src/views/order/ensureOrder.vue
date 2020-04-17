@@ -19,6 +19,8 @@
       :tablePage='ensureOrderPagination'
       :longDatas="ensureOrderLongDatas"
       :newBtnList='ensureOrderBtnArrList'
+      @CurrentChange = 'CurrentChange'
+      @SizeChange = 'SizeChange'
     >
     </table-com>
     <el-dialog title="温馨提示" :visible="dialogVisible" width="40%" @close='close'>
@@ -156,6 +158,16 @@ export default {
           console.log(res)
         })
       })
+    },
+    //翻页
+    CurrentChange(val){
+      this.$store.state.ensureOrderPagination.pageNum = val;
+      this.getEnsureOrderList()
+    },
+    //选择 每页显示数量
+    SizeChange(val){
+      this.$store.state.ensureOrderPagination.pageSize = val;
+      this.getEnsureOrderList()
     },
     treatOrder (that, row) {// 是否接受治疗
       this.dialogVisible = true

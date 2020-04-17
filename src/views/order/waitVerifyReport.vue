@@ -19,6 +19,8 @@
               :isPagination='true'
               :tablePage='waitVerifyReportPagination'
               :longDatas="waitVerifyReportLongData"
+              @CurrentChange = 'CurrentChange'
+              @SizeChange = 'SizeChange'
       >
       </table-com>
       <record-form
@@ -326,7 +328,7 @@
     </el-dialog>
 
   </div>
-  
+
 </template>
 
 <script>
@@ -496,6 +498,16 @@
       },
 
       searchOrder () { // 查询
+        this.getWaitVerifyReportList()
+      },
+      //翻页
+      CurrentChange(val){
+        this.$store.state.waitVerifyReportPagination.pageNum = val;
+        this.getWaitVerifyReportList()
+      },
+      //选择 每页显示数量
+      SizeChange(val){
+        this.$store.state.waitVerifyReportPagination.pageSize = val;
         this.getWaitVerifyReportList()
       },
 

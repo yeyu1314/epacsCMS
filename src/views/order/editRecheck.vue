@@ -19,6 +19,8 @@
               :isPagination='true'
               :tablePage='editTecheckPagination'
               :longDatas="editTecheckLongData"
+              @CurrentChange = 'CurrentChange'
+              @SizeChange = 'SizeChange'
       >
       </table-com>
       <record-form
@@ -523,6 +525,16 @@
       },
 
       searchOrder () { // 查询
+        this.getEditRecheckList()
+      },
+      //翻页
+      CurrentChange(val){
+        this.$store.state.editTecheckPagination.pageNum = val;
+        this.getEditRecheckList()
+      },
+      //选择 每页显示数量
+      SizeChange(val){
+        this.$store.state.editTecheckPagination.pageSize = val;
         this.getEditRecheckList()
       },
 

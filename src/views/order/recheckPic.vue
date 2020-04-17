@@ -19,6 +19,8 @@
             :tablePage='recheckPicPagination'
             :longDatas="recheckPicLongData"
             :newBtnList="recheckImgUploadBtnArrList"
+            @CurrentChange = 'CurrentChange'
+            @SizeChange = 'SizeChange'
     >
     </table-com>
     <el-dialog title="上传照片" :visible="recheckonloadPicDialog" @close='close'>
@@ -32,7 +34,7 @@
                     type="primary"
             >确认上传</el-button>
           </p>
-          
+
           <p>
             <span>车牌号：{{recheckonloadPicRow.carNumber}}</span>
             <span>车系：{{recheckonloadPicRow.seriesName}}</span>
@@ -51,7 +53,7 @@
             clearable
             style="margin-right:10px;margin-top:10px"
           >
-            
+
           </el-select>
           <el-select
             v-model="jiance"
@@ -59,7 +61,7 @@
             clearable
             style="margin-right:10px;margin-top:10px"
           >
-            
+
           </el-select>
           <el-select
             v-model="gendan"
@@ -67,7 +69,7 @@
             clearable
             style="margin-right:10px;margin-top:10px"
           >
-            
+
           </el-select>
           <el-select
             v-model="zhiliao"
@@ -75,7 +77,7 @@
             clearable
             style="margin-right:10px;margin-top:10px"
           >
-            
+
           </el-select>
         </div>
         <div class="recheckPicBox">
@@ -243,7 +245,7 @@ export default {
     this.getRecheckPicList()
   },
   computed: {
-    ...mapState(['recheckPicTableData', 'recheckPicLongData', 'recheckPicPagination', 'pageNo', 'pageSize', 'searchData', 
+    ...mapState(['recheckPicTableData', 'recheckPicLongData', 'recheckPicPagination', 'pageNo', 'pageSize', 'searchData',
     'recheckImgUploadBtnArrList', 'recheckonloadPicRow', 'recheckonloadPicDialog', 'recheckrowCarInfo', 'productItem', 'dataModel',
     'frecheckrowFleList', 'recheckPicPhotoList', 'prodectArr'])// 读数据
   },
@@ -286,6 +288,16 @@ export default {
           this.getRecheckPicList()
         })
       })
+    },
+    //翻页
+    CurrentChange(val){
+      this.$store.state.recheckPicPagination.pageNum = val;
+      this.getRecheckPicList()
+    },
+    //选择 每页显示数量
+    SizeChange(val){
+      this.$store.state.recheckPicPagination.pageSize = val;
+      this.getRecheckPicList()
     },
 
     uploadImgs () { // 确认上传

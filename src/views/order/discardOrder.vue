@@ -3,7 +3,7 @@
     <search-com
             size='medium '
             labelWidth = '80px'
-            :searchData = "searchData"
+            :searchData = "discardSearchData"
             :searchForm = "searchForm"
             :searchHandle="searchHandle">
     </search-com>
@@ -18,6 +18,8 @@
             :isPagination='true'
             :tablePage='discardPagination'
             :longDatas="discardLongData"
+            @CurrentChange = 'CurrentChange'
+            @SizeChange = 'SizeChange'
     >
     </table-com>
     <record-form
@@ -77,10 +79,21 @@ export default {
     }
   },
   created() {
+    this.$store.state.discardSearchData = {
+      carNumber: null,
+      carMsg: null,
+      station: null,
+      checkType: null
+    }
+    this.$store.state.discardPagination = {
+      pageSize: 10,
+      pageNum: 1,
+      total: 0
+    }
     this.getDiscaedList()
   },
   computed: {
-    ...mapState(['discardTableData', 'discardLongData', 'discardPagination', 'pageNo', 'pageSize', 'searchData', 'redordData', 'redordCols'])// 读数据
+    ...mapState(['discardTableData', 'discardLongData', 'discardPagination', 'pageNo', 'pageSize', 'discardSearchData', 'redordData', 'redordCols'])// 读数据
   },
   methods: {
     ...mapActions(['getDiscaedList']),
@@ -100,6 +113,19 @@ export default {
     closeTip () { // 关闭弹窗
       this.isShowRecord = false
     },
+    //翻页
+    CurrentChange(val){
+      this.$store.state.discardPagination.pageNum = val;
+      this.getDiscaedList()
+    },
+    //选择 每页显示数量
+    SizeChange(val){
+      this.$store.state.discardPagination.pageSize = val;
+      this.getDiscaedList()
+    },
+    searchNews() { // 查询
+      this.getDiscaedList()
+    }
   }
 };
 </script>
