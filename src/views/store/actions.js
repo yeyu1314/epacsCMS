@@ -289,13 +289,13 @@ export default {
           })
           if (tableData[i].jobCode === 20) {
             imgBtnArr.push(
-              {type: 'primary', label: '上传照片', isShow: true, handle: (that, row) => { showEditTest(that, row) }},
+              {type: 'primary', label: '上传照片', size: 'small',  isShow: true, handle: (that, row) => { showEditTest(that, row) }},
               {type: 'success', label: '完成', isShow: false}
             )
           } if (tableData[i].jobCode === 30 || tableData[i].jobCode === 31 || tableData[i].jobCode === 32) {
             imgBtnArr.push(
-              {type: 'primary', label: '编辑照片', isShow: true, handle: (that, row) => { EditImg(that, row) }},
-              {type: 'success', label: '完成上传', isShow: true, handle: (that, row) => { finshUpload(that, row) }}
+              {type: 'primary', label: '编辑照片', size: 'small',  isShow: true, handle: (that, row) => { EditImg(that, row) }},
+              {type: 'success', label: '完成上传', size: 'small',  isShow: true, handle: (that, row) => { finshUpload(that, row) }}
             )
           }
         }
@@ -372,14 +372,14 @@ export default {
           })
           if (tableData[i].jobCode === 100) {
             btnArr.push(
-              {type: 'success', label: '开始编辑', isShow: true, handle: (that, row) => { showEditTest(that, row) }},
+              {type: 'success', label: '开始编辑', isShow: true,size: 'small', handle: (that, row) => { showEditTest(that, row) }},
               {type: 'warning', label: '编辑检测报告', isShow: false, }
             )
           }
           if (tableData[i].jobCode === 210 || tableData[i].jobCode === 220 || tableData[i].jobCode === 221) {
             btnArr.push(
               {type: 'success', label: '开始编辑', isShow: false, },
-              {type: 'warning', label: '编辑检测报告', isShow: true, handle: (that, row) => { starEdit(that, row) }}
+              {type: 'warning', label: '编辑检测报告', isShow: true,size: 'small', handle: (that, row) => { starEdit(that, row) }}
             )
           }
         }
@@ -471,12 +471,12 @@ export default {
           })
           if (tableData[i].avgValue === 3) {
             btnArr.push(
-              {type: 'success', label: '报告解读', isShow: true, handle: (that, row) => { isViewPdf30(that, row) }},
-              {type: 'warning', label: '车主答疑', isShow: true, handle: (that, row) => { isViewPdf31(that, row) }}
+              {type: 'success', label: '报告解读', isShow: true, size: 'small', handle: (that, row) => { isViewPdf30(that, row) }},
+              {type: 'warning', label: '车主答疑', isShow: true, size: 'small',handle: (that, row) => { isViewPdf31(that, row) }}
             )
           } if (tableData[i].avgValue === 2) {
             btnArr.push(
-              {type: 'success', label: '报告解读', isShow: true, handle: (that, row) => { isViewPdf20(that, row) }},
+              {type: 'success', label: '报告解读', isShow: true, size: 'small', handle: (that, row) => { isViewPdf20(that, row) }},
               {type: 'warning', label: '车主答疑', isShow: false}
             )
           }
@@ -721,13 +721,13 @@ export default {
           })
           if (tableData[i].jobCode === 600) {
             imgBtnArr.push(
-              {type: 'primary', label: '上传照片', isShow: true, handle: (that, row) => { showEditTest(that, row) }},
-              {type: 'success', label: '完成', isShow: false}
+              {type: 'primary', size: 'small', label: '上传复查照片', isShow: true, handle: (that, row) => { showEditTest(that, row) }},
+              {type: 'success', size: 'small', label: '完成', isShow: false}
             )
           } if (tableData[i].jobCode === 630 || tableData[i].jobCode === 631 || tableData[i].jobCode === 632) {
             imgBtnArr.push(
-              {type: 'primary', label: '编辑照片', isShow: true, handle: (that, row) => { EditTest(that, row) }},
-              {type: 'success', label: '完成上传', isShow: true, handle: (that, row) => { finshUpload(that, row) }}
+              {type: 'primary', size: 'small', label: '编辑复查照片', isShow: true, handle: (that, row) => { EditTest(that, row) }},
+              {type: 'success', size: 'small', label: '完成上传', isShow: true, handle: (that, row) => { finshUpload(that, row) }}
             )
           }
         }

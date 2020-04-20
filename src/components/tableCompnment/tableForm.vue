@@ -56,7 +56,7 @@
                   <el-button v-for="btn in btnItem.btnList" :key="btn.label"
                              :disabled="btn.disabled && btn.disabled(scope.row)"
                              :type="btn.type"
-                             :size="size || btn.size"
+                             :size="btn.size || size"
                              :icon="btn.icon"
                              @click="btn.handle(that,scope.row)"
                              v-show="btn.isShow"
@@ -67,11 +67,11 @@
             </template>
             <!--一个单元格一个按钮         显示      -->
             <template v-if="item.type === 'Button'">
-              <div v-for="btnItem in item.btnList" :key="btnItem.label">
+              <div v-for="btnItem in item.btnList" :key="btnItem.label" style="display: inline-flex">
                 <el-button
                   :disabled="btnItem.disabled && btnItem.disabled(scope.row)"
                   :type="btnItem.type"
-                  :size="size || btnItem.size"
+                  :size="btnItem.size || size"
                   :icon="btnItem.icon"
                   @click="btnItem.handle(that,scope.row)">{{btnItem.label}}
                 </el-button>
@@ -81,11 +81,11 @@
             <!--@click="btn.handle(scope.row,btn.jobID)"-->
             <template v-if="item.type === 'checkButton'">
               <div v-for="btnItem in checkButtonList" :key="btnItem.id">
-                <template v-if="btnItem.id === scope.row.jobId">
+                <template v-if="btnItem.id === scope.row.id" >
                   <el-button v-for="btn in btnItem.btnList" :key="btn.id"
                              :disabled="btn.disabled && btn.disabled(scope.row)"
                              :type="btn.type"
-                             :size="size || btn.size"
+                             :size="btn.size || size"
                              :icon="btn.icon"
                              @click="btn.handle(that,scope.row)"
                              v-show="btn.isShow"
@@ -101,7 +101,7 @@
                   <el-button v-for="btn in btnItem.btnList" :key="btn.id"
                              :disabled="btn.disabled && btn.disabled(scope.row)"
                              :type="btn.type"
-                             :size="size || btn.size"
+                             :size="btn.size || size"
                              :icon="btn.icon"
                              @click="btn.handle(that,scope.row)"
                              v-show="btn.isShow"
@@ -117,7 +117,7 @@
                   <el-button v-for="btn in btnItem.btnList" :key="btn.id"
                              :disabled="btn.disabled && btn.disabled(scope.row)"
                              :type="btn.type"
-                             :size="size || btn.size"
+                             :size="btn.size || size"
                              :icon="btn.icon"
                              @click="btn.handle(btn.allData,btn.jobID)"
                              v-show="btn.isShow"

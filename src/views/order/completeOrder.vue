@@ -68,7 +68,7 @@
 <script>
   import net from "../../assets/js/public";
   import SearchForm from '../form/searchForm'
-  import cesTable from '../form/compomentTable'
+  import cesTable from '../../components/tableCompnment/tableForm'
   import operatingRecord from '../form/operatingRecord'
   import editForm from '../form/editForm'
   import moment from 'moment'
@@ -355,12 +355,12 @@
                       checkButtonArr.push({id:i,type:'primary',label:'查看检测报告',isShow: false,})
                     }
                     if(tableArr[i].jobCode === 1000){
-                      reviewButtonArr.push({id:i,type:'warning',label:'查看复查报告',isShow: true, handle:(row,that)=>this.showReview(row,that)})
+                      reviewButtonArr.push({id:i,type:'warning',label:'查看复查报告',isShow: true,size:'small ', handle:(row,that)=>this.showReview(row,that)})
                     }else {
                       reviewButtonArr.push({id:i,type:'warning',label:'查看复查报告',isShow: false,} )
                     }
                     if(tableArr[i].jobCode === 1000 || tableArr[i].jobCode === 1010){
-                      remarkButtonArr.push({id:i,type:'success',label:'备注项',isShow: true, handle:(row,that)=>this.showRemark(row,that)})
+                      remarkButtonArr.push({id:i,type:'success',label:'备注项',isShow: true, size:'small ',handle:(row,that)=>this.showRemark(row,that)})
                     }else {
                       remarkButtonArr.push({id:i,type:'success',label:'备注项',isShow: false,} )
                     }

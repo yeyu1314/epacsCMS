@@ -203,18 +203,20 @@ export default {
           label: '打印',
           type: 'Button',
           btnList: [
-            {type: 'primary', label: '打印检测报告', handle: (that, row) => this.printReport(that, row)}
+            {type: 'primary',  size: 'small', label: '打印检测报告', handle: (that, row) => this.printReport(that, row)}
           ]
         },
         {
           label: '操作',
           type: 'button',
+          width: '280px',
+          size: 'small'
         },
         {
           label: '冻结',
           type: 'Button',
           btnList: [
-            {type: 'danger', label: '冻结工单', handle: (that, row) => this.frozen(that, row)}
+            {type: 'danger', size: 'small', label: '冻结工单', handle: (that, row) => this.frozen(that, row)}
           ]
         }
       ],

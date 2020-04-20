@@ -103,20 +103,21 @@ export default {
         {label: '业务类型', prop: 'checkTypeLaber'},
         {label: '故障描述', prop: 'note'},
         {label: '发动机缸数量', prop: 'carCylinder'},
-        {label: '报告解读',type: 'button'},
+        {label: '报告解读',type: 'button', width: '280px',},
         {
           label: '操作',
           type: 'Button',
+          width: '280px',
           btnList: [
-            {type: 'primary', label: '是否接受治疗', handle: (that, row) => this.treatOrder(that, row)},
-            {type: 'primary', label: '打印检测报告', handle: (that, row) => this.printReport(that, row)}
+            {type: 'primary', label: '是否接受治疗',size: 'small', handle: (that, row) => this.treatOrder(that, row)},
+            {type: 'primary', label: '打印检测报告',size: 'small', handle: (that, row) => this.printReport(that, row)}
           ]
         },
         {
           label: '冻结',
           type: 'Button',
           btnList: [
-            {type: 'danger', label: '冻结工单', handle: (that, row) => this.frozen(that, row)}
+            {type: 'danger', label: '冻结工单',size: 'small', handle: (that, row) => this.frozen(that, row)}
           ]
         }
       ],

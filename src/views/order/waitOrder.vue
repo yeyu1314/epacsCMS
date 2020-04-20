@@ -54,9 +54,10 @@ export default {
         {
           label: '操作记录',
           type: 'Button',
+          width: '280px',
           btnList: [
-            {type: 'success', label: '开始检测', handle: (that, row) => this.startDetection(that, row)},
-            {type: 'danger', label: '冻结工单', handle: (that, row) => this.frozen(that, row)}
+            {type: 'success', size: 'small', label: '开始检测', handle: (that, row) => this.startDetection(that, row)},
+            {type: 'danger', size: 'small', label: '冻结工单', handle: (that, row) => this.frozen(that, row)}
           ]
         }
       ],

@@ -915,14 +915,14 @@ export default {
           label: '操作记录',
           type: 'Button',
           btnList: [
-            {type: 'success', isShow: true, label: '查看', handle: (that, row) => this.showRecord(that, row)}
+            {type: 'success', isShow: true, label: '查看',size: 'small', handle: (that, row) => this.showRecord(that, row)}
           ]
         },
         {
           label: '冻结',
           type: 'Button',
           btnList: [
-            {type: 'danger', isShow: true, label: '冻结工单', handle: (that, row) => this.frozen(that, row)}
+            {type: 'danger', isShow: true, label: '冻结工单',size: 'small', handle: (that, row) => this.frozen(that, row)}
           ]
         }
       ],

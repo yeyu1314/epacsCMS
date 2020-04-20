@@ -404,28 +404,28 @@
             label: '打印',
             type: 'Button',
             btnList: [
-              {type: 'primary', label: '打印检测报告', handle: (that, row) => this.printReport(that, row)}
+              {type: 'primary', label: '打印检测报告',size: 'small', handle: (that, row) => this.printReport(that, row)}
             ]
           },
           {
             label: '操作',
             type: 'Button',
             btnList: [
-              {type: 'primary', label: '编辑复查报告', handle: (that, row) => this.editVerift(that, row)}
+              {type: 'primary', label: '编辑复查报告',size: 'small', handle: (that, row) => this.editVerift(that, row)}
             ]
           },
           {
             label: '操作记录',
             type: 'Button',
             btnList: [
-              {type: 'success', label: '查看', handle: (that, row) => this.showRecord(that, row)}
+              {type: 'success', label: '查看', size: 'small',handle: (that, row) => this.showRecord(that, row)}
             ]
           },
           {
             label: '冻结',
             type: 'Button',
             btnList: [
-              {type: 'danger', label: '冻结工单', handle: (that, row) => this.frozen(that, row)}
+              {type: 'danger', label: '冻结工单',size: 'small', handle: (that, row) => this.frozen(that, row)}
             ]
           }
         ],

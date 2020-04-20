@@ -71,7 +71,7 @@ export default {
           label: '操作记录',
           type: 'Button',
           btnList: [
-            {type: 'success', label: '查看', handle: (that, row) => this.showRecord(that, row)}
+            {type: 'success', label: '查看',size: 'small', handle: (that, row) => this.showRecord(that, row)}
           ]
         }
       ],

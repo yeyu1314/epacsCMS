@@ -56,21 +56,21 @@ export default {
           label: '打印',
           type: 'Button',
           btnList: [
-            {type: 'success', isShow: true, label: '打印检测报告', handle: (that, row) => this.printReport(that, row)}
+            {type: 'success', isShow: true, size: 'small', label: '打印检测报告', handle: (that, row) => this.printReport(that, row)}
           ]
         },
         {
           label: '操作',
           type: 'Button',
           btnList: [
-            {type: 'success', isShow: true, label: '开始复查', handle: (that, row) => this.startTeaet(that, row)}
+            {type: 'success', isShow: true, size: 'small', label: '开始复查', handle: (that, row) => this.startTeaet(that, row)}
           ]
         },
         {
           label: '冻结',
           type: 'Button',
           btnList: [
-            {type: 'danger', isShow: true, label: '冻结工单', handle: (that, row) => this.frozen(that, row)}
+            {type: 'danger', isShow: true, size: 'small', label: '冻结工单', handle: (that, row) => this.frozen(that, row)}
           ]
         }
       ],

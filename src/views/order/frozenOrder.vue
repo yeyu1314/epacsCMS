@@ -72,16 +72,17 @@ export default {
           label: '操作记录',
           type: 'Button',
           btnList: [
-            {type: 'success', label: '查看', handle: (that, row) => this.showRecord(that, row)}
+            {type: 'success', label: '查看',size: 'small', handle: (that, row) => this.showRecord(that, row)}
           ]
         },
         {
           label: '操作',
           type: 'Button',
+          width: '280px',
           btnList: [
 
-            {type: 'primary', label: '恢复工单', handle: (that, row) => this.recover(that, row)},
-            {type: 'danger', label: '作废工单', handle: (that, row) => this.cancellation(that, row)}
+            {type: 'primary', label: '恢复工单',size: 'small', handle: (that, row) => this.recover(that, row)},
+            {type: 'danger', label: '作废工单',size: 'small', handle: (that, row) => this.cancellation(that, row)}
           ]
         }
       ],

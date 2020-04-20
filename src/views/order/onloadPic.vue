@@ -179,12 +179,12 @@ export default {
         {label: '故障描述', prop: 'note'},
         {label: '发动机缸数量', prop: 'carCylinder'},
         {label: '当前操作人', prop: 'operatorName'},
-        {label: '操作', type: 'button'},
+        {label: '操作', type: 'button', width: '280px'},
         {
           label: '冻结',
           type: 'Button',
           btnList: [
-            {type: 'danger', label: '冻结工单', handle: (that, row) => this.frozen(that, row)}
+            {type: 'danger',size: 'small', label: '冻结工单', handle: (that, row) => this.frozen(that, row)}
           ]
         }
       ],
