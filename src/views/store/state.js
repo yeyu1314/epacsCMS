@@ -53,7 +53,7 @@ export default {
   onloadPicFileList: [],
   onloadPicFileList1: [],
   onLoadPicPhotoList: [],
-  conloadPicCarPhotoId: undefined,
+  onloadPicCarPhotoId: undefined,
   onloadPicFramePhotoId: undefined,
   onloadPics1: 0,
   onloadPics2: 0,
@@ -116,6 +116,12 @@ export default {
   frecheckrowFleList: [],
   recheckPicPhotoList: [],
   prodectArr: [],
+  recheckPicRow: '',
+  progressBarRecheck: false,
+  loadProgressRecheck: false,
+  recheckPicCarPhotoId: undefined,
+  recheckPics1: 0,
+  recheckPics2: 0,
   // 复查报告编辑
   editTecheckTableData: [],
   editTecheckPagination: {

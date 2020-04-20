@@ -20,7 +20,8 @@ import {
   RECEIVE_ENSURE_ORDER_DIA_TABLEDATA,
   RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA,
   RECEIVE_IMG_UPLOAD_FINUPLOAD,
-  RECEIVE_DETECTION_ORDER_REFRESH
+  RECEIVE_DETECTION_ORDER_REFRESH,
+  RECEIVE_RECHECK_PIC_FINUPLOAD
 } from './mutation_types'
 export default {
   [RECEIVE_TABLEDATA] (state, {tableData, pagination, longDatas, checkButtonList, detectionOrderBtnArrList}) { // 完成工单
@@ -112,26 +113,29 @@ export default {
     state.discardLongData = longDatas
   },
 
-  [RECEIVE_IMG_UPLOAD_D_TABLEDATA] (state, {row, result, fileList, fileList1, photoList, conloadPicCarPhotoId, onloadPicFramePhotoId, onloadPics1, onloadPics2}) { //待上传照片 编辑照片/上传照片
+  [RECEIVE_IMG_UPLOAD_D_TABLEDATA] (state, {row, result, fileList, fileList1, photoList, onloadPicCarPhotoId, onloadPicFramePhotoId, onloadPics1, onloadPics2}) { //待上传照片 编辑照片/上传照片
     state.onloadPicDialog = true
     state.onloadPicRow = row
     state.rowCarInfo = result
     state.onloadPicFileList = fileList
     state.onloadPicFileList1 = fileList1
     state.onLoadPicPhotoList = photoList
-    state.conloadPicCarPhotoId = conloadPicCarPhotoId
+    state.onloadPicCarPhotoId = onloadPicCarPhotoId
     state.onloadPicFramePhotoId = onloadPicFramePhotoId
     state.onloadPics1 = onloadPics1
     state.onloadPics2 = onloadPics2
   },
 
-  [RECHECK_IMG_UPLOAD_D_TABLEDATA] (state, {row, result, fileList, photoList, prodectArr}) {
+  [RECHECK_IMG_UPLOAD_D_TABLEDATA] (state, {row, result, fileList, photoList, prodectArr, recheckPicCarPhotoId, recheckPics1, recheckPics2}) {
     state.recheckonloadPicDialog = true
     state.recheckonloadPicRow = row
     state.recheckrowCarInfo = result
     state.frecheckrowFleList = fileList
     state.recheckPicPhotoList = photoList
     state.prodectArr = prodectArr
+    state.recheckPicCarPhotoId = recheckPicCarPhotoId
+    state.recheckPics1 = recheckPics1
+    state.recheckPics2 = recheckPics2
   },
 
   [RECEIVE_RECHECKPIC_ORDER_P_TABLEDATA] (state, {productItem, dataModel}) {
@@ -158,5 +162,11 @@ export default {
 
   [RECEIVE_DETECTION_ORDER_REFRESH](state, {refresh}) {
     state.refresh = refresh
+  },
+
+  [RECEIVE_RECHECK_PIC_FINUPLOAD](state, {progressBarRecheck,loadProgressRecheck, row}) { // 复查照片上传  完成上传
+    state.progressBarRecheck = progressBarRecheck
+    state.loadProgressRecheck = loadProgressRecheck
+    state.recheckonloadPicRow = row
   },
 }

@@ -83,17 +83,17 @@
         <div class="recheckPicBox">
           <div class="onlodList">
             <div class="perform">
-              <div class="left">车牌号</div>
+              <div class="left" :class="{error:recheckPics1 === 2}">车牌号</div>
               <div class="right">
                 <el-upload
                   style="display:inline-block"
                   :action="uploadUrl"
                   list-type="picture-card"
                   :data="{carNumber:recheckonloadPicRow.carNumber,step:1,option:-1}"
-                  :on-success="uploadSuccess.bind(this,-2,recheckrowCarInfo.carPhotoId)"
+                  :on-success="uploadSuccess.bind(this,-2,recheckPicCarPhotoId)"
                   :on-preview="handlePictureCardPreview"
                   :on-change="change.bind(this,-1)"
-                  :on-remove="remove.bind(this,-1,carPhotoId,recheckonloadPicRow.jobId,recheckonloadPicRow.version)"
+                  :on-remove="remove.bind(this,-1,recheckPicCarPhotoId,recheckonloadPicRow.jobId,recheckonloadPicRow.version)"
                   :file-list="frecheckrowFleList"
                 >
                   <i class="el-icon-plus"></i>
@@ -101,7 +101,7 @@
               </div>
             </div>
             <div class="perform" v-for="item in recheckrowCarInfo.list" :key="item.id">
-              <div class="left">{{item.optionName}}</div>
+              <div class="left"  :class="{error:item.isQualified === 2}">{{item.optionName}}</div>
               <div class="right">
                 <el-upload
                   :action="uploadUrl"
@@ -166,6 +166,27 @@
     <el-dialog :visible="dialogVisible1">
       <img width="100%" :src="dialogImageUrl" alt />
     </el-dialog>
+    <el-dialog
+      :visible="progressBarRecheck"
+      title="AI正在识别运算"
+      custom-class="hello1"
+      :center="true"
+      :showClose="false"
+      :closeOnClickModal="false"
+      :closeOnPressEscape="false"
+    >
+      <div style="text-align:center">
+        <div style="height:50px">
+          <el-progress
+                  :percentage="used"
+                  :text-inside="loadProgress"
+                  status="exception"
+                  :stroke-width="18"
+          ></el-progress>
+        </div>
+        <img src="../../assets/img/ai.gif" />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -174,7 +195,7 @@ import $ from "jquery"
 import net from "../../assets/js/public"
 import tableCom from '../../components/tableCompnment/tableForm'
 import searchCom from '../../components/tableCompnment/searchForm'
-import {frozenOrder, saveProductData, uploadSecondPhotoList, deleteRecheckPhoto} from '../../api'
+import {frozenOrder, saveProductData, uploadSecondPhotoList, deleteRecheckPhoto, completeRecheck} from '../../api'
 import {mapActions, mapState} from 'vuex'
 export default {
   components: {
@@ -240,7 +261,9 @@ export default {
       gendan: "",
       gendan_data: [],
       zhiliao: "",
-      zhiliao_data: []
+      zhiliao_data: [],
+      loadProgress: false,
+      used: 0
     }
   },
   created() {
@@ -249,7 +272,14 @@ export default {
   computed: {
     ...mapState(['recheckPicTableData', 'recheckPicLongData', 'recheckPicPagination', 'pageNo', 'pageSize', 'searchData',
     'recheckImgUploadBtnArrList', 'recheckonloadPicRow', 'recheckonloadPicDialog', 'recheckrowCarInfo', 'productItem', 'dataModel',
-    'frecheckrowFleList', 'recheckPicPhotoList', 'prodectArr'])// 读数据
+    'frecheckrowFleList', 'recheckPicPhotoList', 'prodectArr', 'progressBarRecheck', 'recheckPicCarPhotoId', 'recheckPics1', 'recheckPics2'])// 读数据
+  },
+  watch: {
+    progressBarRecheck: function (progressBarRecheck) {
+      if(progressBarRecheck === true) {
+        this.finshUpload()
+      }
+    }
   },
   methods: {
     ...mapActions(['getRecheckPicList']),
@@ -353,20 +383,51 @@ export default {
       this.$store.state.recheckonloadPicDialog = false
     },
 
-    ensureUpload(param) {
+    finshUpload() { // 完成上传
+      this.loadProgress = true
+      const that = this
+      const param = {
+        jobId: that.recheckonloadPicRow.jobId,
+        version: that.recheckonloadPicRow.version
+      }
+      completeRecheck(param).then(res => {
+        if (res.retcode === 1) {
+          let dsq = setInterval(function() {
+            that.used = that.used + 1
+            if (that.used >= 100) {
+              clearInterval(dsq);
+              net.message(that, "AI已经识别,可继续录入数据", "success");
+              const skip = net.isJump("/editRecheck");
+              if (skip) {
+                that.$router.push({path: "/editRecheck"});
+              } else {
+                that.getRecheckPicList()
+              }
+              that.$store.state.progressBarRecheck = false;
+            }
+          }, 50)
+        } else {
+          net.message(this, res.retmsg, "error");
+          that.$store.state.progressBarRecheck = false;
+        }
+      })
+    },
+
+    ensureUpload(param) { // 确认上传
       console.log(param)
       console.log(this.recheckPicPhotoList)
-      // uploadSecondPhotoList(param, this.photoList).then(res => {
-      //     if (res.retcode === 1) {
-      //       net.message(this, res.retmsg, "success");
-      //       this.version = res.data;
-      //       // this.updatePicState(optionId);
-      //       this.dialogVisible = false;
-      //       this.getRecheckPicList()
-      //     } else {
-      //       net.message(this, res.retmsg, "warning");
-      //     }
-      //   });
+      uploadSecondPhotoList(param, this.recheckPicPhotoList).then(res => {
+        console.log(res)
+          if (res.retcode === 1) {
+            net.message(this, res.retmsg, "success");
+            this.version = res.data;
+            // this.updatePicState(optionId);
+            this.dialogVisible = false;
+            this.getRecheckPicList()
+          } else {
+            net.message(this, res.retmsg, "warning");
+          }
+        });
     },
 
     close () { // 关闭弹窗
@@ -477,18 +538,18 @@ export default {
       }
     },
 
-    uploadSuccess(optionId, photoId, response, file, fileList) {//图片上次成功回调
+    uploadSuccess(optionId, photoId, response) {//图片上次成功回调
+      console.log(optionId, photoId, response)
       if (response.retcode !== 1) {
         net.message(this, response.retmsg, "error");
         return false;
       }
-      this.photoList.push({ optionId: optionId, photoId: response.data });
+      this.$store.state.recheckPicPhotoList.push({ optionId: optionId, photoId: response.data });
       this.optionId = optionId;
-      if (optionId === -1) {
-        this.carPhotoId = response.data;
-      } else if (optionId === -11) {
-        this.framePhotoId = response.data;
-      } else {
+      if (optionId === -1) { // 车牌
+        this.$store.state.recheckPicCarPhotoId = response.data;
+      }
+      else {
         for (let i = 0; i < this.placeData.length; i++) {
           const element = this.placeData[i];
           if (optionId === element.optionId) {

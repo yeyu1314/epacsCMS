@@ -85,6 +85,7 @@ export const veriftRepulse = (params) => net.request('admin/order/repulseStep1',
 
 export const uploadSecondPhotoList = (params, data) => net.request('admin/order/uploadSecondPhotoList', 'post', params, data) //复查照片上传  确认上传的回调
 export const deleteRecheckPhoto = (params, data) => net.request('admin/order/deleteRecheckPhoto', 'post', params, data) //复查照片上传  删除照片
+export const completeRecheck = (params) => net.request('admin/order/completeRecheck', 'post', params) //复查照片上传  完成上传
 
 
 export const writeRecheckExamination = (params) => net.request('admin/order/writeRecheckExamination', 'post', params) //复查报告编辑  保存数据

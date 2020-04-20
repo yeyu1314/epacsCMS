@@ -27,6 +27,8 @@ export const RECEIVE_DETECTION_ORDER_REFRESH = 'receive_detection_order_refresh'
 
 
 export const RECEIVE_IMG_UPLOAD_FINUPLOAD = 'receive_img_upload_finupload' // 待上传照片 完成上传
+export const RECEIVE_RECHECK_PIC_FINUPLOAD = 'receive_recheck_pic_finupload' // 复查照片上传 完成上传
+
 
 
 

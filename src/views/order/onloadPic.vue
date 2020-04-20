@@ -79,10 +79,10 @@
                 :action="uploadUrl"
                 list-type="picture-card"
                 :data="{carNumber:onloadPicRow.carNumber,step:1,option:-1}"
-                :on-success="uploadSuccess.bind(this,-1,conloadPicCarPhotoId)"
+                :on-success="uploadSuccess.bind(this,-1,onloadPicCarPhotoId)"
                 :on-preview="handlePictureCardPreview"
                 :on-change="change.bind(this,-1)"
-                :on-remove="remove.bind(this,-1,conloadPicCarPhotoId,onloadPicRow.jobId,onloadPicRow.version)"
+                :on-remove="remove.bind(this,-1,onloadPicCarPhotoId,onloadPicRow.jobId,onloadPicRow.version)"
                 :file-list="onloadPicFileList"
               >
                 <i class="el-icon-plus"/>
@@ -213,7 +213,7 @@ export default {
   },
   computed: {
     ...mapState(['imgUploadTableData', 'imgUploadPagination', 'imgUploadLongDatas', 'pageNo', 'pageSize', 'searchData', 'detectionImgUploadBtnArrList',
-    'onloadPicDialog', 'onloadPicRow', 'rowCarInfo', 'onLoadPicPhotoList', 'onloadPicFileList', 'onloadPicFileList1', 'conloadPicCarPhotoId', 'onloadPicFramePhotoId',
+    'onloadPicDialog', 'onloadPicRow', 'rowCarInfo', 'onLoadPicPhotoList', 'onloadPicFileList', 'onloadPicFileList1', 'onloadPicCarPhotoId', 'onloadPicFramePhotoId',
     'onloadPics1', 'onloadPics2', 'progressBar', ])// 读数据
   },
   watch: {
@@ -251,7 +251,7 @@ export default {
               if (skip) {
                 that.$router.push({path: "/firstReport"});
               } else {
-                this.getDetectionImgUploadList()
+                that.getDetectionImgUploadList()
               }
               that.$store.state.progressBar = false;
             }
@@ -373,6 +373,7 @@ export default {
     },
 
     uploadSuccess(optionId, photoId, response){ // 上传图片成功
+      console.log(optionId, photoId, response)
       if (response.retcode !== 1) {
         net.message(this, response.retmsg, "error");
         return false;
@@ -380,9 +381,9 @@ export default {
       this.$store.state.onLoadPicPhotoList.push({ optionId: optionId, photoId: response.data });
       // this.optionId = optionId;
       if (optionId === -1) { // 车牌
-        this.carPhotoId = response.data;
+        this.$store.state.onloadPicCarPhotoId = response.data;
       } else if (optionId === -11) { // 车架号
-        this.framePhotoId = response.data;
+        this.$store.state.onloadPicFramePhotoId = response.data;
       } else { // 部位
         const data = this.rowCarInfo
         for (let i = 0; i < data.list.length; i++) {

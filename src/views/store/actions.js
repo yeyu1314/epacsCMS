@@ -19,7 +19,8 @@ import {
   RECEIVE_ENSURE_ORDER_DIA_TABLEDATA,
   RECEIVE_DETECTION_ORDER_EDIT_TABLEDATA,
   RECEIVE_IMG_UPLOAD_FINUPLOAD,
-  RECEIVE_DETECTION_ORDER_REFRESH
+  RECEIVE_DETECTION_ORDER_REFRESH,
+  RECEIVE_RECHECK_PIC_FINUPLOAD
 } from "./mutation_types";
 import net from "../../assets/js/public"
 import router from '../../router'
@@ -190,7 +191,7 @@ export default {
                 }
               }
             }
-            let conloadPicCarPhotoId = ''
+            let onloadPicCarPhotoId = ''
             let onloadPicFramePhotoId = ''
             let fileList = []
             let fileList1 = []
@@ -203,7 +204,7 @@ export default {
                 obj1["url"] =net.imageHP + "image/getLarge?imageId=" + data[g].photoId;
 
                 if (data[g].optionId === -1) {// 车牌号
-                  conloadPicCarPhotoId = data[g].photoId;
+                  onloadPicCarPhotoId = data[g].photoId;
                   fileList.push(obj1);
                   onloadPics1 = data[g].isQualified;
                 }
@@ -219,15 +220,15 @@ export default {
                 });
                 // console.log(this.photoList)
               } else {
-                if (data[g].optionId == -1) {
+                if (data[g].optionId === -1) {
                   onloadPics1 = data[g].isQualified;
                 }
-                if (data[g].optionId == -11) {
+                if (data[g].optionId === -11) {
                   onloadPics2 = data[g].isQualified;
                 }
               }
             }
-            commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, fileList1, photoList, conloadPicCarPhotoId, onloadPicFramePhotoId, onloadPics1, onloadPics2})// 提交一个mutation
+            commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, fileList1, photoList, onloadPicCarPhotoId, onloadPicFramePhotoId, onloadPics1, onloadPics2})// 提交一个mutation
           })
 
         }
@@ -533,11 +534,14 @@ export default {
   async getRecheckPicList ({commit, state}) {
     const showEditTest = (that, row) => { // 上传照片
       getUploadImgBtnData({carId: row.carId}).then(res => {
-        const fileList = []
+        let recheckPicCarPhotoId = ''
+        let fileList = []
+        let recheckPics1 = ''
+        let recheckPics2 = ''
         const photoList = []
         if(res.retcode === 1){
           const result = res.data
-          commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, photoList, prodectArr})// 提交一个mutation
+          commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, photoList, prodectArr, recheckPicCarPhotoId, recheckPics1, recheckPics2})// 提交一个mutation
         }
       })
       getSelectList(1, row.orgId)
@@ -550,6 +554,9 @@ export default {
 
     const finshUpload = (that, row) => { // 完成上传
       console.log(that, row)
+      const progressBarRecheck = true
+      const loadProgressRecheck = true
+      commit(RECEIVE_RECHECK_PIC_FINUPLOAD, {progressBarRecheck,loadProgressRecheck, row})// 提交一个mutation
     }
     let prodectArr = [];
     const getSelectList = (index,orgId) => { // 获取诊断工程师 等 的下拉框的值
@@ -629,7 +636,7 @@ export default {
       })
     }
 
-    const EditTest = (that, row) => { // 编辑照片
+    const EditTest = (that, row) => { // 编辑复查照片
       getUploadImgBtnData({carId: row.carId}).then(rowRes => {
         if(rowRes.retcode === 1){
           const result = rowRes.data
@@ -655,34 +662,35 @@ export default {
               }
             }
 
-            let carPhotoId = ''
+            let recheckPicCarPhotoId = ''
             let fileList = []
-            let s1 = ''
+            let recheckPics1 = ''
+            let recheckPics2 = ''
             let photoList = []
             for (let g = 0; g < data.length; g++) {
               if (data[g].photoId != null && data[g].photoId > 0) {
                 let obj1 = {}
                 obj1["url"] =net.imageHP + "image/get?imageId=" + data[g].photoId
 
-                if (data[g].optionId == -2) { // 车牌
-                  carPhotoId = data[g].photoId;
+                if (data[g].optionId === -2) { // 车牌
+                  recheckPicCarPhotoId = data[g].photoId;
                   fileList.push(obj1);
-                  s1 = data[g].isQualified;
+                  recheckPics1 = data[g].isQualified;
                 }
                 photoList.push({
                   optionId: data[g].optionId,
                   photoId: data[g].photoId
                 });
               } else {
-                if (data[g].optionId == -2) {
-                  // this.s1 = data[g].isQualified;
+                if (data[g].optionId === -2) {
+                  recheckPics1 = data[g].isQualified;
                 }
-                if (data[g].optionId == -11) {
-                  // this.s2 = data[g].isQualified;
+                if (data[g].optionId === -11) {
+                  recheckPics2 = data[g].isQualified;
                 }
               }
             }
-            commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, photoList, prodectArr})// 提交一个mutation
+            commit(RECHECK_IMG_UPLOAD_D_TABLEDATA, {row, result, fileList, photoList, prodectArr, recheckPicCarPhotoId, recheckPics1, recheckPics2})// 提交一个mutation
 
           })
         }

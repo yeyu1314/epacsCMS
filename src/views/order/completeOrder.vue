@@ -108,7 +108,7 @@
           {label:'复查报告',type:'reviewButton',},
           {label:'备注',type:'remarkButton',},
           {label:'操作记录',type:'Button',btnList:[
-              {type:'success',label:'查看',handle:(row,that)=>this.showRecord(row,that)},
+              {type:'success',label:'查看',size: 'small', handle:(row,that)=>this.showRecord(row,that)},
             ]},
         ],
         longDatas : [],
