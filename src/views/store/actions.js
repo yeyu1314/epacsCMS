@@ -163,9 +163,7 @@ export default {
     }
 
     const EditImg = (that, row) => { // 编辑照片
-      console.log(that, row)
       getUploadImgBtnData({carId: row.carId}).then(res => {
-        console.log(res)
         if(res.retcode === 1){
           const result = res.data
           const params = {
@@ -173,16 +171,14 @@ export default {
             step: 1
           }
           getUploadImgBtnPhotoData({params}).then( res => {
-            console.log(res)
             const data = res.data
             for (let i = 0; i < result.list.length; i++) {
               for (let j = 0; j < data.length; j++) {
-                if (result.list[i].optionId == data[j].optionId) {
+                if (result.list[i].optionId === data[j].optionId) {
                   result.list[i]["isQualified"] = data[j].isQualified;
                   const obj = {};
                   if (data[j].photoId != null && data[j].photoId > 0) {
-                    obj["url"] =
-                        net.imageHP + "image/get?imageId=" + data[j].photoId;
+                    obj["url"] = net.imageHP + "image/get?imageId=" + data[j].photoId;
                     result.list[i].list.push(obj);
                     result.list[i]["photoId"] = data[j].photoId;
                   } else {
@@ -191,13 +187,13 @@ export default {
                 }
               }
             }
-            let onloadPicCarPhotoId = ''
-            let onloadPicFramePhotoId = ''
-            let fileList = []
-            let fileList1 = []
-            let onloadPics1 = ''
-            let onloadPics2 = ''
-            let photoList = []
+            let onloadPicCarPhotoId = '' //车牌图片id
+            let onloadPicFramePhotoId = '' // 车架号图片id
+            let fileList = [] // 存放车牌图片信息
+            let fileList1 = [] // 存放车架号图片信息
+            let onloadPics1 = '' // 回显车牌不合格
+            let onloadPics2 = '' // 回显车架号不合格
+            let photoList = [] // 存放图片的信息
             for (let g = 0; g < data.length; g++) {
               const obj1 = {};
               if (data[g].photoId != null && data[g].photoId > 0) {
@@ -218,7 +214,6 @@ export default {
                   optionId: data[g].optionId,
                   photoId: data[g].photoId
                 });
-                // console.log(this.photoList)
               } else {
                 if (data[g].optionId === -1) {
                   onloadPics1 = data[g].isQualified;
@@ -246,7 +241,6 @@ export default {
     }
 
     const getSelectList = (index,orgId) => {
-      console.log(index,orgId)
       let url;
       if (index === 1) {
         url = "admin/engineer/CZListByOrgId";
@@ -257,8 +251,7 @@ export default {
       if (index === 3) {
         url = "admin/engineer/GDListByOrgId";
       }
-      getSelectData(url,{orgId: orgId}).then(res => {
-        console.log(res)
+      getSelectData(url,{orgId: orgId}).then(() => {
         // commit(RECEIVE_IMG_UPLOAD_D_TABLEDATA, {res})// 提交一个mutation
       }).catch(error => {
         console.log(error)
