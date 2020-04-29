@@ -111,7 +111,7 @@
               </div>
             </template>
 
-            <template v-if="item.type === 'remarkButton'">
+            <!--<template v-if="item.type === 'remarkButton'">
               <div v-for="btnItem in remarkButtonList" :key="btnItem.id">
                 <template v-if="btnItem.id === scope.row.id">
                   <el-button v-for="btn in btnItem.btnList" :key="btn.id"
@@ -120,6 +120,21 @@
                              :size="btn.size || size"
                              :icon="btn.icon"
                              @click="btn.handle(btn.allData,btn.jobID)"
+                             v-show="btn.isShow"
+                  >{{btn.label}}
+                  </el-button>
+                </template>
+              </div>
+            </template>-->
+            <template v-if="item.type === 'remarkButton'">
+              <div v-for="btnItem in remarkButtonList" :key="btnItem.id">
+                <template v-if="btnItem.id === scope.row.id" >
+                  <el-button v-for="btn in btnItem.btnList" :key="btn.id"
+                             :disabled="btn.disabled && btn.disabled(scope.row)"
+                             :type="btn.type"
+                             :size="btn.size || size"
+                             :icon="btn.icon"
+                             @click="btn.handle(that,scope.row)"
                              v-show="btn.isShow"
                   >{{btn.label}}
                   </el-button>

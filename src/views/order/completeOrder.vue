@@ -190,7 +190,7 @@
       },
       // 点击 查看复查报告
       showReview (that,row) {
-        console.log("点击了查看复查报告",that,row.jobId)
+        console.log("点击了查看复查报告",that,row)
         this.record(row.jobId, 2);
         this.$router.push({
           name: "recheck",
@@ -205,32 +205,28 @@
         });
       },
       // 点击 备注项
-      showRemark (row,that) {
+      showRemark (that, row) {
         console.log("点击了备注项",row,that)
         this.dialogVisible = true;
-        net
-            .request("admin/order/queryProductInfoList", "post", {
-              jobId: that.jobId
-            })
-            .then(res => {
-              if (res.retcode == 1) {
-                var data = res.data.rows;
-                var list = [];
-                for (var i = 0; i < data.length; i++) {
-                  if (data[i].number != 0) {
-                    list.push(data[i]);
-                  }
-                }
-                if (list.length == 0) {
-                  this.isUse = true;
-                } else {
-                  8;
-                  this.seeProArr = list;
-                }
-              } else {
-                net.message(this, res.retmsg, "warning");
+        net.request("admin/order/queryProductInfoList", "post", { jobId: row.jobId}).then(res => {
+          if (res.retcode == 1) {
+            var data = res.data.rows;
+            var list = [];
+            for (var i = 0; i < data.length; i++) {
+              if (data[i].number != 0) {
+                list.push(data[i]);
               }
-            });
+            }
+            if (list.length == 0) {
+              this.isUse = true;
+            } else {
+              8;
+              this.seeProArr = list;
+            }
+          } else {
+            net.message(this, res.retmsg, "warning");
+          }
+        });
       },
       // 类型下拉框
       selectCheckType (row) {//类型下拉框
@@ -261,16 +257,6 @@
                   }
 
                 });
-
-        /*this.editData = {// 给弹窗赋值
-          carNumber:that.carNumber,
-          carMsg:that.carMsg,
-          station:that.note,
-          checkType:that.checkType,
-          inputTime : that.inputTime
-        }
-        this.title = '车辆信息'
-        this.showEdit = true*/
       },
       //关闭弹窗
       closeTip() {

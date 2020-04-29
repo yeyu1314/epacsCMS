@@ -54,7 +54,7 @@
                         inactive-value="打印"
                         active-text="不打印"
                         inactive-text="打印"
-                >></el-switch>
+                ></el-switch>
             </el-tooltip>
         </div>
     </div>
@@ -101,9 +101,7 @@
                 this.opinion = this.radio1+this.radio2+this.radio3+this.radio4+this.radio5;
             },
             adviseArrow() {
-                // this.advise = this.opinion;
-                this.Bus.$emit('listenToA', this.opinion)
-                console.log(this.opinion)
+                this.Bus.$emit('sendOptions', this.opinion)
             },
         }
     }

@@ -515,11 +515,14 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          frozenOrder({jobId: row.jobId, version: row.version}).then(res => {
-            console.log(res)
-          }).catch(res => {
-            console.log(res)
-            this.getDetectionOrderList()
+          frozenOrder({jobId: row.jobId, version: row.version}).then(() => {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.getEditRecheckList()
+          }).catch(() => {
+            this.getEditRecheckList()
           })
         })
       },

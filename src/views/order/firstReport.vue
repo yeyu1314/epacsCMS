@@ -1089,14 +1089,15 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log(that, row)
-        frozenOrder({jobId: row.jobId, version: row.version})
-          .then(res => {
-            console.log(res)
-          }).catch(res => {
-            console.log(res)
-            this.getDetectionOrderList()
+        frozenOrder({jobId: row.jobId, version: row.version}).then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
           })
+          this.getDetectionOrderEditList()
+        }).catch(() => {
+          this.getDetectionOrderEditList()
+      })
       })
     },
     //翻页

@@ -38,6 +38,7 @@ export default {
   },
   data() {
     return {
+      value123345:'',
       that: this,
       searchForm: [ // 搜索栏
         {type: 'Input', prop: 'carNumber', width: '180px', placeholder: '请输入车牌'}
@@ -123,12 +124,14 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log(that, row)
-        frozenOrder({jobId: row.jobId, version: row.version}).then(res => {
-          console.log(res)
-        }).catch(error => {
-          console.log(error)
-          this.getDetectionOrderList()
+        frozenOrder({jobId: row.jobId, version: row.version}).then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+          this.getTreatOrderEditList()
+        }).catch(() => {
+          this.getTreatOrderEditList()
         })
       })
     },
