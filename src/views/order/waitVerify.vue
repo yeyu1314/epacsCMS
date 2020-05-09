@@ -55,7 +55,7 @@
 
        <!-- 中间 -->
         <div id="centershow" style="width: 210mm;height: 297mm;border: 1px solid #eee; overflow-x: hidden;margin-left:50px;" >
-          <contentItem ref="contentItem" :mileNumber="mileNumber" @carFrameImage="getCarFrameImage" />
+          <contentItem ref="contentItem" :mileNumber="mileNumber" @carFrameImage="getCarFrameImage" @sendChildData="sendChildData" />
         </div>
 
          <!-- 右侧 -->
@@ -187,6 +187,8 @@ export default {
       seeArr: [],
       rowData: '',
       mileNumber: '', //里程
+      advise: '',
+      illustrate: ''
     }
   },
   created () {
@@ -215,6 +217,10 @@ export default {
 
     getCarFrameImage(data){ // 获取车架号图片
       this.carFrameImageId = data
+    },
+    sendChildData(data){ // 结果和意见
+      this.advise = data.advise
+      this.illustrate = data.illustrate
     },
 
     // 打印检测报告
@@ -283,8 +289,8 @@ export default {
     closeTip () { // 关闭操作记录的弹窗
       this.isShowRecord = false
     },
-
-    startVerift (that, row) {// 开始审核
+    // 开始审核
+    startVerift (that, row) {
       this.isShowOpear = true
       this.$refs.contentItem.getContentData(row);
       this.$refs.rightItem.getSlectData(row);
@@ -293,181 +299,31 @@ export default {
     },
     // 审核通过
     subExamine(){
-      if (this.illustrate.length > 280) {
-        net.message(
-          this,
-          "诊断意见超过最大限制字数(280字)，请重新修改",
-          "error"
-        );
-        return false;
-      }
-      if (this.advise.length > 100) {
-        net.message(
-          this,
-          "检测结果 超过最大限制字数(100字)，请重新修改",
-          "error"
-        );
-        return false;
-      }
-      let list = [];
-      for (let i = 0; i < this.datapicArr.length; i++) {
-        const obj = {},
-                obj1 = {},
-                obj2 = {};
-        obj["contrast"] = 2;
-        obj["imageId"] = this.datapicArr[i].imageId2;
-        obj["optionId"] = this.datapicArr[i].optionId;
-        obj1["contrast"] = 3;
-        obj1["imageId"] = this.datapicArr[i].imageId3;
-        obj1["optionId"] = this.datapicArr[i].optionId;
-        obj2["contrast"] = 4;
-        obj2["imageId"] = this.datapicArr[i].imageId4;
-        obj2["optionId"] = this.datapicArr[i].optionId;
-        list.push(obj);
-        list.push(obj1);
-        list.push(obj2);
-      }
-      const params = {
-        jobId: this.jobId,
-        optionIds: this.optionIds.join(","),
-        version: this.version
-      };
-      const checkRecordList = [];
-      for (let i = 0; i < this.placeArr.length; i++) {
-        const obj3 = {};
-        obj3["contrastResult"] = this.placeArr[i].contrastResult;
-        obj3["optionId"] = this.placeArr[i].optionId;
-        checkRecordList.push(obj3);
-      }
-      const data = {
-        imageNote: this.illustrate, //说明
-        diagnosticOption: this.advise,
-        list: list,
-        checkRecordList: checkRecordList
-      }
-      veriftToExamine(params, data).then(res => {
-        if (res.retcode === 1) {
-          const skip = net.isJump("/ensureOrder");
-          const skip1 = net.isJump("/completeOrder");
-          net.message(this, res.retmsg, "suuccess");
-          if (this.checkType === 1) {
-            if (skip1) { //检测工单
-              this.$router.push({ path: "/completeOrder" });
-            } else {
-              this.getDetectionVerifyList()
-            }
-          } else {
-            if (skip) {
-              this.$router.push({ path: "/ensureOrder" });
-            } else {
-              this.getDetectionVerifyList()
-            }
-          }
-        } else {
-          net.message(this, res.retmsg, "error")
-        }
-      })
+      this.$refs.contentItem.subExamine();
     },
     // 还原
     reduction(){
-      this.advise = "";
-      this.illustrate =
-        "上述检测比对是指在同区域，同车型，同里程条件下从大数据检索出来的积碳生成情况三个维度的照片：轻度--表示比对范围内积碳较少；中度--表示比对范围内积碳平均水平；重度--表示比对范围内积碳最多。";
-      this.getConterData(this.carId);
-      setTimeout(() => {
-        $(".tr_sign").each(function() {
-          $(this).hide();
-        });
-      }, 300);
+      this.$refs.contentItem.reduction();
     },
     // 编辑并通过
     editAdopt(){
-      if (this.illustrate.length > 260) {
-        net.message(
-          this,
-          "诊断说明超过最大限制字数(260字)，请重新修改",
-          "error"
-        );
-        return false;
-      }
-      if (this.advise.length > 120) {
-        net.message(
-          this,
-          "诊断意见超过最大限制字数(120字)，请重新修改",
-          "error"
-        );
-        return false;
-      }
-      let list = [];
-      for (let i = 0; i < this.datapicArr.length; i++) {
-        const obj = {},
-                obj1 = {},
-                obj2 = {};
-        obj["contrast"] = 2;
-        obj["imageId"] = this.datapicArr[i].imageId2;
-        obj["optionId"] = this.datapicArr[i].optionId;
-        obj1["contrast"] = 3;
-        obj1["imageId"] = this.datapicArr[i].imageId3;
-        obj1["optionId"] = this.datapicArr[i].optionId;
-        obj2["contrast"] = 4;
-        obj2["imageId"] = this.datapicArr[i].imageId4;
-        obj2["optionId"] = this.datapicArr[i].optionId;
-        list.push(obj);
-        list.push(obj1);
-        list.push(obj2);
-      }
-      const params = {
-        jobId: this.jobId,
-        optionIds: this.optionIds.join(","),
-        version: this.version
-      };
-      const checkRecordList = [];
-      for (let i = 0; i < this.placeArr.length; i++) {
-        const obj3 = {};
-        obj3["contrastResult"] = this.placeArr[i].contrastResult;
-        obj3["optionId"] = this.placeArr[i].optionId;
-        checkRecordList.push(obj3);
-      }
-      const data = {
-        imageNote: this.illustrate, //说明
-        diagnosticOption: this.advise,
-        list: list,
-        checkRecordList: checkRecordList
-      };
-      veriftPresentation(params, data).then(res => {
-          if (res.retcode === 1) {
-            const skip = net.isJump("/ensureOrder");
-            const skip1 = net.isJump("/completeOrder");
-            net.message(this, res.retmsg, "suuccess");
-            if (this.checkType === 1) {
-              if (skip1) {//检测工单
-                this.$router.push({ path: "/completeOrder" });
-              } else {
-                this.getDetectionVerifyList()
-              }
-            } else {
-              if (skip) {
-                this.$router.push({ path: "/ensureOrder" });
-              } else {
-                this.getDetectionVerifyList()
-              }
-            }
-          } else {
-            net.message(this, res.retmsg, "error");
-          }
-        });
+      this.$refs.contentItem.editAdopt()
     },
     // 打回
     repulse(){
+      const param = {
+        jobId: this.rowData.jobId,
+        version: this.rowData.version
+      }
       this.$confirm("此操作将修改工单为待编辑状态，是否确认打回?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          veriftRepulse({jobId: this.rowData.jobId,version: this.rowData.version}).then(res => {
+          veriftRepulse(param).then(res => {
               this.isShowOpear = false;
-              if (res.retcode === 0) {
+              if (res.retcode === 1) {
                 this.getDetectionVerifyList()
               } else {
                 net.message(this, res.retmsg, "warning");
@@ -515,137 +371,12 @@ export default {
     },
     // 预览、打印
     printdiv() {
-      this.isprint = false;
-      this.templateBut = false;
-      $(".placeVal").each(function() {
-        $(this).hide();
-        $(".ctrolPrintPlace").css({
-          position: "relative",
-          right: "32px"
-        });
-      });
-      const iconArr = [];
-      $(".tr_sign").each(function() {
-        const flag = $(this).is(":hidden");
-        if (flag === false) {
-          iconArr.push($(this).data("imgid"));
-          $(this).hide();
-        }
-      });
-      $(".severe").each(function() {
-        $(this).css({
-          width: "121px"
-        });
-      });
-      if (this.isShowArrow === "不打印") {
-        $(".arrowIcon").hide();
-      }
-      setTimeout(() => {
-        $(".placeVal").each(function() {
-          $(this).show();
-          $(".ctrolPrintPlace").css({
-            position: "relative",
-            right: "0"
-          });
-        });
-        this.isprint = true;
-        $(".arrowIcon").show();
-        $(".tr_sign").each(function() {
-          if (iconArr.length !== 0) {
-            for (let i = 0; i < iconArr.length; i++) {
-              if ($(this).data("imgid") === iconArr[i]) {
-                $(this).show();
-              }
-            }
-          }
-        });
-        $(".severe").each(function() {
-          $(this).css({
-            width: "120px"
-          });
-        });
-      }, 600);
-      setTimeout(() => {
-        net.printServer(
-          document.getElementById("centershow").innerHTML,
-          myWindow => {
-            setTimeout(() => {
-              myWindow.print();
-              myWindow.close();
-            }, 1000);
-          }
-        );
-      }, 300);
-    },
-
-    Arrow(optionId, contrastResult) { //图标箭头点击
-      const arr = this.placeArr;
-      for (let i = 0; i < arr.length; i++) {
-        if (optionId === arr[i].optionId) {
-          if (contrastResult === 4) {
-            //向上
-            arr[i]["contrastResult"] = 3;
-          }
-          if (contrastResult === 3) {
-            //向下
-            arr[i]["contrastResult"] = 2;
-          }
-          if (contrastResult === 2) {
-            //等于
-            arr[i]["contrastResult"] = 4;
-          }
-        }
-      }
-    },
-
-    mouseEnter(d) {//鼠标进入图片显示放大按钮
-      $(".showBigBtn").hide();
-      $(".showBigBtn[data-optionid='" + d + "']").show();
-    },
-
-    mouseLeave() {
-      $(".showBigBtn").hide();
-    },
-
-
-    bigIcon(id) {// 放大图片图标
-      this.dialogVisible2 = true;
-      this.bigImage = net.bigImg + id;
+      this.$refs.contentItem.printDiv();
     },
 
 
 
-//删除部位照片
-    deleteRow(id) {
-      this.$confirm("是否删除该部位图片", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.optionIds.push(id);
-          const arr1 = [],
-                  arr2 = [];
-          for (let i = 0; i < this.placeArr.length; i++) {
-            if (this.placeArr[i].optionId !== id) {
-              arr1.push(this.placeArr[i]);
-            }
-          }
-          for (let j = 0; j < this.datapicArr.length; j++) {
-            if (this.datapicArr[j].optionId !== id) {
-              arr2.push(this.datapicArr[j]);
-            }
-          }
-          this.placeArr = arr1;
-          this.datapicArr = arr2;
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
+
   }
 };
 </script>
@@ -714,18 +445,6 @@ export default {
       height: 36px;
       line-height: 36px;
       text-align: left;
-    }
-    .ctroArrow {
-      display: flex;
-      margin-top: 15px;
-      margin-left: 20px;
-      p {
-        font-size: 14px;
-      }
-      .derail {
-        margin-top: 8px;
-        margin-left: 10px;
-      }
     }
   }
   .centent {

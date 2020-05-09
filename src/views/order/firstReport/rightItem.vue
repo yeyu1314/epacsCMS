@@ -320,6 +320,9 @@
         dialogVisible2: false,
       };
     },
+    created (){
+
+    },
     props: {
       // rowData: {   //这个就是父组件中子标签自定义名字
       //   type: Object
@@ -341,6 +344,14 @@
     methods: {
       getSlectData(row) {
         console.log('row',row)
+
+        this.partData = ''
+        this.statusArr = []
+        this.rightPercent1 = ''
+        this.rightPercent2 = ''
+        this.rightPercent3 = ''
+        this.showRightTitle = false
+
         this.baseData = row,
         this.dimensionalityValue = row.avgValue > 0 ? row.avgValue : '';//报告维度
         this.getEngineData(() => {

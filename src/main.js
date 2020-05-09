@@ -8,6 +8,7 @@ import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
+Vue.config.devtools = true
 // 引用组件
 Vue.use(ElementUI)
 

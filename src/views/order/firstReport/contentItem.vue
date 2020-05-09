@@ -375,8 +375,8 @@
                     </div>
                 </div>
             </div>
-            <div class="three">
-                <div style=" width: 158mm; margin-left: 88px;">
+            <div class="three" style=" width: 158mm; margin-left: 88px;">
+                <div>
                     <p
                             v-show="isprint"
                             style="height: 30px;line-height: 30px;text-align: left;padding-left: 5px;font-size:14px;margin:0;"
@@ -411,7 +411,7 @@
                     >选择模板
                     </el-button>
                 </div>
-                <div style="width: 158mm;margin: 0px 0 10px 88px;" class="ctroAdvise">
+                <div style="width: 158mm;" class="ctroAdvise">
                     <p
                             style="height: 30px;line-height: 30px;text-align: left;padding-left: 5px;font-size:14px;margin:0;"
                             v-show="isprint"
@@ -440,7 +440,7 @@
                     </p>
                 </div>
                 <div
-                        style="display: flex;justify-content: space-between;width: 158mm;margin: 20px 0 20px 88px;font-size:14px;"
+                        style="display: flex;justify-content: space-between;width: 158mm;margin: 20px 0 20px 0;font-size:14px;"
                 >
                     <span style="padding-left:10px;">影像诊断工程师：{{step1ImageHeader}}</span>
                     <span>客户签名：</span>
@@ -505,6 +505,7 @@
   } from "../../../api/index";
   import net from '../../../assets/js/public'
   import $ from "jquery";
+  import {mapActions, mapState} from 'vuex'
 
   export default {
     name: "contentItem",
@@ -587,6 +588,7 @@
       })
     },
     methods : {
+      ...mapActions(['getDetectionVerifyList']),
       getContentData(row) {
         console.log('row',row)
         row.review = 1
@@ -595,6 +597,10 @@
         this.cartype = row.modelName;
         this.ReseriesName = row.seriesName;
         this.testAddr = row.orgName;
+        // 通过的请求需要的参数
+        this.jobId = row.jobId
+        this.version = row.version
+
         queryByIdFirstReport({carId: row.carId}).then(res => {
           this.oilDeplete = res.data.oilDeplete; // 综合油耗
           if (res.retcode === 1) {
@@ -730,6 +736,7 @@
             this.exLen = 280 - res.data.imageNote.length;
             this.chLen = 100 - res.data.diagnosticOption.length;
             this.step1ImageHeader = res.data.step1ImageHeader;
+            this.$emit('sendChildData',{illustrate:this.illustrate,advise:this.advise})
           }
         })
       },
@@ -765,6 +772,26 @@
               message: "已取消删除"
             });
           });
+      },
+      //图标箭头点击
+      Arrow(optionId, contrastResult) {
+        const arr = this.placeArr;
+        for (let i = 0; i < arr.length; i++) {
+          if (optionId === arr[i].optionId) {
+            if (contrastResult === 4) {
+              //向上
+              arr[i]["contrastResult"] = 3;
+            }
+            if (contrastResult === 3) {
+              //向下
+              arr[i]["contrastResult"] = 2;
+            }
+            if (contrastResult === 2) {
+              //等于
+              arr[i]["contrastResult"] = 4;
+            }
+          }
+        }
       },
 
 
@@ -877,6 +904,244 @@
         });
       },
 
+      printDiv(){
+        this.isprint = false;
+        this.templateBut = false;
+        $(".placeVal").each(function() {
+          $(this).hide();
+          $(".ctrolPrintPlace").css({
+            position: "relative",
+            right: "32px"
+          });
+        });
+        const iconArr = [];
+        $(".tr_sign").each(function() {
+          const flag = $(this).is(":hidden");
+          if (flag === false) {
+            iconArr.push($(this).data("imgid"));
+            $(this).hide();
+          }
+        });
+        $(".severe").each(function() {
+          $(this).css({
+            width: "121px"
+          });
+        });
+        if (this.isShowArrow === "不打印") {
+          $(".arrowIcon").hide();
+        }
+        setTimeout(() => {
+          $(".placeVal").each(function() {
+            $(this).show();
+            $(".ctrolPrintPlace").css({
+              position: "relative",
+              right: "0"
+            });
+          });
+          this.isprint = true;
+          $(".arrowIcon").show();
+          $(".tr_sign").each(function() {
+            if (iconArr.length !== 0) {
+              for (let i = 0; i < iconArr.length; i++) {
+                if ($(this).data("imgid") === iconArr[i]) {
+                  $(this).show();
+                }
+              }
+            }
+          });
+          $(".severe").each(function() {
+            $(this).css({
+              width: "120px"
+            });
+          });
+        }, 600);
+        setTimeout(() => {
+          net.printServer(
+            document.getElementById("centershow").innerHTML,
+            myWindow => {
+              setTimeout(() => {
+                myWindow.print();
+                myWindow.close();
+              }, 1000);
+            }
+          );
+        }, 300);
+      },
+        // 还原
+      reduction() {
+        this.advise = "";
+        this.illustrate =
+          "上述检测比对是指在同区域，同车型，同里程条件下从大数据检索出来的积碳生成情况三个维度的照片：轻度--表示比对范围内积碳较少；中度--表示比对范围内积碳平均水平；重度--表示比对范围内积碳最多。";
+        setTimeout(() => {
+          $(".tr_sign").each(function() {
+            $(this).hide();
+          });
+        }, 300);
+      },
+
+      dataTest(){
+
+      },
+
+      // 审核通过
+      subExamine(){
+        if (this.illustrate.length > 280) {
+          net.message(
+            this,
+            "诊断意见超过最大限制字数(280字)，请重新修改",
+            "error"
+          );
+          return false;
+        }
+        if (this.advise.length > 100) {
+          net.message(
+            this,
+            "检测结果 超过最大限制字数(100字)，请重新修改",
+            "error"
+          );
+          return false;
+        }
+        let list = [];
+        for (let i = 0; i < this.datapicArr.length; i++) {
+          const obj = {},
+            obj1 = {},
+            obj2 = {};
+          obj["contrast"] = 2;
+          obj["imageId"] = this.datapicArr[i].imageId2;
+          obj["optionId"] = this.datapicArr[i].optionId;
+          obj1["contrast"] = 3;
+          obj1["imageId"] = this.datapicArr[i].imageId3;
+          obj1["optionId"] = this.datapicArr[i].optionId;
+          obj2["contrast"] = 4;
+          obj2["imageId"] = this.datapicArr[i].imageId4;
+          obj2["optionId"] = this.datapicArr[i].optionId;
+          list.push(obj);
+          list.push(obj1);
+          list.push(obj2);
+        }
+
+        const params = {
+          jobId: this.jobId,
+          optionIds: this.optionIds.join(","),
+          version: this.version
+        };
+        const checkRecordList = [];
+        for (let i = 0; i < this.placeArr.length; i++) {
+          const obj3 = {};
+          obj3["contrastResult"] = this.placeArr[i].contrastResult;
+          obj3["optionId"] = this.placeArr[i].optionId;
+          checkRecordList.push(obj3);
+        }
+        const data = {
+          imageNote: this.illustrate, //说明
+          diagnosticOption: this.advise,
+          list: list,
+          checkRecordList: checkRecordList
+        }
+        console.log('params',params)
+        console.log('data',data)
+        veriftToExamine(params, data).then(res => {
+          if (res.retcode === 1) {
+            const skip = net.isJump("/ensureOrder");
+            const skip1 = net.isJump("/completeOrder");
+            net.message(this, res.retmsg, "suuccess");
+            if (this.checkType === 1) {
+              if (skip1) { //检测工单
+                this.$router.push({ path: "/completeOrder" });
+              } else {
+                this.getDetectionVerifyList()
+              }
+            } else {
+              if (skip) {
+                this.$router.push({ path: "/ensureOrder" });
+              } else {
+                this.getDetectionVerifyList()
+              }
+            }
+          } else {
+            net.message(this, res.retmsg, "error")
+          }
+        })
+      },
+      // 编辑并通过
+      editAdopt(){
+        if (this.illustrate.length > 260) {
+          net.message(
+            this,
+            "诊断说明超过最大限制字数(260字)，请重新修改",
+            "error"
+          );
+          return false;
+        }
+        if (this.advise.length > 120) {
+          net.message(
+            this,
+            "诊断意见超过最大限制字数(120字)，请重新修改",
+            "error"
+          );
+          return false;
+        }
+        let list = [];
+        for (let i = 0; i < this.datapicArr.length; i++) {
+          const obj = {},
+            obj1 = {},
+            obj2 = {};
+          obj["contrast"] = 2;
+          obj["imageId"] = this.datapicArr[i].imageId2;
+          obj["optionId"] = this.datapicArr[i].optionId;
+          obj1["contrast"] = 3;
+          obj1["imageId"] = this.datapicArr[i].imageId3;
+          obj1["optionId"] = this.datapicArr[i].optionId;
+          obj2["contrast"] = 4;
+          obj2["imageId"] = this.datapicArr[i].imageId4;
+          obj2["optionId"] = this.datapicArr[i].optionId;
+          list.push(obj);
+          list.push(obj1);
+          list.push(obj2);
+        }
+        const params = {
+          jobId: this.jobId,
+          optionIds: this.optionIds.join(","),
+          version: this.version
+        };
+        const checkRecordList = [];
+        for (let i = 0; i < this.placeArr.length; i++) {
+          const obj3 = {};
+          obj3["contrastResult"] = this.placeArr[i].contrastResult;
+          obj3["optionId"] = this.placeArr[i].optionId;
+          checkRecordList.push(obj3);
+        }
+        const data = {
+          imageNote: this.illustrate, //说明
+          diagnosticOption: this.advise,
+          list: list,
+          checkRecordList: checkRecordList
+        };
+        console.log('params',params)
+        console.log('data',data)
+        veriftPresentation(params, data).then(res => {
+          if (res.retcode === 1) {
+            const skip = net.isJump("/ensureOrder");
+            const skip1 = net.isJump("/completeOrder");
+            net.message(this, res.retmsg, "suuccess");
+            if (this.checkType === 1) {
+              if (skip1) {//检测工单
+                this.$router.push({ path: "/completeOrder" });
+              } else {
+                this.getDetectionVerifyList()
+              }
+            } else {
+              if (skip) {
+                this.$router.push({ path: "/ensureOrder" });
+              } else {
+                this.getDetectionVerifyList()
+              }
+            }
+          } else {
+            net.message(this, res.retmsg, "error");
+          }
+        });
+      },
     }
   };
 </script>
